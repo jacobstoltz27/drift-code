@@ -185,22 +185,22 @@ async def get_current_user(token: Optional[str] = Depends(oauth2_scheme)) -> dic
 
 # ---------------- AI Planner ----------------
 ITINERARY_SYSTEM_PROMPT = """You are Drift's elite AI travel advisor.
-You craft INCREDIBLY DETAILED multi-day itineraries that feel hand-built by a luxury travel concierge.
+You craft DETAILED multi-day itineraries that feel hand-built by a luxury travel concierge.
 
 CRITICAL RULES:
 - You NEVER mention booking, reservations, payments, hotels-as-bookings, or purchase steps. Drift is NOT a booking platform.
-- You DO recommend specific places, restaurants, hidden gems, walking routes, transport options, costs (estimates), and local tips.
-- Each day MUST have Morning, Afternoon, Evening blocks with multiple activities each.
-- Include: transport, costs (est. USD), restaurants (specific names), attractions, hidden gems, travel tips, alternatives, weather adjustment.
-- Output STRICT JSON only. No prose outside JSON. No markdown code fences.
+- You DO recommend specific places, restaurants, hidden gems, transport options, costs (estimates), and local tips.
+- Each day MUST have Morning, Afternoon, Evening blocks. Put EXACTLY 2 activities per block (no more, no less).
+- Cap the trip at 5 days maximum, even if the user asks for more. If they ask for >5, return a 5-day "highlights" version.
+- Output STRICT JSON only. No prose outside JSON. No markdown code fences. Keep all string values concise.
 
 JSON schema:
 {
   "destination": str,
   "country": str,
-  "summary": str,                       // 2-3 sentence pitch
+  "summary": str,                       // 1-2 sentence pitch (max 220 chars)
   "trip_score": int,                    // 0-100 proprietary Drift score
-  "best_time": str,
+  "best_time": str,                     // short, max 60 chars
   "total_estimated_cost_usd": int,
   "budget_breakdown": [
     {"category": "Flights", "amount": int, "pct": int},
@@ -212,23 +212,20 @@ JSON schema:
   "days": [
     {
       "day": int,
-      "title": str,                     // e.g. "Rome, Italy"
-      "morning": [
-        {"time": "08:00", "activity": str, "detail": str, "cost_usd": int, "tip": str}
-      ],
-      "afternoon": [ ... same shape ... ],
-      "evening": [ ... same shape ... ],
-      "transport": str,
-      "hidden_gem": str,
-      "weather_tip": str,
-      "alternative": str
+      "title": str,                     // short e.g. "Rome, Italy"
+      "morning":   [ {"time": "08:00", "activity": str, "detail": str, "cost_usd": int, "tip": str}, ... 2 items ],
+      "afternoon": [ ... 2 items ... ],
+      "evening":   [ ... 2 items ... ],
+      "transport": str,                 // 1 sentence
+      "hidden_gem": str,                // 1 sentence
+      "weather_tip": str,               // 1 short sentence
+      "alternative": str                // 1 short sentence
     }
   ],
-  "packing_tips": [str, str, str],
-  "local_phrases": [{"phrase": str, "meaning": str}]
+  "packing_tips": [str, str, str]       // exactly 3 short tips
 }
 
-Generate the entire response as ONE JSON object. Be specific (real place names, real neighborhoods). Be cinematic and concise in language."""
+Keep every "detail" string under 140 chars, every "tip" under 100 chars. Be specific (real place names, neighborhoods). Return ONE JSON object only."""
 
 
 async def call_claude_for_itinerary(user_prompt: str) -> Dict[str, Any]:
@@ -697,8 +694,8 @@ async def remix_trip(trip_id: str, body: RemixBody, user=Depends(get_current_use
         "score": new_itin.get("trip_score", trip.get("score", 90)),
         "created_at": utcnow_iso(),
     }
-    new_doc.pop("_id", None)
     await db.trips.insert_one(new_doc)
+    new_doc.pop("_id", None)
     return new_doc
 
 
@@ -709,7 +706,9 @@ async def planner_generate(body: PlannerRequest, user=Depends(get_current_user))
     interest_str = ", ".join(prefs.get("interests", [])) or "general adventure"
     budget = body.budget or prefs.get("budget") or "$1,500-$3,000"
     travelers = body.travelers or 2
-    days = body.days or 7
+    # Cap days to 5 to keep Claude latency under ingress timeout (~90s headroom)
+    requested_days = body.days or 5
+    days = min(max(requested_days, 1), 5)
 
     user_prompt = (
         f"USER REQUEST: {body.prompt}\n"

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="60.618" timestamp="2026-06-02T22:23:07.216278+00:00" hostname="agent-env-c5be24eb-b25f-4173-abed-3e1779c491de"><testcase classname="backend.tests.test_ai_endpoints_public" name="test_planner_generate_3day_lisbon_under_ingress_timeout" time="60.565"><failure message="AssertionError: planner/generate failed: 502 The preview environment is not responding. It may be starting up.&#10;  &#10;assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_ai_endpoints_public.py:58: in test_planner_generate_3day_lisbon_under_ingress_timeout
+    assert r.status_code == 200, f"planner/generate failed: {r.status_code} {r.text[:500]}"
+E   AssertionError: planner/generate failed: 502 The preview environment is not responding. It may be starting up.
+E     
+E   assert 502 == 200
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase></testsuite></testsuites>
