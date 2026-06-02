@@ -13,16 +13,21 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { api } from "@/src/api/client";
+import { api, useAuth } from "@/src/api/client";
 import { colors } from "@/src/theme";
 import { TripScoreBadge, PrimaryButton, GhostButton, Avatar } from "@/src/components/ui";
+import { PaywallModal } from "@/src/components/paywall-modal";
+import { ScheduleModal } from "@/src/components/schedule-modal";
 
 export default function FeedDetail() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { user } = useAuth();
   const [post, setPost] = useState<any | null>(null);
   const [busy, setBusy] = useState<"save" | "steal" | null>(null);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -131,6 +136,12 @@ export default function FeedDetail() {
               label={busy === "save" ? "..." : "Save"}
               onPress={onSave}
               testID="feed-detail-save"
+              style={{ width: 90 }}
+            />
+            <GhostButton
+              label="Schedule"
+              onPress={() => setScheduleOpen(true)}
+              testID="feed-detail-schedule"
               style={{ width: 110 }}
             />
           </View>
@@ -144,6 +155,19 @@ export default function FeedDetail() {
           </View>
         </View>
       </ScrollView>
+
+      <PaywallModal
+        visible={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        reason="Steal Itinerary is a Drift Plus feature."
+        onSuccess={onSteal}
+      />
+      <ScheduleModal
+        visible={scheduleOpen}
+        onClose={() => setScheduleOpen(false)}
+        onConfirm={onSchedule}
+        busy={busy === "save"}
+      />
     </View>
   );
 }

@@ -16,6 +16,7 @@ import { api, useAuth } from "@/src/api/client";
 import { colors, radii, IMG } from "@/src/theme";
 import { Avatar, TripScoreBadge, SectionHeader, GhostButton } from "@/src/components/ui";
 import { TripTile } from "@/src/components/trip-cards";
+import { WorldTravelMap } from "@/src/components/world-map";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -104,37 +105,12 @@ export default function ProfileScreen() {
           <TripScoreBadge score={stats.trip_score ?? 88} size={84} />
         </View>
 
-        {/* Travel Map (mock world grid) */}
-        <SectionHeader title="Travel Map" action="View all" />
-        <View style={styles.mapCard} testID="profile-travel-map">
-          <Text style={styles.mapTitle}>
-            {stats.countries ?? 0} countries · {stats.cities ?? 0} cities
-          </Text>
-          <View style={styles.mapGrid}>
-            {Array.from({ length: 42 }).map((_, i) => {
-              const visited = i % 3 === 0;
-              return (
-                <View
-                  key={i}
-                  style={[
-                    styles.mapPixel,
-                    visited && { backgroundColor: colors.teal, opacity: 0.95 },
-                  ]}
-                />
-              );
-            })}
-          </View>
-          <View style={styles.mapLegend}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-              <View style={[styles.legendDot, { backgroundColor: colors.teal }]} />
-              <Text style={styles.legendText}>Visited</Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-              <View style={[styles.legendDot, { backgroundColor: colors.border }]} />
-              <Text style={styles.legendText}>Yet to discover</Text>
-            </View>
-          </View>
-        </View>
+        {/* World Travel Map */}
+        <SectionHeader title="World Travel Map" />
+        <WorldTravelMap
+          visited={(user as any)?.visited_countries ?? []}
+          countriesCount={stats.countries ?? 0}
+        />
 
         {/* Statistics breakdown */}
         <SectionHeader title="Statistics" />

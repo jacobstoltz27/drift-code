@@ -1,4 +1,4 @@
-// Home: Upcoming trips, Invite unlock, Personalized feed
+// Home: Upcoming Trips + Invite Unlock + Following Feed (focused & personal)
 import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
@@ -10,39 +10,35 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api, useAuth } from "@/src/api/client";
 import { colors } from "@/src/theme";
 import { Avatar, SectionHeader } from "@/src/components/ui";
-import { UpcomingTripCard, FeedCard } from "@/src/components/trip-cards";
+import { UpcomingTripCard } from "@/src/components/trip-cards";
 import { InviteUnlockCard } from "@/src/components/invite-card";
+import { FollowingPostCard } from "@/src/components/following-post";
 
 export default function HomeScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const [upcoming, setUpcoming] = useState<any[]>([]);
-  const [feed, setFeed] = useState<any[]>([]);
-  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [followingPosts, setFollowingPosts] = useState<any[]>([]);
+  const [liked, setLiked] = useState<Set<string>>(new Set());
   const [invites, setInvites] = useState({ remaining: 5, used: 0, total: 5 });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   const load = useCallback(async () => {
     try {
-      const [u, f, inv, savedRes] = await Promise.all([
+      const [u, f, inv] = await Promise.all([
         api.trips("upcoming"),
-        api.feed(),
+        api.followingFeed(),
         api.invites(),
-        api.trips("saved"),
       ]);
       setUpcoming(u.trips ?? []);
-      setFeed(f.posts ?? []);
+      setFollowingPosts(f.posts ?? []);
       setInvites(inv);
-      const ids = new Set<string>(
-        (savedRes.trips ?? []).map((t: any) => t.original_id).filter(Boolean),
-      );
-      setSavedIds(ids);
     } catch (e) {
       console.warn(e);
     }
@@ -56,35 +52,26 @@ export default function HomeScreen() {
     })();
   }, [load]);
 
+  // Refresh upcoming when navigating back to Home (so newly scheduled trips appear)
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load]),
+  );
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await load();
     setRefreshing(false);
   }, [load]);
 
-  const handleSave = async (postId: string) => {
-    if (savedIds.has(postId)) return;
-    setSavedIds((s) => new Set(s).add(postId));
-    try {
-      await api.savePost(postId);
-    } catch {
-      // revert
-      setSavedIds((s) => {
-        const n = new Set(s);
-        n.delete(postId);
-        return n;
-      });
-    }
-  };
-
-  const handleSteal = async (postId: string) => {
-    try {
-      const t = await api.stealPost(postId);
-      router.push(`/trip/${t.id}`);
-    } catch (e) {
-      console.warn(e);
-    }
-  };
+  const toggleLike = (id: string) =>
+    setLiked((s) => {
+      const n = new Set(s);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
 
   return (
     <SafeAreaView style={styles.wrap} edges={["top"]}>
@@ -154,19 +141,25 @@ export default function HomeScreen() {
               onInvite={() => router.push("/invite")}
             />
 
-            <SectionHeader title="For You" />
+            <SectionHeader title="Following" />
             <View style={{ paddingHorizontal: 20 }}>
-              {feed.map((p) => (
-                <FeedCard
-                  key={p.id}
-                  post={p}
-                  saved={savedIds.has(p.id)}
-                  onPress={() => router.push(`/feed/${p.id}`)}
-                  onSave={() => handleSave(p.id)}
-                  onSteal={() => handleSteal(p.id)}
-                  testID={`feed-card-${p.id}`}
-                />
-              ))}
+              {followingPosts.length === 0 ? (
+                <View style={styles.emptyFollow}>
+                  <Text style={styles.emptyText}>No new posts yet</Text>
+                  <Text style={styles.emptySub}>
+                    Follow creators & guides on Explore to fill your feed.
+                  </Text>
+                </View>
+              ) : (
+                followingPosts.map((p) => (
+                  <FollowingPostCard
+                    key={p.id}
+                    post={p}
+                    liked={liked.has(p.id)}
+                    onLike={() => toggleLike(p.id)}
+                  />
+                ))
+              )}
             </View>
           </>
         )}
@@ -207,4 +200,12 @@ const styles = StyleSheet.create({
   },
   emptyText: { color: "#fff", fontSize: 16, fontWeight: "800", marginTop: 10 },
   emptySub: { color: colors.textMuted, fontSize: 12, marginTop: 4, textAlign: "center" },
+  emptyFollow: {
+    padding: 30,
+    alignItems: "center",
+    borderRadius: 22,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
 });

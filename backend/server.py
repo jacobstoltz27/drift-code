@@ -54,8 +54,10 @@ class UserPublic(BaseModel):
     avatar_url: Optional[str] = None
     bio: Optional[str] = None
     onboarded: bool = False
+    is_premium: bool = False
     preferences: Dict[str, Any] = Field(default_factory=dict)
     stats: Dict[str, Any] = Field(default_factory=dict)
+    visited_countries: List[str] = Field(default_factory=list)
     created_at: str
 
 
@@ -97,6 +99,15 @@ class TripCreate(BaseModel):
     itinerary: Optional[Dict[str, Any]] = None
     original_id: Optional[str] = None
     creator: Optional[Dict[str, str]] = None
+
+
+class ScheduleBody(BaseModel):
+    start_date: str
+    end_date: str
+
+
+class UpgradeBody(BaseModel):
+    plan: str  # "monthly" | "annual"
 
 
 class Trip(TripCreate):
@@ -161,8 +172,10 @@ def user_doc_to_public(doc: dict) -> UserPublic:
         avatar_url=doc.get("avatar_url"),
         bio=doc.get("bio"),
         onboarded=doc.get("onboarded", False),
+        is_premium=doc.get("is_premium", False),
         preferences=doc.get("preferences", {}),
         stats=doc.get("stats", {}),
+        visited_countries=doc.get("visited_countries", []),
         created_at=doc.get("created_at", utcnow_iso()),
     )
 
@@ -274,6 +287,7 @@ async def lifespan(app: FastAPI):
     await db.feed.create_index("id", unique=True)
     await db.planner_jobs.create_index("id", unique=True)
     await db.planner_jobs.create_index("user_id")
+    await db.following_feed.create_index("id", unique=True)
     await seed_demo_data()
     logger.info("Drift backend started.")
     yield
@@ -432,7 +446,86 @@ DEMO_UPCOMING = [
 ]
 
 
+DEMO_FOLLOWING_FEED = [
+    {
+        "id": "fol-1",
+        "kind": "trip",
+        "creator": {"id": "c-jack", "name": "Jack Morris", "handle": "@jackmorris", "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80", "verified": True, "role": "Creator"},
+        "image_url": "https://images.unsplash.com/photo-1583844056361-4418a8f2a985?w=1200&q=85",
+        "destination": "Positano, Italy",
+        "text": "Just back from the Amalfi Coast — Da Adolfo lunch was unreal. Drop your hidden gems below!",
+        "likes": 1843,
+        "comments": 92,
+        "saves": 412,
+        "time_ago": "2h",
+    },
+    {
+        "id": "fol-2",
+        "kind": "photo",
+        "creator": {"id": "c-lauren", "name": "Lauren Bullen", "handle": "@gypsea_lust", "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80", "verified": True, "role": "Influencer"},
+        "image_url": "https://images.pexels.com/photos/1287455/pexels-photo-1287455.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        "destination": "Maldives",
+        "text": "Sunrise from the overwater villa. Worth the 22-hour journey.",
+        "likes": 9214,
+        "comments": 320,
+        "saves": 2102,
+        "time_ago": "5h",
+    },
+    {
+        "id": "fol-3",
+        "kind": "recommendation",
+        "creator": {"id": "c-mia", "name": "Mia Chen", "handle": "@miawanders", "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80", "verified": False, "role": "Friend"},
+        "image_url": "https://images.unsplash.com/photo-1493997181344-712f2f19d87a?w=1200&q=85",
+        "destination": "Tokyo, Japan",
+        "text": "Pro tip for Tokyo: skip Tsukiji and head to Toyosu's Sushi Dai at 6am. 90-min wait, life-changing.",
+        "likes": 412,
+        "comments": 28,
+        "saves": 84,
+        "time_ago": "1d",
+    },
+    {
+        "id": "fol-4",
+        "kind": "itinerary",
+        "creator": {"id": "c-guide-tomas", "name": "Tomás Verified Guide", "handle": "@tomas.lisboa", "avatar": "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=200&q=80", "verified": True, "role": "Verified Guide"},
+        "image_url": "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1200&q=85",
+        "destination": "Lisbon, Portugal",
+        "text": "I just published my 5-day Lisbon foodie itinerary — pastéis, fado, miradouros. Steal it 🤙",
+        "likes": 671,
+        "comments": 41,
+        "saves": 233,
+        "time_ago": "1d",
+    },
+    {
+        "id": "fol-5",
+        "kind": "update",
+        "creator": {"id": "c-alex", "name": "Alex Strohl", "handle": "@alexstrohl", "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80", "verified": True, "role": "Creator"},
+        "image_url": "https://images.unsplash.com/photo-1601439678777-b2b3c56fa627?w=1200&q=85",
+        "destination": "Lofoten, Norway",
+        "text": "Heading to the Lofoten Islands tomorrow for 10 days of fjords. Any local recs?",
+        "likes": 2103,
+        "comments": 154,
+        "saves": 67,
+        "time_ago": "2d",
+    },
+    {
+        "id": "fol-6",
+        "kind": "photo",
+        "creator": {"id": "c-jules", "name": "Jules Marquez", "handle": "@julesmarquez", "avatar": "https://images.unsplash.com/photo-1545996124-0501ebae84d0?w=200&q=80", "verified": False, "role": "Friend"},
+        "image_url": "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1200&q=85",
+        "destination": "Santorini, Greece",
+        "text": "Oia at golden hour. Worth every euro.",
+        "likes": 521,
+        "comments": 19,
+        "saves": 38,
+        "time_ago": "3d",
+    },
+]
+
+
 async def seed_demo_data():
+    # Seed following feed
+    for item in DEMO_FOLLOWING_FEED:
+        await db.following_feed.update_one({"id": item["id"]}, {"$setOnInsert": item}, upsert=True)
     # Seed feed
     for item in DEMO_FEED:
         await db.feed.update_one({"id": item["id"]}, {"$setOnInsert": item}, upsert=True)
@@ -452,6 +545,11 @@ async def seed_demo_data():
                 "avatar_url": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80",
                 "bio": "Travel enthusiast • Photography • Collecting moments, not things.",
                 "onboarded": True,
+                "is_premium": False,
+                "visited_countries": [
+                    "JP", "ID", "IT", "GR", "PT", "FR", "ES", "TH", "VN", "PE",
+                    "MX", "US", "CA", "AR", "BR", "ZA", "MA", "AE",
+                ],
                 "preferences": {
                     "travel_frequency": "2-4 times per year",
                     "age_range": "25-34",
@@ -608,6 +706,68 @@ async def delete_trip(trip_id: str, user=Depends(get_current_user)):
     return {"ok": True}
 
 
+@api.post("/trips/{trip_id}/schedule")
+async def schedule_trip(trip_id: str, body: ScheduleBody, user=Depends(get_current_user)):
+    """Promote a saved/stolen trip into an upcoming trip with dates."""
+    trip = await db.trips.find_one({"id": trip_id, "user_id": user["id"]}, {"_id": 0})
+    if not trip:
+        raise HTTPException(404, "Trip not found")
+    await db.trips.update_one(
+        {"id": trip_id, "user_id": user["id"]},
+        {
+            "$set": {
+                "bucket": "upcoming",
+                "start_date": body.start_date,
+                "end_date": body.end_date,
+            }
+        },
+    )
+    updated = await db.trips.find_one(
+        {"id": trip_id, "user_id": user["id"]}, {"_id": 0}
+    )
+    return updated
+
+
+# --- Following feed (Home)
+@api.get("/following/feed")
+async def get_following_feed(user=Depends(get_current_user)):
+    posts = await db.following_feed.find({}, {"_id": 0}).to_list(50)
+    return {"posts": posts}
+
+
+# --- Subscription (mock — Drift is not a booking platform; Plus is the only paid product)
+PLANS = {
+    "monthly": {"id": "monthly", "name": "Monthly", "price": 8.99, "interval": "month"},
+    "annual": {
+        "id": "annual",
+        "name": "Annual",
+        "price": 7.19,
+        "interval": "month",
+        "billed": 86.28,
+        "save": 21.6,
+        "save_pct": 20,
+    },
+}
+
+
+@api.get("/subscription/plans")
+async def list_plans(user=Depends(get_current_user)):
+    return {"plans": PLANS, "is_premium": user.get("is_premium", False)}
+
+
+@api.post("/subscription/upgrade")
+async def upgrade(body: UpgradeBody, user=Depends(get_current_user)):
+    """Mock upgrade — flips is_premium = True. No real payment processed."""
+    if body.plan not in PLANS:
+        raise HTTPException(400, "invalid plan")
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {"is_premium": True, "plan": body.plan, "upgraded_at": utcnow_iso()}},
+    )
+    updated = await db.users.find_one({"id": user["id"]}, {"_id": 0})
+    return user_doc_to_public(updated)
+
+
 # --- Save / Steal / Remix
 @api.post("/feed/{post_id}/save")
 async def save_post(post_id: str, user=Depends(get_current_user)):
@@ -642,6 +802,9 @@ async def save_post(post_id: str, user=Depends(get_current_user)):
 
 @api.post("/feed/{post_id}/steal")
 async def steal_post(post_id: str, user=Depends(get_current_user)):
+    # Premium gate — Steal Itinerary is a Drift Plus feature
+    if not user.get("is_premium", False):
+        raise HTTPException(status_code=402, detail="premium_required")
     post = await db.feed.find_one({"id": post_id}, {"_id": 0})
     if not post:
         raise HTTPException(404, "Not found")

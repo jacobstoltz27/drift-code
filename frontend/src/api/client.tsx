@@ -126,6 +126,15 @@ export const api = {
     request<{ remaining: number; used: number; total: number }>("/invites"),
   sendInvite: (email: string) =>
     request<any>("/invites/send", { method: "POST", body: { email } }),
+  followingFeed: () =>
+    request<{ posts: any[] }>("/following/feed"),
+  scheduleTrip: (id: string, start: string, end: string) =>
+    request<any>(`/trips/${id}/schedule`, {
+      method: "POST",
+      body: { start_date: start, end_date: end },
+    }),
+  upgrade: (plan: "monthly" | "annual") =>
+    request<DriftUser>("/subscription/upgrade", { method: "POST", body: { plan } }),
 };
 
 // ---------------- Auth Context ----------------

@@ -18,7 +18,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { api, useAuth } from "@/src/api/client";
 import { colors, radii } from "@/src/theme";
-import { PrimaryButton, TripScoreBadge, Pill } from "@/src/components/ui";
+import { PrimaryButton, TripScoreBadge, Pill, GhostButton } from "@/src/components/ui";
+import { PaywallModal } from "@/src/components/paywall-modal";
+import { ScheduleModal } from "@/src/components/schedule-modal";
 
 const BUDGETS = ["Under $500", "$500-$1.5k", "$1.5k-$3k", "$3k-$7.5k", "Luxury $7.5k+"];
 
@@ -46,6 +48,9 @@ export default function PlannerScreen() {
   const [elapsed, setElapsed] = useState(0);
   const [itinerary, setItinerary] = useState<any | null>(null);
   const [saving, setSaving] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [busyAction, setBusyAction] = useState<null | "save" | "schedule" | "remix">(null);
   const scrollRef = useRef<ScrollView>(null);
   const elapsedTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -131,7 +136,7 @@ export default function PlannerScreen() {
     }
   };
 
-  const saveItinerary = async () => {
+  const saveItinerary = async (bucket: "saved" | "upcoming", dates?: { start: string; end: string }) => {
     if (!itinerary) return;
     setSaving(true);
     try {
@@ -142,7 +147,9 @@ export default function PlannerScreen() {
         score: itinerary.trip_score ?? 92,
         summary: itinerary.summary,
         itinerary,
-        bucket: "saved",
+        bucket,
+        start_date: dates?.start,
+        end_date: dates?.end,
       });
       router.push(`/trip/${t.id}`);
     } catch (e) {
@@ -150,6 +157,15 @@ export default function PlannerScreen() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const onStealClick = () => {
+    if (!user?.is_premium) {
+      setPaywallOpen(true);
+      return;
+    }
+    // For premium users, "Steal" just saves a copy
+    saveItinerary("saved");
   };
 
   return (
@@ -303,17 +319,73 @@ export default function PlannerScreen() {
 
           {itinerary ? <ItineraryView itinerary={itinerary} /> : null}
           {itinerary ? (
-            <View style={{ paddingTop: 16 }}>
-              <PrimaryButton
-                label={saving ? "Saving..." : "Save to My Trips"}
-                onPress={saveItinerary}
+            <View style={styles.actionGrid} testID="planner-actions">
+              <TouchableOpacity
+                style={styles.actionCard}
+                onPress={() => saveItinerary("saved")}
                 disabled={saving}
-                testID="planner-save-button"
-              />
+                testID="planner-action-save"
+              >
+                <Ionicons name="bookmark-outline" size={20} color={colors.accent} />
+                <Text style={styles.actionLabel}>Save Trip</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.actionCard}
+                onPress={() => setScheduleOpen(true)}
+                disabled={saving}
+                testID="planner-action-schedule"
+              >
+                <Ionicons name="calendar-outline" size={20} color={colors.teal} />
+                <Text style={styles.actionLabel}>Add to Upcoming</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.actionCard}
+                onPress={onStealClick}
+                disabled={saving}
+                testID="planner-action-steal"
+              >
+                <View style={styles.actionProBadge}>
+                  <Text style={styles.actionProBadgeText}>PRO</Text>
+                </View>
+                <Ionicons name="sparkles-outline" size={20} color="#F59E0B" />
+                <Text style={styles.actionLabel}>Steal Itinerary</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.actionCard}
+                onPress={() => {
+                  // Save first, then go to trip detail to remix
+                  saveItinerary("saved");
+                }}
+                disabled={saving}
+                testID="planner-action-remix"
+              >
+                <Ionicons name="color-wand-outline" size={20} color="#7C8AFF" />
+                <Text style={styles.actionLabel}>Remix Trip</Text>
+              </TouchableOpacity>
             </View>
           ) : null}
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <PaywallModal
+        visible={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        reason="Steal Itinerary is a Drift Plus feature."
+        onSuccess={() => saveItinerary("saved")}
+      />
+
+      <ScheduleModal
+        visible={scheduleOpen}
+        onClose={() => setScheduleOpen(false)}
+        onConfirm={async (start, end) => {
+          await saveItinerary("upcoming", { start, end });
+          setScheduleOpen(false);
+        }}
+        busy={saving}
+      />
     </SafeAreaView>
   );
 }
@@ -598,6 +670,35 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   checkText: { color: colors.textMuted, fontSize: 12, flex: 1 },
+  actionGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 16,
+    justifyContent: "space-between",
+  },
+  actionCard: {
+    width: "48%",
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 16,
+    alignItems: "flex-start",
+    gap: 8,
+    position: "relative",
+  },
+  actionLabel: { color: "#fff", fontWeight: "800", fontSize: 13 },
+  actionProBadge: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: colors.teal,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 999,
+  },
+  actionProBadgeText: { color: "#fff", fontWeight: "900", fontSize: 9, letterSpacing: 0.5 },
 });
 
 const iv = StyleSheet.create({

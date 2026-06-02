@@ -1,4 +1,4 @@
-// Trip detail (a saved/stolen/upcoming trip)
+// Trip detail — 4 actions: Save / Add to Upcoming / Steal (premium) / Remix
 import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
@@ -12,24 +12,32 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { api } from "@/src/api/client";
+import { api, useAuth } from "@/src/api/client";
 import { colors, radii } from "@/src/theme";
-import { TripScoreBadge, PrimaryButton, GhostButton, Avatar } from "@/src/components/ui";
+import { TripScoreBadge, PrimaryButton, Avatar } from "@/src/components/ui";
 import { ItineraryView } from "@/app/(tabs)/planner";
+import { PaywallModal } from "@/src/components/paywall-modal";
+import { ScheduleModal } from "@/src/components/schedule-modal";
 
 export default function TripDetail() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { user } = useAuth();
   const [trip, setTrip] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+
   const [remixOpen, setRemixOpen] = useState(false);
   const [remixNote, setRemixNote] = useState("");
   const [remixing, setRemixing] = useState(false);
+
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [scheduling, setScheduling] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -47,12 +55,25 @@ export default function TripDetail() {
     load();
   }, [load]);
 
+  const schedule = async (start: string, end: string) => {
+    setScheduling(true);
+    try {
+      const updated = await api.scheduleTrip(trip.id, start, end);
+      setTrip(updated);
+      setScheduleOpen(false);
+      router.replace("/(tabs)/trips");
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setScheduling(false);
+    }
+  };
+
   const remix = async () => {
     if (!trip || !remixNote.trim()) return;
     setRemixing(true);
     try {
       const job = await api.remixTripJob(trip.id, remixNote);
-      // poll up to ~3.5 min
       for (let i = 0; i < 70; i++) {
         await new Promise((r) => setTimeout(r, 3000));
         try {
@@ -64,11 +85,11 @@ export default function TripDetail() {
             return;
           }
           if (status.status === "error") throw new Error(status.error ?? "Remix failed");
-        } catch (e) {
-          /* keep polling */
+        } catch {
+          // keep polling
         }
       }
-      throw new Error("Remix timed out — try a shorter note");
+      throw new Error("Remix timed out");
     } catch (e) {
       console.warn(e);
     } finally {
@@ -76,18 +97,27 @@ export default function TripDetail() {
     }
   };
 
+  const onStealClick = () => {
+    if (!user?.is_premium) {
+      setPaywallOpen(true);
+      return;
+    }
+    // Already in trips, just confirm
+    router.push("/(tabs)/trips");
+  };
+
   if (loading) {
     return (
-      <SafeAreaView style={styles.wrap}>
+      <View style={styles.wrap}>
         <ActivityIndicator color={colors.accent} style={{ marginTop: 80 }} />
-      </SafeAreaView>
+      </View>
     );
   }
   if (!trip) {
     return (
-      <SafeAreaView style={styles.wrap}>
+      <View style={styles.wrap}>
         <Text style={{ color: "#fff", padding: 20 }}>Trip not found</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -107,12 +137,11 @@ export default function TripDetail() {
           >
             <Ionicons name="chevron-back" size={22} color="#fff" />
           </TouchableOpacity>
+
           <View style={[styles.heroBottom, { paddingBottom: 20 }]}>
             <View style={styles.heroRow}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.heroEyebrow}>
-                  {trip.bucket?.toUpperCase()}
-                </Text>
+                <Text style={styles.heroEyebrow}>{trip.bucket?.toUpperCase()}</Text>
                 <Text style={styles.heroTitle}>{trip.destination}</Text>
                 {trip.start_date ? (
                   <Text style={styles.heroDates}>
@@ -137,19 +166,34 @@ export default function TripDetail() {
         <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
           {trip.summary ? <Text style={styles.summary}>{trip.summary}</Text> : null}
 
-          <View style={styles.actionRow}>
-            <PrimaryButton
-              label={remixOpen ? "Cancel" : "Remix with AI"}
-              onPress={() => setRemixOpen((v) => !v)}
-              testID="trip-detail-remix-toggle"
-              icon={<Ionicons name="sparkles" size={16} color="#fff" />}
-              style={{ flex: 1 }}
+          {/* 4-action toolbar */}
+          <View style={styles.toolbar} testID="trip-detail-toolbar">
+            <ActionPill
+              icon="bookmark"
+              label="Saved"
+              active
+              testID="action-save"
             />
-            <GhostButton
-              label="Share"
-              onPress={() => {}}
-              testID="trip-detail-share"
-              style={{ width: 110 }}
+            {trip.bucket !== "upcoming" ? (
+              <ActionPill
+                icon="calendar-outline"
+                label="Add to Upcoming"
+                onPress={() => setScheduleOpen(true)}
+                testID="action-schedule"
+              />
+            ) : null}
+            <ActionPill
+              icon="sparkles-outline"
+              label="Steal"
+              premium
+              onPress={onStealClick}
+              testID="action-steal"
+            />
+            <ActionPill
+              icon="color-wand-outline"
+              label={remixOpen ? "Cancel" : "Remix"}
+              onPress={() => setRemixOpen((v) => !v)}
+              testID="action-remix"
             />
           </View>
 
@@ -169,7 +213,7 @@ export default function TripDetail() {
                 testID="trip-detail-remix-input"
               />
               <PrimaryButton
-                label={remixing ? "Remixing..." : "Remix"}
+                label={remixing ? "Remixing..." : "Remix with AI"}
                 onPress={remix}
                 disabled={remixing || !remixNote.trim()}
                 testID="trip-detail-remix-submit"
@@ -198,9 +242,55 @@ export default function TripDetail() {
           )}
         </View>
       </ScrollView>
+
+      <PaywallModal
+        visible={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        reason="Steal Itinerary is a Drift Plus feature."
+      />
+
+      <ScheduleModal
+        visible={scheduleOpen}
+        onClose={() => setScheduleOpen(false)}
+        onConfirm={schedule}
+        busy={scheduling}
+      />
     </View>
   );
 }
+
+const ActionPill = ({
+  icon,
+  label,
+  onPress,
+  active,
+  premium,
+  testID,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  onPress?: () => void;
+  active?: boolean;
+  premium?: boolean;
+  testID?: string;
+}) => (
+  <TouchableOpacity
+    activeOpacity={0.85}
+    onPress={onPress}
+    testID={testID}
+    style={[styles.action, active && styles.actionActive]}
+  >
+    <Ionicons name={icon} size={16} color={active ? "#fff" : colors.text} />
+    <Text style={[styles.actionText, active && { color: "#fff" }]} numberOfLines={1}>
+      {label}
+    </Text>
+    {premium ? (
+      <View style={styles.proBadge}>
+        <Text style={styles.proBadgeText}>PRO</Text>
+      </View>
+    ) : null}
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: colors.background },
@@ -226,7 +316,32 @@ const styles = StyleSheet.create({
   creatorName: { color: "#fff", fontSize: 13, fontWeight: "700" },
   creatorHandle: { color: colors.textMuted, fontSize: 11, fontWeight: "600" },
   summary: { color: colors.text, fontSize: 15, lineHeight: 22 },
-  actionRow: { flexDirection: "row", gap: 10, marginTop: 18 },
+  toolbar: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 18,
+  },
+  action: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 14,
+    height: 42,
+    borderRadius: 999,
+    backgroundColor: colors.glass,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  actionActive: { backgroundColor: colors.accent, borderColor: colors.accent },
+  actionText: { color: colors.text, fontWeight: "700", fontSize: 13 },
+  proBadge: {
+    backgroundColor: colors.teal,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 999,
+  },
+  proBadgeText: { color: "#fff", fontWeight: "900", fontSize: 9, letterSpacing: 0.5 },
   remixBox: {
     marginTop: 16,
     padding: 14,
