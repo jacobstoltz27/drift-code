@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="120.649" timestamp="2026-06-02T22:13:54.312800+00:00" hostname="agent-env-c5be24eb-b25f-4173-abed-3e1779c491de"><testcase classname="backend.tests.test_drift_backend.TestPlannerAI" name="test_planner_generate" time="60.398"><failure message="AssertionError: The preview environment is not responding. It may be starting up.&#10;  &#10;assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_drift_backend.py:314: in test_planner_generate
+    assert r.status_code == 200, r.text
+E   AssertionError: The preview environment is not responding. It may be starting up.
+E     
+E   assert 502 == 200
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase><testcase classname="backend.tests.test_drift_backend.TestPlannerAI" name="test_remix_trip" time="60.208"><failure message="AssertionError: The preview environment is not responding. It may be starting up.&#10;  &#10;assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_drift_backend.py:348: in test_remix_trip
+    assert r2.status_code == 200, r2.text
+E   AssertionError: The preview environment is not responding. It may be starting up.
+E     
+E   assert 502 == 200
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="32" time="120.084" timestamp="2026-06-02T22:11:36.331640+00:00" hostname="agent-env-c5be24eb-b25f-4173-abed-3e1779c491de"><testcase classname="backend.tests.test_drift_backend.TestAuth" name="test_root" time="60.228"><failure message="assert 502 == 200&#10; +  where 502 = &lt;Response [502]&gt;.status_code">backend/tests/test_drift_backend.py:19: in test_root
+    assert r.status_code == 200
+E   assert 502 == 200
+E    +  where 502 = &lt;Response [502]&gt;.status_code</failure></testcase><testcase classname="backend.tests.test_drift_backend.TestAuth" name="test_login_demo" time="30.026"><failure message="requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='ai-travel-remix.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)">/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:534: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/urllib3/connection.py:571: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/http/client.py:1415: in getresponse
+    response.begin()
+/usr/local/lib/python3.11/http/client.py:330: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/http/client.py:291: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/socket.py:718: in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/ssl.py:1314: in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/ssl.py:1166: in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+/root/.venv/lib/python3.11/site-packages/requests/adapters.py:696: in send
+    resp = conn.urlopen(
+/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:842: in urlopen
+    retries = retries.increment(
+/root/.venv/lib/python3.11/site-packages/urllib3/util/retry.py:498: in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/urllib3/util/util.py:39: in reraise
+    raise value
+/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:788: in urlopen
+    response = self._make_request(
+/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:536: in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+/root/.venv/lib/python3.11/site-packages/urllib3/connectionpool.py:367: in _raise_timeout
+    raise ReadTimeoutError(
+E   urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='ai-travel-remix.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+
+During handling of the above exception, another exception occurred:
+backend/tests/test_drift_backend.py:23: in test_login_demo
+    r = api_client.post(
+/root/.venv/lib/python3.11/site-packages/requests/sessions.py:712: in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/requests/sessions.py:651: in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/requests/sessions.py:784: in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/requests/adapters.py:742: in send
+    raise ReadTimeout(e, request=request)
+E   requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='ai-travel-remix.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)</failure></testcase><testcase classname="backend.tests.test_drift_backend.TestAuth" name="test_login_wrong_password" time="27.041" /><testcase classname="backend.tests.test_drift_backend.TestAuth" name="test_me_requires_auth" time="0.092" /><testcase classname="backend.tests.test_drift_backend.TestAuth" name="test_me_with_token" time="0.335" /><testcase classname="backend.tests.test_drift_backend.TestAuth" name="test_register_and_onboarding" time="0.446" /><testcase classname="backend.tests.test_drift_backend.TestAuth" name="test_register_duplicate_email" time="0.051" /><testcase classname="backend.tests.test_drift_backend.TestFeed" name="test_feed_requires_auth" time="0.052" /><testcase classname="backend.tests.test_drift_backend.TestFeed" name="test_feed_list" time="0.053" /><testcase classname="backend.tests.test_drift_backend.TestFeed" name="test_feed_single" time="0.059" /><testcase classname="backend.tests.test_drift_backend.TestFeed" name="test_feed_single_not_found" time="0.062" /><testcase classname="backend.tests.test_drift_backend.TestTrips" name="test_trips_requires_auth" time="0.051" /><testcase classname="backend.tests.test_drift_backend.TestTrips" name="test_upcoming_trips" time="0.052" /><testcase classname="backend.tests.test_drift_backend.TestTrips" name="test_other_buckets_initially_empty_or_list[past]" time="0.054" /><testcase classname="backend.tests.test_drift_backend.TestTrips" name="test_other_buckets_initially_empty_or_list[stolen]" time="0.073" /><testcase classname="backend.tests.test_drift_backend.TestTrips" name="test_saved_bucket_lists" time="0.057" /><testcase classname="backend.tests.test_drift_backend.TestSaveSteal" name="test_save_is_idempotent" time="0.178" /><testcase classname="backend.tests.test_drift_backend.TestSaveSteal" name="test_steal_increments_count" time="0.168" /><testcase classname="backend.tests.test_drift_backend.TestSaveSteal" name="test_save_nonexistent_returns_404" time="0.057" /><testcase classname="backend.tests.test_drift_backend.TestPlannerScore" name="test_score_endpoint" time="0.055" /><testcase classname="backend.tests.test_drift_backend.TestPlannerScore" name="test_score_rare_destination_bonus" time="0.052" /><testcase classname="backend.tests.test_drift_backend.TestPlannerScore" name="test_score_requires_auth" time="0.054" /><testcase classname="backend.tests.test_drift_backend.TestInvites" name="test_invites_get" time="0.059" /><testcase classname="backend.tests.test_drift_backend.TestInvites" name="test_invites_send" time="0.061" /><testcase classname="backend.tests.test_drift_backend.TestInvites" name="test_invites_send_missing_email" time="0.061" /><testcase classname="backend.tests.test_drift_backend.TestInvites" name="test_invites_requires_auth" time="0.054" /><testcase classname="backend.tests.test_drift_backend.TestNoBooking" name="test_booking_endpoints_do_not_exist[/api/bookings]" time="0.057" /><testcase classname="backend.tests.test_drift_backend.TestNoBooking" name="test_booking_endpoints_do_not_exist[/api/book]" time="0.053" /><testcase classname="backend.tests.test_drift_backend.TestNoBooking" name="test_booking_endpoints_do_not_exist[/api/checkout]" time="0.055" /><testcase classname="backend.tests.test_drift_backend.TestNoBooking" name="test_booking_endpoints_do_not_exist[/api/payment]" time="0.059" /><testcase classname="backend.tests.test_drift_backend.TestNoBooking" name="test_booking_endpoints_do_not_exist[/api/payments]" time="0.068" /><testcase classname="backend.tests.test_drift_backend.TestNoBooking" name="test_booking_endpoints_do_not_exist[/api/orders]" time="0.059" /></testsuite></testsuites>
