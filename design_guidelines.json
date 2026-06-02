@@ -1,0 +1,130 @@
+{
+  "theme": "dark",
+  "archetype": "5 (Luxury)",
+  "colors": {
+    "background": "#070B14",
+    "primary": "#1B1F3B",
+    "accent": "#5B67FF",
+    "secondary_accent": "#14B8A6",
+    "text_primary": "#F5F7FA",
+    "text_secondary": "#A1A1AA",
+    "surface": "#121726",
+    "surface_glass": "rgba(27, 31, 59, 0.6)",
+    "border": "rgba(255, 255, 255, 0.05)"
+  },
+  "typography": {
+    "headlines": "Satoshi",
+    "body": "Inter",
+    "scale": {
+      "h1": "text-4xl font-black tracking-tighter",
+      "h2": "text-2xl font-bold tracking-tight",
+      "h3": "text-xl font-bold tracking-tight",
+      "body": "text-base font-normal leading-relaxed",
+      "small": "text-sm font-medium",
+      "label": "text-xs font-bold uppercase tracking-[0.2em]"
+    }
+  },
+  "spacing_and_layout": {
+    "grid": "8pt",
+    "scale": "p-2, p-4, p-6, p-8, p-12",
+    "radii": {
+      "sm": "rounded-lg",
+      "md": "rounded-2xl",
+      "lg": "rounded-[24px]",
+      "full": "rounded-full"
+    },
+    "shadows": {
+      "glow": "drop-shadow-[0_0_12px_rgba(91,103,255,0.4)]",
+      "glass": "shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+    }
+  },
+  "motion": {
+    "spring": "type: 'spring', damping: 20, stiffness: 100",
+    "glass_blur": "backdrop-blur-xl",
+    "stagger": "staggerChildren: 0.1"
+  },
+  "components": {
+    "trip_score_badge": {
+      "description": "Circular gauge representing the 0-100 proprietary score. Use conic-gradient with accent and secondary_accent colors. Prominent gauge ring with number in center."
+    },
+    "trip_card_horizontal": {
+      "description": "Large horizontal hero card for upcoming trips. Uses background image with overlay bg-black/40. Rounded-2xl, inner content features dates, countdown, companion avatars (overlapping), and Trip Score badge."
+    },
+    "feed_card": {
+      "description": "Standard feed card. Vertical layout. Image top (max-h-64), body below. Features creator info, title, trip score, and primary 'Steal Itinerary' button."
+    },
+    "invite_unlock_card": {
+      "description": "Premium dark unlock card. Uses surface color with subtle border-white/5. Horizontal icon row (Score, Map, Steal, Group, Creators). Heavy use of inner glow and blur. 'Invite Friends' CTA in Accent color."
+    },
+    "ai_chat_bubble": {
+      "description": "For AI Planner. User messages in #1B1F3B (Primary), AI messages in glassmorphism (rgba(255,255,255,0.05)) with backdrop-blur. Animated generating state with checklist."
+    },
+    "itinerary_day_block": {
+      "description": "Vertical timeline layout for multi-day itineraries. Morning/Afternoon/Evening blocks. Border-l-2 with accent color. Cards for transport, costs, restaurants."
+    },
+    "profile_travel_map": {
+      "description": "Interactive map highlighting visited countries. Dark mode map styling (custom Mapbox or similar). Highlight countries using secondary_accent (#14B8A6)."
+    },
+    "onboarding_pill_buttons": {
+      "description": "Multi-step quiz buttons. Fully rounded (rounded-full). Active state uses accent color (#5B67FF), inactive uses glass surface."
+    },
+    "bottom_navigation": {
+      "description": "Fixed at bottom, glassmorphism surface. 5 icons: Home, Explore, Planner, Trips, Profile. Active tab uses accent color."
+    }
+  },
+  "screens": {
+    "onboarding": "Multi-step flow. Splash -> Quiz (frequency, age, budget, companions, interests, contacts, follow creators) -> Welcome. Use smooth spring transitions between steps.",
+    "home": "Upcoming Trips (horizontal scroll snap). '5 invites left' premium card. Bottom navigation active.",
+    "feed": "Personalized social feed. Mix of creator content and AI suggestions. 'Steal Itinerary' is primary action.",
+    "explore": "Search bar, category pills (Beaches, Luxury, etc.), interactive map, trending destinations grid.",
+    "planner": "AI Chat interface. Shifts from chat to generated itinerary view with budget breakdown donut chart.",
+    "trips": "4 Tabs (Upcoming, Past, Saved, Stolen). Grid/List view of trip cards.",
+    "profile": "User header, stats grid (Score gauge), travel map, saved trips grid."
+  },
+  "image_urls": {
+    "destinations": [
+      {
+        "url": "https://images.unsplash.com/photo-1711609110590-5ad5c4599e56?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1Mjh8MHwxfHNlYXJjaHwxfHxiYWxpJTIwdGVtcGxlJTIwc3Vuc2V0fGVufDB8fHx8MTc4MDQzNjg2OXww&ixlib=rb-4.1.0&q=85",
+        "category": "Bali Temple"
+      },
+      {
+        "url": "https://images.pexels.com/photos/1287455/pexels-photo-1287455.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "Maldives"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1504893524553-b855bce32c67?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHw0fHxpY2VsYW5kJTIwbmF0dXJlfGVufDB8fHx8MTc4MDQzNjg2OXww&ixlib=rb-4.1.0&q=85",
+        "category": "Iceland"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1583844056361-4418a8f2a985?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwxfHxhbWFsZmklMjBjb2FzdCUyMHBvc2l0YW5vfGVufDB8fHx8MTc4MDQzNjg2OXww&ixlib=rb-4.1.0&q=85",
+        "category": "Amalfi Coast"
+      },
+      {
+        "url": "https://images.pexels.com/photos/2600506/pexels-photo-2600506.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "category": "Switzerland Alps"
+      }
+    ],
+    "avatars": [
+      {
+        "url": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3ODA0MzY4NzZ8MA&ixlib=rb-4.1.0&q=85",
+        "category": "Creator 1"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwzfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3ODA0MzY4NzZ8MA&ixlib=rb-4.1.0&q=85",
+        "category": "Creator 2"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3ODA0MzY4NzZ8MA&ixlib=rb-4.1.0&q=85",
+        "category": "Creator 3"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Build this as a mobile-first web app using React and Tailwind. Limit the max-width to simulate a mobile app layout (e.g., max-w-md mx-auto h-screen overflow-hidden) unless building an actual React Native app.",
+    "Use Phosphor or Lucide icons for the bottom navigation and action buttons.",
+    "Ensure glassmorphism layers (surface_glass) have the correct backdrop-blur and a subtle 1px border (border-white/5) for crisp edges.",
+    "For the circular Trip Score gauge, utilize an SVG with stroke-dasharray, or an accessible Shadcn-styled radial bar.",
+    "Use framer-motion for spring animations, screen transitions, and stagger effects.",
+    "Every interactive element, button, and key piece of info MUST include a data-testid attribute in kebab-case."
+  ]
+}
