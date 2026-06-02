@@ -51,10 +51,24 @@ export default function TripDetail() {
     if (!trip || !remixNote.trim()) return;
     setRemixing(true);
     try {
-      const t = await api.remixTrip(trip.id, remixNote);
-      setRemixOpen(false);
-      setRemixNote("");
-      router.replace(`/trip/${t.id}`);
+      const job = await api.remixTripJob(trip.id, remixNote);
+      // poll up to ~3.5 min
+      for (let i = 0; i < 70; i++) {
+        await new Promise((r) => setTimeout(r, 3000));
+        try {
+          const status = await api.plannerJobStatus(job.job_id);
+          if (status.status === "done" && status.trip) {
+            setRemixOpen(false);
+            setRemixNote("");
+            router.replace(`/trip/${status.trip.id}`);
+            return;
+          }
+          if (status.status === "error") throw new Error(status.error ?? "Remix failed");
+        } catch (e) {
+          /* keep polling */
+        }
+      }
+      throw new Error("Remix timed out — try a shorter note");
     } catch (e) {
       console.warn(e);
     } finally {

@@ -99,11 +99,29 @@ export const api = {
       method: "POST",
       body: { trip_id: id, note },
     }),
+  remixTripJob: (id: string, note: string) =>
+    request<{ job_id: string; status: string }>(`/trips/${id}/remix/jobs`, {
+      method: "POST",
+      body: { trip_id: id, note },
+    }),
   plannerGenerate: (body: any) =>
     request<{ itinerary: any }>("/planner/generate", {
       method: "POST",
       body,
     }),
+  plannerCreateJob: (body: any) =>
+    request<{ job_id: string; status: string }>("/planner/jobs", {
+      method: "POST",
+      body,
+    }),
+  plannerJobStatus: (job_id: string) =>
+    request<{
+      id: string;
+      status: "running" | "done" | "error";
+      itinerary?: any;
+      trip?: any;
+      error?: string;
+    }>(`/planner/jobs/${job_id}`),
   invites: () =>
     request<{ remaining: number; used: number; total: number }>("/invites"),
   sendInvite: (email: string) =>

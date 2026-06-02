@@ -184,48 +184,53 @@ async def get_current_user(token: Optional[str] = Depends(oauth2_scheme)) -> dic
 
 
 # ---------------- AI Planner ----------------
-ITINERARY_SYSTEM_PROMPT = """You are Drift's elite AI travel advisor.
-You craft DETAILED multi-day itineraries that feel hand-built by a luxury travel concierge.
+ITINERARY_SYSTEM_PROMPT = """You are Drift's elite AI travel advisor — think Condé Nast Traveler concierge meets local-fixer.
+You craft EXTREMELY DETAILED multi-day itineraries that feel hand-built by an obsessive expert.
 
 CRITICAL RULES:
 - You NEVER mention booking, reservations, payments, hotels-as-bookings, or purchase steps. Drift is NOT a booking platform.
-- You DO recommend specific places, restaurants, hidden gems, transport options, costs (estimates), and local tips.
-- Each day MUST have Morning, Afternoon, Evening blocks. Put EXACTLY 2 activities per block (no more, no less).
-- Cap the trip at 5 days maximum, even if the user asks for more. If they ask for >5, return a 5-day "highlights" version.
-- Output STRICT JSON only. No prose outside JSON. No markdown code fences. Keep all string values concise.
+- You DO recommend specific real places (with neighborhoods), restaurants (real names), hidden gems, transport, costs, local tips.
+- Each day MUST have Morning, Afternoon, Evening blocks. Put 3 to 4 activities per block (NOT fewer, NOT more).
+- Honor the user's requested number of days exactly (1-7). Honor their budget (scale costs proportionally).
+- Output STRICT JSON only. No prose outside JSON. No markdown code fences.
 
-JSON schema:
+JSON schema (return ONE object, this exact shape):
 {
   "destination": str,
   "country": str,
-  "summary": str,                       // 1-2 sentence pitch (max 220 chars)
-  "trip_score": int,                    // 0-100 proprietary Drift score
-  "best_time": str,                     // short, max 60 chars
+  "summary": str,                       // 2-3 sentence cinematic pitch
+  "trip_score": int,                    // 0-100 Drift proprietary score
+  "best_time": str,                     // when to visit
   "total_estimated_cost_usd": int,
   "budget_breakdown": [
-    {"category": "Flights", "amount": int, "pct": int},
-    {"category": "Stay", "amount": int, "pct": int},
+    {"category": "Flights",    "amount": int, "pct": int},
+    {"category": "Stay",       "amount": int, "pct": int},
     {"category": "Activities", "amount": int, "pct": int},
-    {"category": "Food", "amount": int, "pct": int},
-    {"category": "Transport", "amount": int, "pct": int}
+    {"category": "Food",       "amount": int, "pct": int},
+    {"category": "Transport",  "amount": int, "pct": int}
   ],
   "days": [
     {
       "day": int,
-      "title": str,                     // short e.g. "Rome, Italy"
-      "morning":   [ {"time": "08:00", "activity": str, "detail": str, "cost_usd": int, "tip": str}, ... 2 items ],
-      "afternoon": [ ... 2 items ... ],
-      "evening":   [ ... 2 items ... ],
-      "transport": str,                 // 1 sentence
-      "hidden_gem": str,                // 1 sentence
-      "weather_tip": str,               // 1 short sentence
-      "alternative": str                // 1 short sentence
+      "title": str,                     // "Day theme — Neighborhood, City"
+      "morning":   [ {"time": "08:00", "activity": str, "detail": str, "cost_usd": int, "tip": str}, ... 3-4 items ],
+      "afternoon": [ ... 3-4 items ... ],
+      "evening":   [ ... 3-4 items ... ],
+      "transport": str,                 // how you move that day, with prices
+      "hidden_gem": str,                // 1 insider spot most tourists miss
+      "weather_tip": str,               // what to wear / pack that day
+      "alternative": str                // a swap if weather/closed
     }
   ],
-  "packing_tips": [str, str, str]       // exactly 3 short tips
+  "packing_tips": [str, str, str, str, str],   // exactly 5 specific tips
+  "local_phrases": [
+    {"phrase": str, "meaning": str},
+    {"phrase": str, "meaning": str},
+    {"phrase": str, "meaning": str}
+  ]
 }
 
-Keep every "detail" string under 140 chars, every "tip" under 100 chars. Be specific (real place names, neighborhoods). Return ONE JSON object only."""
+Be specific (real place names, real streets, real restaurant names). Keep "detail" strings under 180 chars, "tip" under 120 chars. Return ONE JSON object only."""
 
 
 async def call_claude_for_itinerary(user_prompt: str) -> Dict[str, Any]:
@@ -267,6 +272,8 @@ async def lifespan(app: FastAPI):
     await db.trips.create_index("user_id")
     await db.trips.create_index("id", unique=True)
     await db.feed.create_index("id", unique=True)
+    await db.planner_jobs.create_index("id", unique=True)
+    await db.planner_jobs.create_index("user_id")
     await seed_demo_data()
     logger.info("Drift backend started.")
     yield
@@ -665,12 +672,48 @@ class RemixBody(BaseModel):
     note: str
 
 
+async def _run_remix_job(job_id: str, user_id: str, base_trip: dict, note: str):
+    try:
+        base = base_trip.get("itinerary") or {}
+        prompt = (
+            f"Remix this existing itinerary based on the user's note. Keep the destination "
+            f"({base_trip['destination']}). USER NOTE: {note}. "
+            f"ORIGINAL_ITINERARY: {json.dumps(base)[:6000]}. "
+            f"Return the FULL remixed itinerary JSON in the same schema with 3-4 activities per slot."
+        )
+        new_itin = await call_claude_for_itinerary(prompt)
+        new_doc = {
+            **base_trip,
+            "id": str(uuid.uuid4()),
+            "user_id": user_id,
+            "bucket": "stolen",
+            "original_id": base_trip["id"],
+            "itinerary": new_itin,
+            "summary": new_itin.get("summary", base_trip.get("summary", "")),
+            "score": new_itin.get("trip_score", base_trip.get("score", 90)),
+            "created_at": utcnow_iso(),
+        }
+        new_doc.pop("_id", None)
+        await db.trips.insert_one(new_doc)
+        new_doc.pop("_id", None)
+        await db.planner_jobs.update_one(
+            {"id": job_id},
+            {"$set": {"status": "done", "trip": new_doc, "finished_at": utcnow_iso()}},
+        )
+    except Exception as e:
+        logger.exception("remix job %s failed", job_id)
+        await db.planner_jobs.update_one(
+            {"id": job_id},
+            {"$set": {"status": "error", "error": str(e)[:400], "finished_at": utcnow_iso()}},
+        )
+
+
 @api.post("/trips/{trip_id}/remix")
 async def remix_trip(trip_id: str, body: RemixBody, user=Depends(get_current_user)):
+    """Sync remix — kept for backwards compatibility."""
     trip = await db.trips.find_one({"id": trip_id, "user_id": user["id"]}, {"_id": 0})
     if not trip:
         raise HTTPException(404, "Trip not found")
-    # Use Claude to remix the itinerary based on the note
     base = trip.get("itinerary") or {}
     prompt = (
         f"Remix this existing itinerary based on the user's note. Keep the destination "
@@ -699,32 +742,95 @@ async def remix_trip(trip_id: str, body: RemixBody, user=Depends(get_current_use
     return new_doc
 
 
+@api.post("/trips/{trip_id}/remix/jobs")
+async def remix_create_job(trip_id: str, body: RemixBody, user=Depends(get_current_user)):
+    trip = await db.trips.find_one({"id": trip_id, "user_id": user["id"]}, {"_id": 0})
+    if not trip:
+        raise HTTPException(404, "Trip not found")
+    job_id = str(uuid.uuid4())
+    await db.planner_jobs.insert_one(
+        {
+            "id": job_id,
+            "user_id": user["id"],
+            "kind": "remix",
+            "status": "running",
+            "created_at": utcnow_iso(),
+        }
+    )
+    asyncio.create_task(_run_remix_job(job_id, user["id"], trip, body.note))
+    return {"job_id": job_id, "status": "running"}
+
+
 # --- AI Planner
-@api.post("/planner/generate")
-async def planner_generate(body: PlannerRequest, user=Depends(get_current_user)):
+async def _run_planner_job(job_id: str, user_id: str, user_prompt: str):
+    try:
+        itinerary = await call_claude_for_itinerary(user_prompt)
+        await db.planner_jobs.update_one(
+            {"id": job_id},
+            {"$set": {"status": "done", "itinerary": itinerary, "finished_at": utcnow_iso()}},
+        )
+    except Exception as e:
+        logger.exception("planner job %s failed", job_id)
+        await db.planner_jobs.update_one(
+            {"id": job_id},
+            {"$set": {"status": "error", "error": str(e)[:400], "finished_at": utcnow_iso()}},
+        )
+
+
+def _build_planner_prompt(body: PlannerRequest, user: dict) -> str:
     prefs = user.get("preferences", {})
     interest_str = ", ".join(prefs.get("interests", [])) or "general adventure"
     budget = body.budget or prefs.get("budget") or "$1,500-$3,000"
     travelers = body.travelers or 2
-    # Cap days to 5 to keep Claude latency under ingress timeout (~90s headroom)
     requested_days = body.days or 5
-    days = min(max(requested_days, 1), 5)
-
-    user_prompt = (
+    days = min(max(requested_days, 1), 7)
+    return (
         f"USER REQUEST: {body.prompt}\n"
         f"PROFILE: Travels {prefs.get('travel_frequency', 'a few times a year')}, "
         f"companions: {prefs.get('companions', 'Friends')}, "
         f"interests: {interest_str}.\n"
-        f"CONSTRAINTS: {days} days, ~{travelers} travelers, budget {budget}. "
-        f"Generate a CINEMATIC, DETAILED itinerary in the strict JSON schema."
+        f"CONSTRAINTS: EXACTLY {days} days, ~{travelers} travelers, budget {budget}. "
+        f"Generate a CINEMATIC, EXTREMELY DETAILED itinerary in the strict JSON schema "
+        f"with 3-4 activities per Morning/Afternoon/Evening per day."
     )
 
+
+@api.post("/planner/jobs")
+async def planner_create_job(body: PlannerRequest, user=Depends(get_current_user)):
+    """Start an async planner job. Returns immediately with a job id."""
+    job_id = str(uuid.uuid4())
+    user_prompt = _build_planner_prompt(body, user)
+    await db.planner_jobs.insert_one(
+        {
+            "id": job_id,
+            "user_id": user["id"],
+            "status": "running",
+            "prompt": body.prompt,
+            "created_at": utcnow_iso(),
+        }
+    )
+    # Fire-and-forget background task
+    asyncio.create_task(_run_planner_job(job_id, user["id"], user_prompt))
+    return {"job_id": job_id, "status": "running"}
+
+
+@api.get("/planner/jobs/{job_id}")
+async def planner_job_status(job_id: str, user=Depends(get_current_user)):
+    job = await db.planner_jobs.find_one({"id": job_id, "user_id": user["id"]}, {"_id": 0})
+    if not job:
+        raise HTTPException(404, "Job not found")
+    return job
+
+
+@api.post("/planner/generate")
+async def planner_generate(body: PlannerRequest, user=Depends(get_current_user)):
+    """Synchronous generation — kept for backwards compatibility / testing."""
+    user_prompt = _build_planner_prompt(body, user)
     try:
         itinerary = await call_claude_for_itinerary(user_prompt)
     except Exception as e:
         logger.exception("planner generation failed")
         raise HTTPException(500, f"AI generation failed: {e}")
-
     return {"itinerary": itinerary}
 
 
