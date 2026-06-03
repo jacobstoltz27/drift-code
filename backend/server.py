@@ -258,20 +258,62 @@ async def call_claude_for_itinerary(user_prompt: str) -> Dict[str, Any]:
 
     resp = await chat.send_message(UserMessage(text=user_prompt))
     text = resp if isinstance(resp, str) else getattr(resp, "content", str(resp))
-    # Strip any accidental code fences
     cleaned = text.strip()
     if cleaned.startswith("```"):
         cleaned = cleaned.strip("`")
         if cleaned.startswith("json"):
             cleaned = cleaned[4:]
     cleaned = cleaned.strip()
-    # Find outermost JSON braces
     start = cleaned.find("{")
     end = cleaned.rfind("}")
     if start == -1 or end == -1:
         raise ValueError(f"Claude returned no JSON: {text[:200]}")
     payload = cleaned[start : end + 1]
     return json.loads(payload)
+
+
+async def call_claude_for_days_chunk(
+    destination: str,
+    country: Optional[str],
+    interests: str,
+    budget: str,
+    travelers: int,
+    start_day: int,
+    end_day: int,
+    overall_context: str,
+) -> List[Dict[str, Any]]:
+    """Generate only the `days` array for a contiguous chunk (e.g. days 8-14).
+    Returns a list of day objects with the same schema as the main itinerary."""
+    from emergentintegrations.llm.chat import LlmChat, UserMessage
+
+    system = (
+        "You generate ONLY a JSON array of days for a Drift itinerary. "
+        "Each day MUST have Morning/Afternoon/Evening blocks with EXACTLY 4 timed activities each "
+        "(time, activity, detail, travel_time, cost_usd, tip). Each day also has transport, hidden_gem, "
+        "weather_tip, alternative. Be specific (real place names). Return STRICT JSON: a top-level "
+        '{"days": [ ... ]} object. NO prose, NO code fences.'
+    )
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"drift-planner-chunk-{uuid.uuid4()}",
+        system_message=system,
+    ).with_model("anthropic", "claude-sonnet-4-5-20250929")
+    prompt = (
+        f"Destination: {destination}, {country or ''}. Travelers: {travelers}. "
+        f"Budget: {budget}. Interests: {interests}. Context: {overall_context}. "
+        f"Generate days {start_day} through {end_day} (numbered exactly that way). "
+        f"Return only {{\"days\": [...]}}."
+    )
+    resp = await chat.send_message(UserMessage(text=prompt))
+    text = resp if isinstance(resp, str) else getattr(resp, "content", str(resp))
+    cleaned = text.strip().strip("`")
+    if cleaned.startswith("json"):
+        cleaned = cleaned[4:].strip()
+    s, e = cleaned.find("{"), cleaned.rfind("}")
+    if s == -1 or e == -1:
+        raise ValueError(f"chunk returned no JSON: {text[:200]}")
+    obj = json.loads(cleaned[s : e + 1])
+    return obj.get("days", [])
 
 
 # ---------------- App lifecycle ----------------
@@ -522,13 +564,89 @@ DEMO_FOLLOWING_FEED = [
 ]
 
 
+def _make_template_itinerary(dest: str, country: str, days: int, score: int, image_url: str) -> Dict[str, Any]:
+    """Build a default, fully-populated itinerary skeleton for a seeded feed post.
+    Users can Remix-with-AI to get a richer Claude-generated version."""
+    activity_pool = {
+        "morning": [
+            ("08:00", "Sunrise coffee", "Start at a local roastery with the city slowly waking up.", 8, "Order whatever the barista is brewing — it's never on the menu."),
+            ("09:30", "Old town walk", "Wander the historic core before crowds arrive.", 0, "Bring a refillable bottle — fountains in the old town are drinkable."),
+            ("11:00", "Signature attraction", "The icon of the trip — go early to beat lines.", 18, "Side entrance on the east side is usually empty."),
+            ("12:30", "Market lunch", "Eat what the locals eat at the central market.", 14, "Look for the stall with the longest queue."),
+        ],
+        "afternoon": [
+            ("14:00", "Cultural site", "Museum or gallery that locals actually visit.", 16, "Free entry on the first Sunday — otherwise the cafe is worth the visit alone."),
+            ("15:30", "Scenic viewpoint", "Hike up for the panorama everyone misses.", 0, "Late afternoon light is best for photos."),
+            ("17:00", "Boutique browse", "Independent shops in a creative neighborhood.", 0, "Most close by 19:00 — go now."),
+            ("18:00", "Sunset spot", "Grab a glass of wine and stay till the lights come on.", 12, "Tip generously — you'll get a longer pour."),
+        ],
+        "evening": [
+            ("20:00", "Dinner at a local favorite", "A small plates spot loved by chefs on their nights off.", 38, "Order the off-menu special — just ask."),
+            ("21:30", "Live music or bar", "Intimate venue with the city's best local musicians.", 14, "Cash is faster than card at the door."),
+            ("23:00", "Late-night walk", "The illuminated landmarks at night, almost empty.", 0, "Wear layers — temperature drops fast."),
+            ("23:45", "Nightcap", "Cocktail bar tucked behind a nondescript door.", 18, "Ask the bartender for their 'off-list' creation."),
+        ],
+    }
+    days_arr: List[Dict[str, Any]] = []
+    for i in range(1, days + 1):
+        days_arr.append({
+            "day": i,
+            "title": f"Day {i} — {dest.split(',')[0]}",
+            "morning":   [{"time": t, "activity": a, "detail": d, "travel_time": "15 min walk", "cost_usd": c, "tip": tip} for (t, a, d, c, tip) in activity_pool["morning"]],
+            "afternoon": [{"time": t, "activity": a, "detail": d, "travel_time": "10 min metro", "cost_usd": c, "tip": tip} for (t, a, d, c, tip) in activity_pool["afternoon"]],
+            "evening":   [{"time": t, "activity": a, "detail": d, "travel_time": "5 min walk", "cost_usd": c, "tip": tip} for (t, a, d, c, tip) in activity_pool["evening"]],
+            "transport": "Mostly walking + 24-hour metro pass ($8). Taxis $6-$10 in-center.",
+            "hidden_gem": f"A small rooftop bar behind the main square in {dest.split(',')[0]} — locals only.",
+            "weather_tip": "Layered outfits work — afternoons get warm, evenings cool by the water.",
+            "alternative": "If it rains: swap the viewpoint for the contemporary art museum.",
+        })
+    total = max(800, days * 220)
+    return {
+        "destination": dest,
+        "country": country,
+        "summary": f"A {days}-day cinematic loop through {dest}, balancing icons with under-the-radar locals' favorites. Remix with AI for a fully personalized version.",
+        "trip_score": score,
+        "best_time": "Shoulder season (Apr-May or Sep-Oct) for great weather and fewer crowds.",
+        "total_estimated_cost_usd": total,
+        "budget_breakdown": [
+            {"category": "Flights",    "amount": int(total * 0.33), "pct": 33},
+            {"category": "Stay",       "amount": int(total * 0.30), "pct": 30},
+            {"category": "Activities", "amount": int(total * 0.15), "pct": 15},
+            {"category": "Food",       "amount": int(total * 0.16), "pct": 16},
+            {"category": "Transport",  "amount": int(total * 0.06),  "pct": 6},
+        ],
+        "days": days_arr,
+        "packing_tips": [
+            "Lightweight rain shell — the weather flips fast.",
+            "Comfortable walking shoes you've already broken in.",
+            "A power adapter that handles your home plug type.",
+            "Small cross-body bag for cash + passport.",
+            "Reusable water bottle (most tap water is fine).",
+        ],
+        "local_phrases": [
+            {"phrase": "Hello", "meaning": "Universal greeting"},
+            {"phrase": "Thank you", "meaning": "Always appreciated"},
+            {"phrase": "Where is...?", "meaning": "Lifesaver phrase"},
+        ],
+    }
+
+
 async def seed_demo_data():
     # Seed following feed
     for item in DEMO_FOLLOWING_FEED:
         await db.following_feed.update_one({"id": item["id"]}, {"$setOnInsert": item}, upsert=True)
     # Seed feed
     for item in DEMO_FEED:
-        await db.feed.update_one({"id": item["id"]}, {"$setOnInsert": item}, upsert=True)
+        item_with_itin = dict(item)
+        if "itinerary" not in item_with_itin:
+            item_with_itin["itinerary"] = _make_template_itinerary(
+                dest=item["destination"],
+                country=item["destination"].split(",")[-1].strip(),
+                days=item["days"],
+                score=item["score"],
+                image_url=item["image_url"],
+            )
+        await db.feed.update_one({"id": item["id"]}, {"$set": item_with_itin}, upsert=True)
 
     # Seed demo user
     demo_email = os.environ.get("DEMO_EMAIL", "demo@drift.app")
@@ -578,12 +696,27 @@ async def seed_demo_data():
     count = await db.trips.count_documents({"user_id": existing_id, "bucket": "upcoming"})
     if count == 0:
         for t in DEMO_UPCOMING:
+            days = 7
+            try:
+                from datetime import datetime as _dt
+                sd = _dt.fromisoformat(t["start_date"])
+                ed = _dt.fromisoformat(t["end_date"])
+                days = max(1, (ed - sd).days)
+            except Exception:
+                pass
             await db.trips.insert_one(
                 {
                     **t,
                     "id": str(uuid.uuid4()),
                     "user_id": existing_id,
                     "created_at": utcnow_iso(),
+                    "itinerary": _make_template_itinerary(
+                        dest=t["destination"],
+                        country=t.get("country") or t["destination"].split(",")[-1].strip(),
+                        days=days,
+                        score=t.get("score", 90),
+                        image_url=t["image_url"],
+                    ),
                 }
             )
 
@@ -926,8 +1059,36 @@ async def remix_create_job(trip_id: str, body: RemixBody, user=Depends(get_curre
 
 # --- AI Planner
 async def _run_planner_job(job_id: str, user_id: str, user_prompt: str):
+    """If days <= 7, single call. Otherwise generate first 7 days, then a chunk of remaining days, merge."""
     try:
-        itinerary = await call_claude_for_itinerary(user_prompt)
+        import re
+        m = re.search(r"EXACTLY (\d+) days", user_prompt)
+        requested_days = int(m.group(1)) if m else 5
+        requested_days = min(max(requested_days, 1), 14)
+
+        if requested_days <= 7:
+            itinerary = await call_claude_for_itinerary(user_prompt)
+        else:
+            first_prompt = user_prompt.replace(
+                f"EXACTLY {requested_days} days", "EXACTLY 7 days"
+            ) + (
+                f"\nNOTE: This is part 1 of a {requested_days}-day trip. Generate the "
+                f"FULL JSON shape but ONLY days 1-7. total_estimated_cost_usd and "
+                f"budget_breakdown should represent the FULL {requested_days}-day budget."
+            )
+            itinerary = await call_claude_for_itinerary(first_prompt)
+            extra_days = await call_claude_for_days_chunk(
+                destination=itinerary.get("destination", ""),
+                country=itinerary.get("country"),
+                interests="varied",
+                budget="proportional to overall",
+                travelers=2,
+                start_day=8,
+                end_day=requested_days,
+                overall_context=itinerary.get("summary", "")[:200],
+            )
+            itinerary["days"] = (itinerary.get("days") or []) + extra_days
+
         await db.planner_jobs.update_one(
             {"id": job_id},
             {"$set": {"status": "done", "itinerary": itinerary, "finished_at": utcnow_iso()}},
@@ -946,15 +1107,15 @@ def _build_planner_prompt(body: PlannerRequest, user: dict) -> str:
     budget = body.budget or prefs.get("budget") or "$1,500-$3,000"
     travelers = body.travelers or 2
     requested_days = body.days or 5
-    days = min(max(requested_days, 1), 7)
+    days = min(max(requested_days, 1), 14)
     return (
         f"USER REQUEST: {body.prompt}\n"
         f"PROFILE: Travels {prefs.get('travel_frequency', 'a few times a year')}, "
         f"companions: {prefs.get('companions', 'Friends')}, "
         f"interests: {interest_str}.\n"
         f"CONSTRAINTS: EXACTLY {days} days, ~{travelers} travelers, budget {budget}. "
-        f"Generate a CINEMATIC, EXTREMELY DETAILED itinerary in the strict JSON schema "
-        f"with 3-4 activities per Morning/Afternoon/Evening per day."
+        f"Generate an EXHAUSTIVELY DETAILED itinerary in the strict JSON schema "
+        f"with 4 activities per Morning/Afternoon/Evening per day."
     )
 
 

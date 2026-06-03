@@ -1,136 +1,124 @@
-// Schedule a trip into Upcoming — date picker modal
-import React, { useState } from "react";
+// Schedule a trip into Upcoming — premium native calendar
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Platform,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, radii } from "@/src/theme";
 import { PrimaryButton } from "@/src/components/ui";
+import { RangeCalendar } from "@/src/components/calendar";
 
 const toISO = (d: Date) => d.toISOString().slice(0, 10);
-const fmt = (d: Date) =>
-  d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+const fmt = (d: Date | null) =>
+  d
+    ? d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    : "Pick a date";
+
+const parseISO = (s?: string | null): Date | null => {
+  if (!s) return null;
+  const d = new Date(s + "T00:00:00");
+  return isNaN(d.getTime()) ? null : d;
+};
 
 export const ScheduleModal = ({
   visible,
   onClose,
   onConfirm,
   busy,
+  initialStart,
+  initialEnd,
+  title = "Add to Upcoming Trips",
 }: {
   visible: boolean;
   onClose: () => void;
   onConfirm: (startISO: string, endISO: string) => void | Promise<void>;
   busy?: boolean;
+  initialStart?: string | null;
+  initialEnd?: string | null;
+  title?: string;
 }) => {
-  const today = new Date();
-  const inOneWeek = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-  const inTwoWeeks = new Date(Date.now() + 37 * 24 * 60 * 60 * 1000);
-  const [start, setStart] = useState<Date>(inOneWeek);
-  const [end, setEnd] = useState<Date>(inTwoWeeks);
-  const [editing, setEditing] = useState<null | "start" | "end">(null);
+  const [start, setStart] = useState<Date | null>(null);
+  const [end, setEnd] = useState<Date | null>(null);
 
-  const isWebOrAndroid = Platform.OS !== "ios";
-
-  // For web/Android show inline picker on tap; for iOS use spinner inline.
-  const onChangeStart = (event: any, date?: Date) => {
-    if (isWebOrAndroid) setEditing(null);
-    if (date) {
-      setStart(date);
-      if (end < date) {
-        const d = new Date(date);
-        d.setDate(d.getDate() + 7);
-        setEnd(d);
-      }
+  // Reset selection whenever modal opens
+  useEffect(() => {
+    if (visible) {
+      setStart(parseISO(initialStart));
+      setEnd(parseISO(initialEnd));
     }
-  };
-  const onChangeEnd = (event: any, date?: Date) => {
-    if (isWebOrAndroid) setEditing(null);
-    if (date) setEnd(date);
-  };
+  }, [visible, initialStart, initialEnd]);
+
+  const days = start && end ? Math.max(1, Math.round((end.getTime() - start.getTime()) / 86400000) + 1) : 0;
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={styles.backdrop}>
         <SafeAreaView edges={["bottom"]} style={styles.sheet}>
-          <View style={styles.header}>
-            <View>
-              <Text style={styles.eyebrow}>SCHEDULE</Text>
-              <Text style={styles.title}>Add to Upcoming Trips</Text>
+          <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+            <View style={styles.header}>
+              <View>
+                <Text style={styles.eyebrow}>SCHEDULE</Text>
+                <Text style={styles.title}>{title}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={onClose}
+                style={styles.closeBtn}
+                testID="schedule-close"
+              >
+                <Ionicons name="close" size={20} color="#fff" />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={onClose}
-              style={styles.closeBtn}
-              testID="schedule-close"
-            >
-              <Ionicons name="close" size={20} color="#fff" />
-            </TouchableOpacity>
-          </View>
 
-          <Text style={styles.sub}>
-            Pick your travel dates. We'll show a live countdown on Home.
-          </Text>
-
-          <View style={styles.row}>
-            <TouchableOpacity
-              style={[styles.dateCard, editing === "start" && styles.dateCardActive]}
-              onPress={() => setEditing(editing === "start" ? null : "start")}
-              testID="schedule-start-button"
-            >
-              <Text style={styles.dateLabel}>Start</Text>
-              <Text style={styles.dateValue}>{fmt(start)}</Text>
-            </TouchableOpacity>
-            <View style={styles.arrow}>
-              <Ionicons name="arrow-forward" size={16} color={colors.textMuted} />
+            <View style={styles.row}>
+              <View style={styles.dateChip}>
+                <Text style={styles.dateLabel}>START</Text>
+                <Text style={styles.dateValue}>{fmt(start)}</Text>
+              </View>
+              <View style={styles.arrow}>
+                <Ionicons name="arrow-forward" size={16} color={colors.textMuted} />
+              </View>
+              <View style={styles.dateChip}>
+                <Text style={styles.dateLabel}>END</Text>
+                <Text style={styles.dateValue}>{fmt(end)}</Text>
+              </View>
             </View>
-            <TouchableOpacity
-              style={[styles.dateCard, editing === "end" && styles.dateCardActive]}
-              onPress={() => setEditing(editing === "end" ? null : "end")}
-              testID="schedule-end-button"
-            >
-              <Text style={styles.dateLabel}>End</Text>
-              <Text style={styles.dateValue}>{fmt(end)}</Text>
-            </TouchableOpacity>
-          </View>
 
-          {editing === "start" ? (
-            <DateTimePicker
-              value={start}
-              mode="date"
-              minimumDate={today}
-              display={Platform.OS === "ios" ? "spinner" : "default"}
-              onChange={onChangeStart}
-              themeVariant="dark"
-              testID="schedule-start-picker"
-            />
-          ) : null}
-          {editing === "end" ? (
-            <DateTimePicker
-              value={end}
-              mode="date"
-              minimumDate={start}
-              display={Platform.OS === "ios" ? "spinner" : "default"}
-              onChange={onChangeEnd}
-              themeVariant="dark"
-              testID="schedule-end-picker"
-            />
-          ) : null}
+            {start && end ? (
+              <View style={styles.summary}>
+                <Ionicons name="airplane" size={14} color={colors.accent} />
+                <Text style={styles.summaryText}>
+                  {days} {days === 1 ? "day" : "days"} · live countdown will appear on Home
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.summary}>
+                <Ionicons name="calendar-outline" size={14} color={colors.textMuted} />
+                <Text style={[styles.summaryText, { color: colors.textMuted }]}>
+                  Tap a start date, then an end date.
+                </Text>
+              </View>
+            )}
 
-          <View style={{ marginTop: 12 }}>
-            <PrimaryButton
-              label={busy ? "Saving..." : "Save to Upcoming"}
-              onPress={() => onConfirm(toISO(start), toISO(end))}
-              disabled={!!busy || end < start}
-              testID="schedule-confirm"
-              icon={<Ionicons name="airplane" size={14} color="#fff" />}
-            />
-          </View>
+            <View style={{ marginTop: 14 }}>
+              <RangeCalendar start={start} end={end} onChange={(s, e) => { setStart(s); setEnd(e); }} />
+            </View>
+
+            <View style={{ marginTop: 14 }}>
+              <PrimaryButton
+                label={busy ? "Saving..." : "Save to Upcoming"}
+                onPress={() => start && end && onConfirm(toISO(start), toISO(end))}
+                disabled={!start || !end || !!busy}
+                testID="schedule-confirm"
+                icon={<Ionicons name="airplane" size={14} color="#fff" />}
+              />
+            </View>
+          </ScrollView>
         </SafeAreaView>
       </View>
     </Modal>
@@ -151,7 +139,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     paddingHorizontal: 20,
     paddingTop: 16,
-    paddingBottom: 12,
+    maxHeight: "92%",
   },
   header: {
     flexDirection: "row",
@@ -165,7 +153,6 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
   },
   title: { color: "#fff", fontSize: 22, fontWeight: "900", marginTop: 4 },
-  sub: { color: colors.textMuted, fontSize: 13, marginTop: 6 },
   closeBtn: {
     width: 36,
     height: 36,
@@ -182,22 +169,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 16,
   },
-  dateCard: {
+  dateChip: {
     flex: 1,
-    padding: 16,
+    padding: 14,
     borderRadius: radii.md,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
   },
-  dateCardActive: { borderColor: colors.accent, backgroundColor: colors.accentSoft },
   dateLabel: {
     color: colors.textMuted,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: "900",
     letterSpacing: 1,
     marginBottom: 4,
   },
-  dateValue: { color: "#fff", fontSize: 16, fontWeight: "800" },
+  dateValue: { color: "#fff", fontSize: 15, fontWeight: "800" },
   arrow: { alignItems: "center", justifyContent: "center" },
+  summary: {
+    marginTop: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    backgroundColor: colors.accentSoft,
+    borderRadius: radii.md,
+  },
+  summaryText: { color: colors.text, fontSize: 12, fontWeight: "700", flex: 1 },
 });

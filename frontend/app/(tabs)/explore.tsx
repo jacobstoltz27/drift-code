@@ -1,4 +1,4 @@
-// Explore — Discovery hub: For You + multiple curated sections
+// Explore — single scrolling discovery experience (no chip tabs, no AI widget)
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   View,
@@ -18,8 +18,6 @@ import { api, useAuth } from "@/src/api/client";
 import { colors, radii } from "@/src/theme";
 import { Avatar, TripScoreBadge, SectionHeader } from "@/src/components/ui";
 
-const FILTERS = ["All", "Destinations", "Itineraries", "Creators", "Guides"];
-
 const SECTIONS: { title: string; predicate: (p: any) => boolean }[] = [
   { title: "Trending Trips", predicate: () => true },
   { title: "Hidden Gems", predicate: (p) => (p.tags ?? []).includes("Hidden Gems") },
@@ -32,7 +30,6 @@ export default function ExploreScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState("All");
   const [feed, setFeed] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -43,9 +40,7 @@ export default function ExploreScreen() {
     } catch {}
   }, []);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  useEffect(() => { load(); }, [load]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -53,16 +48,13 @@ export default function ExploreScreen() {
     setRefreshing(false);
   };
 
-  // For You: posts that match user's interest tags
   const forYou = useMemo(() => {
     const interests = new Set<string>(
       (user?.preferences?.interests ?? []).map((s: string) => s.toLowerCase()),
     );
-    if (!interests.size) return feed.slice(0, 4);
+    if (!interests.size) return feed.slice(0, 6);
     return feed
-      .filter((p) =>
-        (p.tags ?? []).some((t: string) => interests.has(t.toLowerCase())),
-      )
+      .filter((p) => (p.tags ?? []).some((t: string) => interests.has(t.toLowerCase())))
       .slice(0, 6);
   }, [feed, user]);
 
@@ -77,7 +69,6 @@ export default function ExploreScreen() {
     );
   };
 
-  // Popular creators derived from feed
   const creators = useMemo(() => {
     const map = new Map<string, any>();
     feed.forEach((p) => {
@@ -90,9 +81,31 @@ export default function ExploreScreen() {
     return Array.from(map.values()).sort((a, b) => b.saves - a.saves).slice(0, 8);
   }, [feed]);
 
+  const SectionRow = ({ title, list }: { title: string; list: any[] }) => {
+    const f = filtered(list);
+    if (!f.length) return null;
+    return (
+      <>
+        <SectionHeader title={title} />
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
+        >
+          {f.map((p) => (
+            <HeroTile
+              key={p.id}
+              post={p}
+              onPress={() => router.push(`/feed/${p.id}`)}
+            />
+          ))}
+        </ScrollView>
+      </>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.wrap} edges={["top"]}>
-      {/* Sticky header */}
       <View style={styles.header}>
         <Text style={styles.title}>Explore</Text>
         <Text style={styles.sub}>Discover trips, creators & hidden gems.</Text>
@@ -106,84 +119,22 @@ export default function ExploreScreen() {
             onChangeText={setQuery}
             testID="explore-search-input"
           />
-        </View>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chipRow}
-        >
-          {FILTERS.map((c) => (
-            <TouchableOpacity
-              key={c}
-              onPress={() => setFilter(c)}
-              style={[styles.chip, filter === c && styles.chipActive]}
-              testID={`explore-filter-${c.toLowerCase()}`}
-            >
-              <Text style={[styles.chipText, filter === c && styles.chipTextActive]}>
-                {c}
-              </Text>
+          {query ? (
+            <TouchableOpacity onPress={() => setQuery("")} testID="explore-search-clear">
+              <Ionicons name="close-circle" size={18} color={colors.textMuted} />
             </TouchableOpacity>
-          ))}
-        </ScrollView>
+          ) : null}
+        </View>
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingTop: 8, paddingBottom: 130 }}
         refreshControl={
           <RefreshControl tintColor={colors.accent} refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {/* AI Discovery */}
-        <View style={styles.aiCard} testID="explore-ai-prompts">
-          <LinearGradient
-            colors={["rgba(91,103,255,0.22)", "rgba(20,184,166,0.14)"]}
-            style={StyleSheet.absoluteFillObject}
-          />
-          <View style={styles.aiHeader}>
-            <Ionicons name="sparkles" size={18} color={colors.accent} />
-            <Text style={styles.aiTitle}>AI Destination Discovery</Text>
-          </View>
-          {[
-            "Find me somewhere peaceful",
-            "Weekend trip under $1,500",
-            "Luxury beach escape",
-          ].map((p) => (
-            <TouchableOpacity
-              key={p}
-              style={styles.aiPrompt}
-              onPress={() =>
-                router.push({ pathname: "/(tabs)/planner", params: { prompt: p } })
-              }
-              testID={`ai-prompt-${p.split(" ")[0].toLowerCase()}`}
-            >
-              <Text style={styles.aiPromptText}>{p}</Text>
-              <Ionicons name="arrow-forward" size={16} color={colors.accent} />
-            </TouchableOpacity>
-          ))}
-        </View>
+        <SectionRow title="For You" list={forYou} />
 
-        {/* For You */}
-        {forYou.length > 0 ? (
-          <>
-            <SectionHeader title="For You" />
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
-            >
-              {filtered(forYou).map((p) => (
-                <HeroTile
-                  key={p.id}
-                  post={p}
-                  onPress={() => router.push(`/feed/${p.id}`)}
-                />
-              ))}
-            </ScrollView>
-          </>
-        ) : null}
-
-        {/* Popular Creators */}
         <SectionHeader title="Popular Creators" />
         <ScrollView
           horizontal
@@ -193,44 +144,18 @@ export default function ExploreScreen() {
           {creators.map((c) => (
             <View key={c.id} style={styles.creatorCard} testID={`creator-${c.id}`}>
               <Avatar uri={c.avatar} size={56} />
-              <Text style={styles.creatorName} numberOfLines={1}>
-                {c.name}
-              </Text>
-              <Text style={styles.creatorHandle} numberOfLines={1}>
-                {c.handle}
-              </Text>
+              <Text style={styles.creatorName} numberOfLines={1}>{c.name}</Text>
+              <Text style={styles.creatorHandle} numberOfLines={1}>{c.handle}</Text>
               <View style={styles.creatorStat}>
-                <Text style={styles.creatorStatText}>
-                  {c.posts} {c.posts === 1 ? "trip" : "trips"}
-                </Text>
+                <Text style={styles.creatorStatText}>{c.posts} {c.posts === 1 ? "trip" : "trips"}</Text>
               </View>
             </View>
           ))}
         </ScrollView>
 
-        {/* Discovery sections */}
-        {SECTIONS.map((sec) => {
-          const list = filtered(feed.filter(sec.predicate));
-          if (!list.length) return null;
-          return (
-            <View key={sec.title}>
-              <SectionHeader title={sec.title} />
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
-              >
-                {list.map((p) => (
-                  <HeroTile
-                    key={p.id}
-                    post={p}
-                    onPress={() => router.push(`/feed/${p.id}`)}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-          );
-        })}
+        {SECTIONS.map((sec) => (
+          <SectionRow key={sec.title} title={sec.title} list={feed.filter(sec.predicate)} />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -252,19 +177,15 @@ const HeroTile = ({ post, onPress }: { post: any; onPress?: () => void }) => (
       <TripScoreBadge score={post.score} size={40} />
     </View>
     <View style={styles.heroTileBottom}>
-      <Text style={styles.heroDest} numberOfLines={1}>
-        {post.destination}
-      </Text>
-      <Text style={styles.heroMeta} numberOfLines={1}>
-        {post.title} · {post.days}d
-      </Text>
+      <Text style={styles.heroDest} numberOfLines={1}>{post.destination}</Text>
+      <Text style={styles.heroMeta} numberOfLines={1}>{post.title} · {post.days}d</Text>
     </View>
   </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: colors.background },
-  header: { paddingHorizontal: 20, paddingTop: 4, paddingBottom: 4 },
+  header: { paddingHorizontal: 20, paddingTop: 4 },
   title: { color: "#fff", fontSize: 28, fontWeight: "900", letterSpacing: -0.5, marginTop: 6 },
   sub: { color: colors.textMuted, fontSize: 13, marginTop: 4, fontWeight: "600" },
   search: {
@@ -275,48 +196,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     height: 46,
     marginTop: 14,
+    marginBottom: 6,
     gap: 8,
     borderWidth: 1,
     borderColor: colors.border,
   },
   searchInput: { flex: 1, color: "#fff", fontSize: 14 },
-  chipRow: { gap: 8, paddingVertical: 14, paddingRight: 8 },
-  chip: {
-    paddingHorizontal: 14,
-    height: 36,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.glass,
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-  },
-  chipActive: { backgroundColor: colors.accent, borderColor: colors.accent },
-  chipText: { color: colors.textMuted, fontWeight: "600", fontSize: 13 },
-  chipTextActive: { color: "#fff", fontWeight: "800" },
-  aiCard: {
-    marginHorizontal: 20,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 16,
-    overflow: "hidden",
-    marginTop: 4,
-  },
-  aiHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 12 },
-  aiTitle: { color: "#fff", fontSize: 15, fontWeight: "800" },
-  aiPrompt: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    backgroundColor: "rgba(7,11,20,0.4)",
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  aiPromptText: { color: "#fff", fontSize: 13, fontWeight: "600" },
   heroTile: {
     width: 220,
     height: 280,

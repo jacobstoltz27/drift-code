@@ -181,7 +181,14 @@ export default function TripDetail() {
                 onPress={() => setScheduleOpen(true)}
                 testID="action-schedule"
               />
-            ) : null}
+            ) : (
+              <ActionPill
+                icon="calendar-outline"
+                label="Edit dates"
+                onPress={() => setScheduleOpen(true)}
+                testID="action-edit-dates"
+              />
+            )}
             <ActionPill
               icon="sparkles-outline"
               label="Steal"
@@ -254,6 +261,9 @@ export default function TripDetail() {
         onClose={() => setScheduleOpen(false)}
         onConfirm={schedule}
         busy={scheduling}
+        initialStart={trip.start_date}
+        initialEnd={trip.end_date}
+        title={trip.bucket === "upcoming" ? "Edit travel dates" : "Add to Upcoming Trips"}
       />
     </View>
   );

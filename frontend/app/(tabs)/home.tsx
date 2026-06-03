@@ -18,6 +18,7 @@ import { Avatar, SectionHeader } from "@/src/components/ui";
 import { UpcomingTripCard } from "@/src/components/trip-cards";
 import { InviteUnlockCard } from "@/src/components/invite-card";
 import { FollowingPostCard } from "@/src/components/following-post";
+import { PaywallModal } from "@/src/components/paywall-modal";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -25,6 +26,9 @@ export default function HomeScreen() {
   const [upcoming, setUpcoming] = useState<any[]>([]);
   const [followingPosts, setFollowingPosts] = useState<any[]>([]);
   const [liked, setLiked] = useState<Set<string>>(new Set());
+  const [saved, setSaved] = useState<Set<string>>(new Set());
+  const [followed, setFollowed] = useState<Set<string>>(new Set());
+  const [paywallOpen, setPaywallOpen] = useState(false);
   const [invites, setInvites] = useState({ remaining: 5, used: 0, total: 5 });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -72,6 +76,27 @@ export default function HomeScreen() {
       else n.add(id);
       return n;
     });
+  const toggleSave = (id: string) =>
+    setSaved((s) => {
+      const n = new Set(s);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  const toggleFollow = (id: string) =>
+    setFollowed((s) => {
+      const n = new Set(s);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  const onSteal = () => {
+    if (!user?.is_premium) {
+      setPaywallOpen(true);
+    } else {
+      router.push("/(tabs)/trips");
+    }
+  };
 
   return (
     <SafeAreaView style={styles.wrap} edges={["top"]}>
@@ -156,7 +181,14 @@ export default function HomeScreen() {
                     key={p.id}
                     post={p}
                     liked={liked.has(p.id)}
+                    saved={saved.has(p.id)}
+                    following={followed.has(p.creator?.id)}
                     onLike={() => toggleLike(p.id)}
+                    onSave={() => toggleSave(p.id)}
+                    onFollow={() => toggleFollow(p.creator?.id)}
+                    onSteal={onSteal}
+                    onPress={() => router.push(`/feed/${p.id.replace("fol-", "feed-")}`)}
+                    onComment={() => router.push(`/feed/${p.id.replace("fol-", "feed-")}`)}
                   />
                 ))
               )}
@@ -164,6 +196,12 @@ export default function HomeScreen() {
           </>
         )}
       </ScrollView>
+
+      <PaywallModal
+        visible={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        reason="Steal Itinerary is a Drift Plus feature."
+      />
     </SafeAreaView>
   );
 }
