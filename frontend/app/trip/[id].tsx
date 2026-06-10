@@ -19,7 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { api, useAuth } from "@/src/api/client";
 import { colors, radii } from "@/src/theme";
 import { TripScoreBadge, PrimaryButton, Avatar } from "@/src/components/ui";
-import { ItineraryView } from "@/app/(tabs)/planner";
+import { ItineraryExperience } from "@/src/components/itinerary-experience";
 import { PaywallModal } from "@/src/components/paywall-modal";
 import { ScheduleModal } from "@/src/components/schedule-modal";
 
@@ -228,7 +228,21 @@ export default function TripDetail() {
             </KeyboardAvoidingView>
           ) : null}
 
-          {trip.itinerary ? <ItineraryView itinerary={trip.itinerary} /> : (
+          {trip.itinerary ? (
+            <View style={{ marginHorizontal: -20, marginTop: 20 }}>
+              <ItineraryExperience
+                itinerary={trip.itinerary}
+                heroImage={trip.image_url}
+                startDate={trip.start_date}
+                endDate={trip.end_date}
+                travelers={(trip.companions ?? []).length || 2}
+                onSave={() => {}}
+                onSchedule={() => setScheduleOpen(true)}
+                onSteal={onStealClick}
+                onRemix={() => setRemixOpen(true)}
+              />
+            </View>
+          ) : (
             <View style={styles.noItinerary}>
               <Ionicons name="sparkles-outline" size={28} color={colors.accent} />
               <Text style={styles.noItinTitle}>No itinerary yet</Text>

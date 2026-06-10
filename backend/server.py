@@ -569,36 +569,55 @@ def _make_template_itinerary(dest: str, country: str, days: int, score: int, ima
     Users can Remix-with-AI to get a richer Claude-generated version."""
     activity_pool = {
         "morning": [
-            ("08:00", "Sunrise coffee", "Start at a local roastery with the city slowly waking up.", 8, "Order whatever the barista is brewing — it's never on the menu."),
-            ("09:30", "Old town walk", "Wander the historic core before crowds arrive.", 0, "Bring a refillable bottle — fountains in the old town are drinkable."),
-            ("11:00", "Signature attraction", "The icon of the trip — go early to beat lines.", 18, "Side entrance on the east side is usually empty."),
-            ("12:30", "Market lunch", "Eat what the locals eat at the central market.", 14, "Look for the stall with the longest queue."),
+            ("08:00", "Sunrise coffee", "Local cafe", "Start at a local roastery with the city slowly waking up.", 8, "Order whatever the barista is brewing — it's never on the menu.", "food"),
+            ("09:30", "Old town walk", "Old town", "Wander the historic core before crowds arrive.", 0, "Bring a refillable bottle — fountains in the old town are drinkable.", "walk"),
+            ("11:00", "Signature attraction", "City center", "The icon of the trip — go early to beat lines.", 18, "Side entrance on the east side is usually empty.", "attraction"),
+            ("12:30", "Market lunch", "Central market", "Eat what the locals eat at the central market.", 14, "Look for the stall with the longest queue.", "food"),
         ],
         "afternoon": [
-            ("14:00", "Cultural site", "Museum or gallery that locals actually visit.", 16, "Free entry on the first Sunday — otherwise the cafe is worth the visit alone."),
-            ("15:30", "Scenic viewpoint", "Hike up for the panorama everyone misses.", 0, "Late afternoon light is best for photos."),
-            ("17:00", "Boutique browse", "Independent shops in a creative neighborhood.", 0, "Most close by 19:00 — go now."),
-            ("18:00", "Sunset spot", "Grab a glass of wine and stay till the lights come on.", 12, "Tip generously — you'll get a longer pour."),
+            ("14:00", "Cultural site", "Museum quarter", "Museum or gallery that locals actually visit.", 16, "Free entry on the first Sunday — the cafe is worth the visit alone.", "culture"),
+            ("15:30", "Scenic viewpoint", "Hilltop", "Hike up for the panorama everyone misses.", 0, "Late afternoon light is best for photos.", "view"),
+            ("17:00", "Boutique browse", "Design district", "Independent shops in a creative neighborhood.", 0, "Most close by 19:00 — go now.", "shopping"),
+            ("18:00", "Sunset spot", "Waterfront", "Grab a glass of wine and stay till the lights come on.", 12, "Tip generously — you'll get a longer pour.", "view"),
         ],
         "evening": [
-            ("20:00", "Dinner at a local favorite", "A small plates spot loved by chefs on their nights off.", 38, "Order the off-menu special — just ask."),
-            ("21:30", "Live music or bar", "Intimate venue with the city's best local musicians.", 14, "Cash is faster than card at the door."),
-            ("23:00", "Late-night walk", "The illuminated landmarks at night, almost empty.", 0, "Wear layers — temperature drops fast."),
-            ("23:45", "Nightcap", "Cocktail bar tucked behind a nondescript door.", 18, "Ask the bartender for their 'off-list' creation."),
+            ("20:00", "Dinner at a local favorite", "Old town", "A small plates spot loved by chefs on their nights off.", 38, "Order the off-menu special — just ask.", "food"),
+            ("21:30", "Live music or bar", "Music quarter", "Intimate venue with the city's best local musicians.", 14, "Cash is faster than card at the door.", "bar"),
+            ("23:00", "Late-night walk", "Old town", "The illuminated landmarks at night, almost empty.", 0, "Wear layers — temperature drops fast.", "walk"),
+            ("23:45", "Nightcap", "Speakeasy", "Cocktail bar tucked behind a nondescript door.", 18, "Ask the bartender for their 'off-list' creation.", "bar"),
         ],
     }
+    insights = [
+        f"Today is walk-heavy in {dest.split(',')[0]}. Wear comfortable shoes.",
+        f"Plan for slower mornings — {dest.split(',')[0]} comes alive after 10am.",
+        f"Catch the sunset — it's the cinematic moment of the day in {dest.split(',')[0]}.",
+        f"This is your photo day — golden hour is non-negotiable.",
+        f"Coffee-and-pastry crawl day. Pace yourself.",
+        f"Local market day — go hungry, bring small bills.",
+        f"Wind-down day — keep it slow, soak it in.",
+    ]
+    crowds = ["Low", "Moderate", "Moderate", "High", "Moderate", "Low", "Moderate"]
     days_arr: List[Dict[str, Any]] = []
     for i in range(1, days + 1):
         days_arr.append({
             "day": i,
             "title": f"Day {i} — {dest.split(',')[0]}",
-            "morning":   [{"time": t, "activity": a, "detail": d, "travel_time": "15 min walk", "cost_usd": c, "tip": tip} for (t, a, d, c, tip) in activity_pool["morning"]],
-            "afternoon": [{"time": t, "activity": a, "detail": d, "travel_time": "10 min metro", "cost_usd": c, "tip": tip} for (t, a, d, c, tip) in activity_pool["afternoon"]],
-            "evening":   [{"time": t, "activity": a, "detail": d, "travel_time": "5 min walk", "cost_usd": c, "tip": tip} for (t, a, d, c, tip) in activity_pool["evening"]],
+            "drift_insight": insights[(i - 1) % len(insights)],
+            "weather": {"temp_low_f": 64 + (i % 4), "temp_high_f": 76 + (i % 5), "condition": "Partly Cloudy"},
+            "crowd_level": crowds[(i - 1) % len(crowds)],
+            "crowd_note": "Some popular spots busy, but easy to navigate.",
+            "morning":   [{"time": t, "activity": a, "location": loc, "detail": d, "travel_time": "15 min walk", "cost_usd": c, "tip": tip, "category": cat} for (t, a, loc, d, c, tip, cat) in activity_pool["morning"]],
+            "afternoon": [{"time": t, "activity": a, "location": loc, "detail": d, "travel_time": "10 min metro", "cost_usd": c, "tip": tip, "category": cat} for (t, a, loc, d, c, tip, cat) in activity_pool["afternoon"]],
+            "evening":   [{"time": t, "activity": a, "location": loc, "detail": d, "travel_time": "5 min walk", "cost_usd": c, "tip": tip, "category": cat} for (t, a, loc, d, c, tip, cat) in activity_pool["evening"]],
             "transport": "Mostly walking + 24-hour metro pass ($8). Taxis $6-$10 in-center.",
             "hidden_gem": f"A small rooftop bar behind the main square in {dest.split(',')[0]} — locals only.",
             "weather_tip": "Layered outfits work — afternoons get warm, evenings cool by the water.",
             "alternative": "If it rains: swap the viewpoint for the contemporary art museum.",
+            "alternatives": [
+                {"kind": "Luxury",    "title": "Fine dining & private tour",    "detail": "Swap lunch for a Michelin spot, add a private driver."},
+                {"kind": "Budget",    "title": "Save money with locals",        "detail": "Eat at family-run trattorias, skip paid attractions."},
+                {"kind": "Adventure", "title": "Add more adventure",            "detail": "Sea kayak, sunset hike, or scuba dive instead of museums."},
+            ],
         })
     total = max(800, days * 220)
     return {
@@ -606,14 +625,16 @@ def _make_template_itinerary(dest: str, country: str, days: int, score: int, ima
         "country": country,
         "summary": f"A {days}-day cinematic loop through {dest}, balancing icons with under-the-radar locals' favorites. Remix with AI for a fully personalized version.",
         "trip_score": score,
+        "score_label": "Excellent Match" if score >= 90 else "Great Match" if score >= 80 else "Good Match",
         "best_time": "Shoulder season (Apr-May or Sep-Oct) for great weather and fewer crowds.",
         "total_estimated_cost_usd": total,
+        "vibes": ["Romantic", "Ocean View", "Relaxing", "Luxury"],
         "budget_breakdown": [
-            {"category": "Flights",    "amount": int(total * 0.33), "pct": 33},
-            {"category": "Stay",       "amount": int(total * 0.30), "pct": 30},
-            {"category": "Activities", "amount": int(total * 0.15), "pct": 15},
-            {"category": "Food",       "amount": int(total * 0.16), "pct": 16},
-            {"category": "Transport",  "amount": int(total * 0.06),  "pct": 6},
+            {"category": "Flights",    "amount": int(total * 0.30), "pct": 30},
+            {"category": "Hotels",     "amount": int(total * 0.42), "pct": 42},
+            {"category": "Activities", "amount": int(total * 0.13), "pct": 13},
+            {"category": "Food",       "amount": int(total * 0.10), "pct": 10},
+            {"category": "Transport",  "amount": int(total * 0.05), "pct": 5},
         ],
         "days": days_arr,
         "packing_tips": [
