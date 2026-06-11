@@ -17,7 +17,7 @@ import { colors } from "@/src/theme";
 import { Avatar, SectionHeader } from "@/src/components/ui";
 import { UpcomingTripCard } from "@/src/components/trip-cards";
 import { InviteUnlockCard } from "@/src/components/invite-card";
-import { FollowingPostCard } from "@/src/components/following-post";
+import { FollowingPostCard, ForYouPostCard } from "@/src/components/following-post";
 import { PaywallModal } from "@/src/components/paywall-modal";
 
 export default function HomeScreen() {
@@ -25,6 +25,8 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const [upcoming, setUpcoming] = useState<any[]>([]);
   const [followingPosts, setFollowingPosts] = useState<any[]>([]);
+  const [forYouPosts, setForYouPosts] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<"forYou" | "following">("forYou");
   const [liked, setLiked] = useState<Set<string>>(new Set());
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const [followed, setFollowed] = useState<Set<string>>(new Set());
@@ -35,13 +37,15 @@ export default function HomeScreen() {
 
   const load = useCallback(async () => {
     try {
-      const [u, f, inv] = await Promise.all([
+      const [u, f, fy, inv] = await Promise.all([
         api.trips("upcoming"),
         api.followingFeed(),
+        api.feed(),
         api.invites(),
       ]);
       setUpcoming(u.trips ?? []);
       setFollowingPosts(f.posts ?? []);
+      setForYouPosts(fy.posts ?? []);
       setInvites(inv);
     } catch (e) {
       console.warn(e);
@@ -113,7 +117,7 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.topRow}>
           <View>
-            <Text style={styles.brand}>DRIFT</Text>
+            <Text style={styles.brand}>drift</Text>
             <Text style={styles.greeting}>
               Good morning, {user?.name?.split(" ")[0] ?? "Traveler"} 👋
             </Text>
@@ -166,31 +170,78 @@ export default function HomeScreen() {
               onInvite={() => router.push("/invite")}
             />
 
-            <SectionHeader title="Following" />
-            <View style={{ paddingHorizontal: 20 }}>
-              {followingPosts.length === 0 ? (
-                <View style={styles.emptyFollow}>
-                  <Text style={styles.emptyText}>No new posts yet</Text>
-                  <Text style={styles.emptySub}>
-                    Follow creators & guides on Explore to fill your feed.
-                  </Text>
-                </View>
+            {/* Feed tabs */}
+            <View style={styles.tabRow}>
+              <TouchableOpacity
+                onPress={() => setActiveTab("forYou")}
+                style={styles.tab}
+                testID="tab-for-you"
+              >
+                <Text style={[styles.tabText, activeTab === "forYou" && styles.tabTextActive]}>
+                  For You
+                </Text>
+                {activeTab === "forYou" && <View style={styles.tabUnderline} />}
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setActiveTab("following")}
+                style={styles.tab}
+                testID="tab-following"
+              >
+                <Text style={[styles.tabText, activeTab === "following" && styles.tabTextActive]}>
+                  Following
+                </Text>
+                {activeTab === "following" && <View style={styles.tabUnderline} />}
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ paddingHorizontal: 16 }}>
+              {activeTab === "forYou" ? (
+                forYouPosts.length === 0 ? (
+                  <View style={styles.emptyFollow}>
+                    <Text style={styles.emptyText}>Nothing yet</Text>
+                    <Text style={styles.emptySub}>Check back soon for personalized content.</Text>
+                  </View>
+                ) : (
+                  forYouPosts.map((p) => (
+                    <ForYouPostCard
+                      key={p.id}
+                      post={p}
+                      liked={liked.has(p.id)}
+                      saved={saved.has(p.id)}
+                      onLike={() => toggleLike(p.id)}
+                      onSave={() => toggleSave(p.id)}
+                      onSteal={onSteal}
+                      onPress={() => router.push(`/feed/${p.id}`)}
+                      onComment={() => router.push(`/feed/${p.id}`)}
+                      onShare={() => {}}
+                    />
+                  ))
+                )
               ) : (
-                followingPosts.map((p) => (
-                  <FollowingPostCard
-                    key={p.id}
-                    post={p}
-                    liked={liked.has(p.id)}
-                    saved={saved.has(p.id)}
-                    following={followed.has(p.creator?.id)}
-                    onLike={() => toggleLike(p.id)}
-                    onSave={() => toggleSave(p.id)}
-                    onFollow={() => toggleFollow(p.creator?.id)}
-                    onSteal={onSteal}
-                    onPress={() => router.push(`/feed/${p.id.replace("fol-", "feed-")}`)}
-                    onComment={() => router.push(`/feed/${p.id.replace("fol-", "feed-")}`)}
-                  />
-                ))
+                followingPosts.length === 0 ? (
+                  <View style={styles.emptyFollow}>
+                    <Text style={styles.emptyText}>No new posts yet</Text>
+                    <Text style={styles.emptySub}>
+                      Follow creators & guides on Explore to fill your feed.
+                    </Text>
+                  </View>
+                ) : (
+                  followingPosts.map((p) => (
+                    <FollowingPostCard
+                      key={p.id}
+                      post={p}
+                      liked={liked.has(p.id)}
+                      saved={saved.has(p.id)}
+                      following={followed.has(p.creator?.id)}
+                      onLike={() => toggleLike(p.id)}
+                      onSave={() => toggleSave(p.id)}
+                      onFollow={() => toggleFollow(p.creator?.id)}
+                      onSteal={onSteal}
+                      onPress={() => router.push(`/feed/${p.id.replace("fol-", "feed-")}`)}
+                      onComment={() => router.push(`/feed/${p.id.replace("fol-", "feed-")}`)}
+                    />
+                  ))
+                )
               )}
             </View>
           </>
@@ -215,17 +266,50 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
   },
-  brand: { color: colors.accent, fontSize: 14, fontWeight: "900", letterSpacing: 3 },
+  brand: {
+    color: colors.accent,
+    fontSize: 36,
+    fontWeight: "900",
+    letterSpacing: -1,
+  },
   greeting: {
     color: "#fff",
-    fontSize: 22,
-    fontWeight: "800",
-    marginTop: 6,
-    letterSpacing: -0.3,
+    fontSize: 18,
+    fontWeight: "700",
+    marginTop: 4,
+    letterSpacing: -0.2,
   },
-  greetingSub: { color: colors.textMuted, fontSize: 13, fontWeight: "600", marginTop: 2 },
+  greetingSub: { color: colors.textMuted, fontSize: 12, fontWeight: "500", marginTop: 2 },
+  tabRow: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  tab: {
+    marginRight: 28,
+    paddingBottom: 12,
+    position: "relative",
+  },
+  tabText: {
+    color: colors.textMuted,
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  tabTextActive: { color: "#fff" },
+  tabUnderline: {
+    position: "absolute",
+    bottom: -1,
+    left: 0,
+    right: 0,
+    height: 2,
+    borderRadius: 2,
+    backgroundColor: colors.accent,
+  },
   emptyHero: {
-    width: 320,
+    width: 300,
     height: 200,
     borderRadius: 22,
     backgroundColor: colors.surface,

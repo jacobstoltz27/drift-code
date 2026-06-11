@@ -6,10 +6,14 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, radii } from "@/src/theme";
 import { Avatar } from "@/src/components/ui";
+
+const SCREEN_W = Dimensions.get("window").width;
 
 export const FollowingPostCard = ({
   post,
@@ -177,4 +181,190 @@ const styles = StyleSheet.create({
   actions: { flexDirection: "row", alignItems: "center", gap: 16, marginTop: 14 },
   actBtn: { flexDirection: "row", alignItems: "center", gap: 6 },
   actText: { color: colors.textMuted, fontSize: 12, fontWeight: "700" },
+});
+
+// ─── For You card (Instagram/Reels-style) ────────────────────────────────────
+
+export const ForYouPostCard = ({
+  post,
+  liked,
+  saved,
+  onLike,
+  onSave,
+  onComment,
+  onShare,
+  onSteal,
+  onPress,
+}: {
+  post: any;
+  liked?: boolean;
+  saved?: boolean;
+  onLike?: () => void;
+  onSave?: () => void;
+  onComment?: () => void;
+  onShare?: () => void;
+  onSteal?: () => void;
+  onPress?: () => void;
+}) => (
+  <View style={fyStyles.wrap} testID={`foryou-post-${post.id}`}>
+    {/* Header */}
+    <View style={fyStyles.header}>
+      <Avatar uri={post.creator?.avatar} size={40} />
+      <View style={{ marginLeft: 10, flex: 1 }}>
+        <Text style={fyStyles.name}>{post.creator?.name}</Text>
+        <View style={fyStyles.locationRow}>
+          <Ionicons name="location-sharp" size={11} color={colors.textMuted} />
+          <Text style={fyStyles.location}>{post.destination}</Text>
+        </View>
+      </View>
+      <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+        <Ionicons name="ellipsis-horizontal" size={20} color={colors.textMuted} />
+      </TouchableOpacity>
+    </View>
+
+    {/* Image + all overlays */}
+    <TouchableOpacity activeOpacity={0.95} onPress={onPress} style={fyStyles.imageWrap}>
+      <Image source={{ uri: post.image_url }} style={fyStyles.image} />
+      <LinearGradient
+        colors={["transparent", "rgba(9,12,26,0.9)"]}
+        locations={[0.35, 1]}
+        style={StyleSheet.absoluteFillObject}
+      />
+
+      {/* Right-side vertical actions */}
+      <View style={fyStyles.sideActions}>
+        <TouchableOpacity onPress={onLike} style={fyStyles.sideBtn}>
+          <Ionicons
+            name={liked ? "heart" : "heart-outline"}
+            size={28}
+            color={liked ? "#EF4444" : "#fff"}
+          />
+          <Text style={fyStyles.sideCount}>{((post.likes ?? 128) + (liked ? 1 : 0)).toLocaleString()}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onComment} style={fyStyles.sideBtn}>
+          <Ionicons name="chatbubble-outline" size={25} color="#fff" />
+          <Text style={fyStyles.sideCount}>{(post.comments ?? 12).toLocaleString()}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onSave} style={fyStyles.sideBtn}>
+          <Ionicons
+            name={saved ? "bookmark" : "bookmark-outline"}
+            size={25}
+            color={saved ? colors.accent : "#fff"}
+          />
+          <Text style={fyStyles.sideCount}>{((post.saves ?? 47) + (saved ? 1 : 0)).toLocaleString()}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onShare} style={fyStyles.sideBtn}>
+          <Ionicons name="arrow-redo-outline" size={25} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Bottom overlay */}
+      <View style={fyStyles.bottomOverlay}>
+        <Text style={fyStyles.title} numberOfLines={2}>{post.title}</Text>
+        <Text style={fyStyles.caption} numberOfLines={2}>{post.text}</Text>
+        <View style={fyStyles.footerRow}>
+          {/* Pagination dots */}
+          <View style={fyStyles.dots}>
+            {[0, 1, 2, 3, 4].map((i) => (
+              <View key={i} style={[fyStyles.dot, i === 0 && fyStyles.dotActive]} />
+            ))}
+          </View>
+          {/* View itinerary button */}
+          <TouchableOpacity onPress={onSteal} style={fyStyles.viewBtn}>
+            <Ionicons name="map-outline" size={13} color="#fff" />
+            <Text style={fyStyles.viewBtnText}>View itinerary</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableOpacity>
+  </View>
+);
+
+const fyStyles = StyleSheet.create({
+  wrap: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: "hidden",
+    marginBottom: 18,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingTop: 14,
+    paddingBottom: 12,
+  },
+  name: { color: "#fff", fontSize: 14, fontWeight: "800" },
+  locationRow: { flexDirection: "row", alignItems: "center", gap: 3, marginTop: 2 },
+  location: { color: colors.textMuted, fontSize: 11, fontWeight: "500" },
+  imageWrap: {
+    width: "100%",
+    height: SCREEN_W * 0.95,
+  },
+  image: { width: "100%", height: "100%" },
+  sideActions: {
+    position: "absolute",
+    right: 14,
+    bottom: 72,
+    alignItems: "center",
+    gap: 20,
+  },
+  sideBtn: { alignItems: "center", gap: 4 },
+  sideCount: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "700",
+    textShadowColor: "rgba(0,0,0,0.6)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+  },
+  bottomOverlay: {
+    position: "absolute",
+    left: 16,
+    right: 70,
+    bottom: 16,
+  },
+  title: {
+    color: "#fff",
+    fontSize: 19,
+    fontWeight: "900",
+    letterSpacing: -0.3,
+    textShadowColor: "rgba(0,0,0,0.5)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
+  },
+  caption: {
+    color: "rgba(255,255,255,0.78)",
+    fontSize: 13,
+    marginTop: 4,
+    lineHeight: 18,
+  },
+  footerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 12,
+  },
+  dots: { flexDirection: "row", alignItems: "center", gap: 5 },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(255,255,255,0.35)",
+  },
+  dotActive: { backgroundColor: "#fff", width: 18, borderRadius: 3 },
+  viewBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: "rgba(9,12,26,0.6)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.18)",
+  },
+  viewBtnText: { color: "#fff", fontSize: 12, fontWeight: "700" },
 });
