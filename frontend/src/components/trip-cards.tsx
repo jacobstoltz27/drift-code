@@ -12,7 +12,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, radii, shadows } from "@/src/theme";
-import { TripScoreBadge, Avatar } from "@/src/components/ui";
+import { Avatar } from "@/src/components/ui";
 
 const { width } = Dimensions.get("window");
 const HERO_W = Math.min(320, width - 56);
@@ -175,12 +175,9 @@ export const FeedCard = ({
     <View style={feedStyles.imgWrap}>
       <Image source={{ uri: post.image_url }} style={feedStyles.img} />
       <LinearGradient
-        colors={["rgba(7,11,20,0.0)", "rgba(7,11,20,0.65)"]}
+        colors={["rgba(9,12,26,0.0)", "rgba(9,12,26,0.72)"]}
         style={StyleSheet.absoluteFillObject}
       />
-      <View style={feedStyles.scoreAbs}>
-        <TripScoreBadge score={post.score} size={48} />
-      </View>
       <View style={feedStyles.titleAbs}>
         <Text style={feedStyles.titleText} numberOfLines={1}>
           {post.title}
@@ -247,7 +244,6 @@ const feedStyles = StyleSheet.create({
   },
   imgWrap: { height: 240, width: "100%" },
   img: { width: "100%", height: "100%" },
-  scoreAbs: { position: "absolute", top: 14, right: 14 },
   titleAbs: { position: "absolute", left: 16, right: 16, bottom: 14 },
   titleText: { color: "#fff", fontSize: 22, fontWeight: "900", letterSpacing: -0.4 },
   destText: { color: colors.textMuted, fontSize: 12, marginTop: 2, fontWeight: "600" },
@@ -306,10 +302,7 @@ export const TripTile = ({
 }) => (
   <TouchableOpacity activeOpacity={0.9} onPress={onPress} testID={testID} style={tileStyles.wrap}>
     <Image source={{ uri: trip.image_url }} style={tileStyles.img} />
-    <LinearGradient colors={["transparent", "rgba(7,11,20,0.9)"]} style={tileStyles.overlay} />
-    <View style={tileStyles.scoreAbs}>
-      <TripScoreBadge score={trip.score ?? 88} size={40} />
-    </View>
+    <LinearGradient colors={["transparent", "rgba(9,12,26,0.9)"]} style={tileStyles.overlay} />
     <View style={tileStyles.bottom}>
       <Text style={tileStyles.dest} numberOfLines={1}>
         {trip.destination}
@@ -332,7 +325,6 @@ const tileStyles = StyleSheet.create({
   },
   img: { width: "100%", height: "100%" },
   overlay: { ...StyleSheet.absoluteFillObject },
-  scoreAbs: { position: "absolute", top: 10, right: 10 },
   bottom: { position: "absolute", left: 12, right: 12, bottom: 10 },
   dest: { color: "#fff", fontSize: 14, fontWeight: "800" },
   dates: { color: colors.textMuted, fontSize: 11, marginTop: 2 },
