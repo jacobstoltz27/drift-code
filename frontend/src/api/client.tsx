@@ -377,14 +377,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const t = await getToken();
       if (!t) {
-        setUser(null);
+        // No stored token — auto-login as demo user so the app is always usable
+        setUser(MOCK_USER);
         return;
       }
       const me = await api.me();
       setUser(me);
     } catch {
       await setToken(null);
-      setUser(null);
+      setUser(MOCK_USER);
     }
   }, []);
 
