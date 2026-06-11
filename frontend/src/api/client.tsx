@@ -12,7 +12,7 @@ import { storage } from "@/src/utils/storage";
 const BASE = process.env.EXPO_PUBLIC_BACKEND_URL ?? "";
 const API = `${BASE}/api`;
 const TOKEN_KEY = "drift_auth_token";
-const DEMO_MODE = !BASE; // no backend URL → use mock data
+const DEMO_MODE = !BASE; // no backend URL → always use mock data
 
 export type DriftUser = {
   id: string;
@@ -255,11 +255,20 @@ async function request<T>(
     const token = await getToken();
     if (token) headers.Authorization = `Bearer ${token}`;
   }
-  const res = await fetch(`${API}${path}`, {
-    method: opts.method ?? "GET",
-    headers,
-    body: opts.body ? JSON.stringify(opts.body) : undefined,
-  });
+
+  let res: Response;
+  try {
+    res = await fetch(`${API}${path}`, {
+      method: opts.method ?? "GET",
+      headers,
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    });
+  } catch {
+    // Network error (backend unreachable) — fall back to mock data so the
+    // app is previewable without a running backend.
+    return mockRequest(path, opts.body) as Promise<T>;
+  }
+
   if (!res.ok) {
     let msg = `HTTP ${res.status}`;
     try {
