@@ -12,7 +12,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, radii, shadows } from "@/src/theme";
-import { TripScoreBadge, Avatar } from "@/src/components/ui";
+import { Avatar } from "@/src/components/ui";
 
 const { width } = Dimensions.get("window");
 const HERO_W = Math.min(320, width - 56);
@@ -27,12 +27,13 @@ const fmtDate = (s?: string) => {
   }
 };
 
-const countdownDays = (start?: string) => {
+const countdownLabel = (start?: string): string | null => {
   if (!start) return null;
-  const d = new Date(start).getTime();
-  const now = Date.now();
-  const diff = Math.ceil((d - now) / (1000 * 60 * 60 * 24));
-  return diff;
+  const diff = Math.ceil((new Date(start).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  if (diff <= 0) return "Today";
+  if (diff < 30) return `In ${diff} day${diff === 1 ? "" : "s"}`;
+  const months = Math.round(diff / 30);
+  return `In ${months} month${months === 1 ? "" : "s"}`;
 };
 
 export const UpcomingTripCard = ({
@@ -44,7 +45,7 @@ export const UpcomingTripCard = ({
   onPress?: () => void;
   testID?: string;
 }) => {
-  const days = countdownDays(trip.start_date);
+  const label = countdownLabel(trip.start_date);
   return (
     <TouchableOpacity
       activeOpacity={0.92}
@@ -58,19 +59,18 @@ export const UpcomingTripCard = ({
         imageStyle={{ borderRadius: radii.lg }}
       >
         <LinearGradient
-          colors={["rgba(7,11,20,0.05)", "rgba(7,11,20,0.85)"]}
+          colors={["rgba(9,12,26,0.1)", "rgba(9,12,26,0.88)"]}
           style={heroStyles.overlay}
         />
         <View style={heroStyles.topRow}>
-          {days !== null ? (
+          {label ? (
             <View style={heroStyles.countdown}>
-              <Ionicons name="time-outline" size={12} color="#fff" />
-              <Text style={heroStyles.countdownText}>
-                {days > 0 ? `${days}d to go` : days === 0 ? "Today" : "Past"}
-              </Text>
+              <Text style={heroStyles.countdownText}>{label}</Text>
             </View>
-          ) : null}
-          <TripScoreBadge score={trip.score ?? 90} size={52} testID={`trip-score-${trip.id ?? trip.destination}`} />
+          ) : <View />}
+          <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <Ionicons name="ellipsis-horizontal" size={18} color="rgba(255,255,255,0.85)" />
+          </TouchableOpacity>
         </View>
 
         <View style={heroStyles.bottom}>
@@ -78,7 +78,7 @@ export const UpcomingTripCard = ({
             {trip.destination}
           </Text>
           <Text style={heroStyles.dates}>
-            {fmtDate(trip.start_date)} — {fmtDate(trip.end_date)}
+            {fmtDate(trip.start_date)} – {fmtDate(trip.end_date)}
           </Text>
           <View style={heroStyles.companionRow}>
             {(trip.companions ?? []).slice(0, 4).map((c: any, idx: number) => (
@@ -89,12 +89,10 @@ export const UpcomingTripCard = ({
                 style={{ marginLeft: idx === 0 ? 0 : -8 }}
               />
             ))}
-            {(trip.companions ?? []).length > 0 ? (
-              <Text style={heroStyles.companionText}>
-                with {trip.companions.map((c: any) => c.name).join(" & ")}
-              </Text>
-            ) : (
-              <Text style={heroStyles.companionText}>Solo trip</Text>
+            {(trip.companions ?? []).length > 1 && (
+              <View style={heroStyles.extraBadge}>
+                <Text style={heroStyles.extraText}>+{(trip.companions ?? []).length - 1}</Text>
+              </View>
             )}
           </View>
         </View>
@@ -106,41 +104,47 @@ export const UpcomingTripCard = ({
 const heroStyles = StyleSheet.create({
   wrap: {
     width: HERO_W,
-    height: 240,
+    height: 260,
     borderRadius: radii.lg,
     overflow: "hidden",
-    marginRight: 16,
+    marginRight: 14,
   },
   bg: { flex: 1, justifyContent: "space-between" },
   overlay: { ...StyleSheet.absoluteFillObject, borderRadius: radii.lg },
   topRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
     padding: 14,
   },
   countdown: {
-    flexDirection: "row",
-    alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
-    backgroundColor: "rgba(7,11,20,0.6)",
+    backgroundColor: "rgba(9,12,26,0.65)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.12)",
+    borderColor: "rgba(255,255,255,0.14)",
   },
   countdownText: {
     color: "#fff",
     fontSize: 11,
     fontWeight: "700",
-    marginLeft: 4,
-    letterSpacing: 0.3,
+    letterSpacing: 0.2,
   },
   bottom: { padding: 16 },
-  dest: { color: "#fff", fontSize: 22, fontWeight: "900", letterSpacing: -0.4 },
-  dates: { color: colors.textMuted, fontSize: 12, marginTop: 2, fontWeight: "600" },
+  dest: { color: "#fff", fontSize: 20, fontWeight: "900", letterSpacing: -0.4 },
+  dates: { color: colors.textMuted, fontSize: 12, marginTop: 3, fontWeight: "600" },
   companionRow: { flexDirection: "row", alignItems: "center", marginTop: 10 },
-  companionText: { color: colors.textMuted, fontSize: 12, marginLeft: 8, fontWeight: "600" },
+  extraBadge: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: colors.accent,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: -8,
+  },
+  extraText: { color: "#fff", fontSize: 10, fontWeight: "800" },
 });
 
 // ---------------- Feed card ----------------
@@ -171,12 +175,9 @@ export const FeedCard = ({
     <View style={feedStyles.imgWrap}>
       <Image source={{ uri: post.image_url }} style={feedStyles.img} />
       <LinearGradient
-        colors={["rgba(7,11,20,0.0)", "rgba(7,11,20,0.65)"]}
+        colors={["rgba(9,12,26,0.0)", "rgba(9,12,26,0.72)"]}
         style={StyleSheet.absoluteFillObject}
       />
-      <View style={feedStyles.scoreAbs}>
-        <TripScoreBadge score={post.score} size={48} />
-      </View>
       <View style={feedStyles.titleAbs}>
         <Text style={feedStyles.titleText} numberOfLines={1}>
           {post.title}
@@ -243,7 +244,6 @@ const feedStyles = StyleSheet.create({
   },
   imgWrap: { height: 240, width: "100%" },
   img: { width: "100%", height: "100%" },
-  scoreAbs: { position: "absolute", top: 14, right: 14 },
   titleAbs: { position: "absolute", left: 16, right: 16, bottom: 14 },
   titleText: { color: "#fff", fontSize: 22, fontWeight: "900", letterSpacing: -0.4 },
   destText: { color: colors.textMuted, fontSize: 12, marginTop: 2, fontWeight: "600" },
@@ -302,10 +302,7 @@ export const TripTile = ({
 }) => (
   <TouchableOpacity activeOpacity={0.9} onPress={onPress} testID={testID} style={tileStyles.wrap}>
     <Image source={{ uri: trip.image_url }} style={tileStyles.img} />
-    <LinearGradient colors={["transparent", "rgba(7,11,20,0.9)"]} style={tileStyles.overlay} />
-    <View style={tileStyles.scoreAbs}>
-      <TripScoreBadge score={trip.score ?? 88} size={40} />
-    </View>
+    <LinearGradient colors={["transparent", "rgba(9,12,26,0.9)"]} style={tileStyles.overlay} />
     <View style={tileStyles.bottom}>
       <Text style={tileStyles.dest} numberOfLines={1}>
         {trip.destination}
@@ -328,7 +325,6 @@ const tileStyles = StyleSheet.create({
   },
   img: { width: "100%", height: "100%" },
   overlay: { ...StyleSheet.absoluteFillObject },
-  scoreAbs: { position: "absolute", top: 10, right: 10 },
   bottom: { position: "absolute", left: 12, right: 12, bottom: 10 },
   dest: { color: "#fff", fontSize: 14, fontWeight: "800" },
   dates: { color: colors.textMuted, fontSize: 11, marginTop: 2 },

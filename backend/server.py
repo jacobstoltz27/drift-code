@@ -320,7 +320,12 @@ async def call_claude_for_days_chunk(
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global client, db
-    client = AsyncIOMotorClient(MONGO_URL)
+    try:
+        from mongomock_motor import AsyncMongoMockClient
+        client = AsyncMongoMockClient()
+        logger.info("Using in-memory MongoDB (mongomock)")
+    except ImportError:
+        client = AsyncIOMotorClient(MONGO_URL)
     db = client[DB_NAME]
     await db.users.create_index("email", unique=True)
     await db.users.create_index("id", unique=True)
