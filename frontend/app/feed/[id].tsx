@@ -165,7 +165,16 @@ export default function FeedDetail() {
       <ScheduleModal
         visible={scheduleOpen}
         onClose={() => setScheduleOpen(false)}
-        onConfirm={onSchedule}
+        onConfirm={async (start, end) => {
+          setBusy("save");
+          try {
+            await api.scheduleTrip(post.id, start, end);
+            setScheduleOpen(false);
+            router.push("/(tabs)/trips");
+          } finally {
+            setBusy(null);
+          }
+        }}
         busy={busy === "save"}
       />
     </View>
