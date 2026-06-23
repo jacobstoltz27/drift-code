@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Drift Ad 3 – Steal the Itinerary</title>
+  <meta name="hz:slide-selector" content=".slide" />
+  <meta name="hz:canvas-width" content="1080" />
+  <meta name="hz:canvas-height" content="1920" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #08080f;
+    }
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background: #09091a;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Dark deep background */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 1000px 700px at 50% 0%, rgba(91,103,255,0.16) 0%, transparent 55%),
+        radial-gradient(ellipse 600px 600px at 100% 60%, rgba(91,103,255,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 500px 400px at 0% 90%, rgba(20,184,164,0.07) 0%, transparent 55%),
+        linear-gradient(180deg, #09091a 0%, #07071a 100%);
+    }
+
+    /* Fine line pattern */
+    .line-pattern {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(91,103,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91,103,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    /* Brand */
+    .brand-top {
+      position: absolute;
+      top: 52px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #5B67FF 0%, #7B85FF 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 400;
+    }
+
+    /* Big hero text */
+    .hero-area {
+      position: absolute;
+      top: 110px;
+      left: 60px;
+      right: 60px;
+    }
+    .hero-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(91,103,255,0.7);
+      letter-spacing: 0.3px;
+      margin-bottom: 14px;
+    }
+    .hero-h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 130px;
+      line-height: 0.90;
+      color: #ffffff;
+      font-weight: 400;
+    }
+    .hero-h1 .purple { color: #5B67FF; }
+
+    /* Decorative arrow */
+    .big-arrow {
+      position: absolute;
+      top: 490px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .arrow-line {
+      width: 60px;
+      height: 2px;
+      background: rgba(91,103,255,0.5);
+    }
+    .arrow-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(91,103,255,0.6);
+    }
+
+    /* Creator card */
+    .creator-section {
+      position: absolute;
+      top: 560px;
+      left: 60px;
+      right: 60px;
+    }
+    .creator-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .creator-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .avatar-ring {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid rgba(91,103,255,0.4);
+      padding: 3px;
+      flex-shrink: 0;
+    }
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2d3070 0%, #1a1a50 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar-emoji { font-size: 28px; }
+    .creator-meta { flex: 1; }
+    .creator-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 4px;
+    }
+    .creator-stats {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+    }
+    .creator-stats strong { color: rgba(91,103,255,0.8); font-weight: 700; }
+    .steal-pill {
+      background: linear-gradient(135deg, #5B67FF 0%, #7B85FF 100%);
+      border-radius: 12px;
+      padding: 12px 22px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    /* Itinerary */
+    .itin-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 16px;
+    }
+    .dest-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      background: rgba(91,103,255,0.12);
+      border: 1px solid rgba(91,103,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .dest-info {}
+    .dest-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: #ffffff;
+      letter-spacing: 1px;
+      font-weight: 400;
+    }
+    .dest-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+    .spot {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .spot:last-child { border-bottom: none; }
+    .spot-num {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      background: rgba(91,103,255,0.12);
+      border: 1px solid rgba(91,103,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #8B95FF;
+    }
+    .spot-txt {
+      flex: 1;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.4;
+    }
+    .spot-txt strong { color: rgba(255,255,255,0.9); font-weight: 600; }
+    .spot-day {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.5px;
+    }
+
+    /* Remix feature */
+    .remix-card {
+      background: rgba(91,103,255,0.06);
+      border: 1px solid rgba(91,103,255,0.16);
+      border-radius: 18px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .remix-icon-box {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(91,103,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .remix-body { flex: 1; }
+    .remix-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 3px;
+    }
+    .remix-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+    .remix-arrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      color: #5B67FF;
+    }
+
+    /* Stats row */
+    .stats-row {
+      position: absolute;
+      top: 1540px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .stat {
+      flex: 1;
+      text-align: center;
+    }
+    .stat-n {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 50px;
+      letter-spacing: 1px;
+      color: #5B67FF;
+      font-weight: 400;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-l {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 0.5px;
+    }
+    .stat-divider {
+      width: 1px;
+      height: 50px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Bottom CTA */
+    .bottom-cta {
+      position: absolute;
+      bottom: 60px;
+      left: 60px;
+      right: 60px;
+    }
+    .big-cta {
+      background: linear-gradient(135deg, #5B67FF 0%, #7B85FF 100%);
+      border-radius: 22px;
+      padding: 28px 40px;
+      text-align: center;
+      margin-bottom: 16px;
+      box-shadow: 0 20px 60px rgba(91,103,255,0.3);
+    }
+    .big-cta-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .tagline-row {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide" data-canvas-width="1080" data-canvas-height="1920">
+    <div class="bg"></div>
+    <div class="line-pattern"></div>
+
+    <!-- Brand -->
+    <div class="brand-top">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2L14 7H11V12H7V7H4L9 2Z" fill="white" opacity="0.9"/>
+          <path d="M5 14H13" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="brand-name">DRIFT</div>
+    </div>
+
+    <!-- Hero text -->
+    <div class="hero-area">
+      <div class="hero-eyebrow">The social travel app</div>
+      <div class="hero-h1">
+        STEAL<br/>
+        <span class="purple">THIS</span><br/>
+        TRIP ✈
+      </div>
+    </div>
+
+    <!-- Arrow label -->
+    <div class="big-arrow">
+      <div class="arrow-line"></div>
+      <div class="arrow-text">Swipe the itinerary</div>
+    </div>
+
+    <!-- Creator + itinerary card -->
+    <div class="creator-section">
+      <div class="creator-card">
+        <!-- Creator row -->
+        <div class="creator-row">
+          <div class="avatar-ring">
+            <div class="avatar-inner">
+              <span class="avatar-emoji">✈️</span>
+            </div>
+          </div>
+          <div class="creator-meta">
+            <div class="creator-name">@wanderlust.emma</div>
+            <div class="creator-stats"><strong>847K</strong> views · Tokyo 8-day trip</div>
+          </div>
+          <div class="steal-pill">Steal It</div>
+        </div>
+
+        <!-- Itinerary -->
+        <div class="itin-header">
+          <div class="dest-circle">🇯🇵</div>
+          <div class="dest-info">
+            <div class="dest-title">Tokyo + Kyoto · 8 Days</div>
+            <div class="dest-sub">Cherry blossom · Mid-range · Solo</div>
+          </div>
+        </div>
+        <div class="spot">
+          <div class="spot-num">1</div>
+          <div class="spot-txt"><strong>Yanaka district</strong> — old Tokyo, pottery shops, cat cafes, no tourists</div>
+          <div class="spot-day">DAY 1</div>
+        </div>
+        <div class="spot">
+          <div class="spot-num">2</div>
+          <div class="spot-txt"><strong>Tsukiji outer market</strong> at 5am — freshest sushi breakfast you'll have</div>
+          <div class="spot-day">DAY 2</div>
+        </div>
+        <div class="spot">
+          <div class="spot-num">3</div>
+          <div class="spot-txt"><strong>Arashiyama bamboo</strong> — arrive at 6am before anyone else gets there</div>
+          <div class="spot-day">DAY 5</div>
+        </div>
+      </div>
+
+      <!-- Remix card -->
+      <div class="remix-card">
+        <div class="remix-icon-box">🔀</div>
+        <div class="remix-body">
+          <div class="remix-title">Make it yours with Remix</div>
+          <div class="remix-sub">Add a day, swap a destination, adjust your budget</div>
+        </div>
+        <div class="remix-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-n">10K+</div>
+        <div class="stat-l">Trips Created</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-n">50+</div>
+        <div class="stat-l">Countries</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-n">Free</div>
+        <div class="stat-l">To Start</div>
+      </div>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="bottom-cta">
+      <div class="big-cta">
+        <div class="big-cta-text">Download Drift — Free ✈</div>
+      </div>
+      <div class="tagline-row">Your Passion Passport · Drift</div>
+    </div>
+  </div>
+</body>
+</html>

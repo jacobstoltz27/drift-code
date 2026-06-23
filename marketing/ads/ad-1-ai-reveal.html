@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Drift Ad 1 – AI Reveal</title>
+  <meta name="hz:slide-selector" content=".slide" />
+  <meta name="hz:canvas-width" content="1080" />
+  <meta name="hz:canvas-height" content="1920" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #050508;
+    }
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background: #080811;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Deep background */
+    .bg-base {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 1200px 900px at 50% -100px, rgba(91,103,255,0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 800px 500px at 80% 90%, rgba(20,184,164,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse 500px 500px at -100px 60%, rgba(91,103,255,0.08) 0%, transparent 60%),
+        linear-gradient(180deg, #080811 0%, #060610 100%);
+    }
+
+    /* Subtle dot grid */
+    .dot-grid {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(91,103,255,0.15) 1px, transparent 1px);
+      background-size: 48px 48px;
+      background-position: 24px 24px;
+    }
+
+    /* Top abstract destination art */
+    .dest-art {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 700px;
+      overflow: hidden;
+    }
+    .dest-art svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Brand top */
+    .brand-top {
+      position: absolute;
+      top: 52px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #5B67FF 0%, #7B85FF 100%);
+    }
+    .brand-mark svg { width: 18px; height: 18px; }
+    .brand-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 400;
+    }
+
+    /* Eyebrow chip */
+    .eyebrow-chip {
+      position: absolute;
+      top: 120px;
+      left: 60px;
+      background: rgba(91,103,255,0.12);
+      border: 1px solid rgba(91,103,255,0.28);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #8B95FF;
+    }
+
+    /* Hero headline */
+    .hero-headline {
+      position: absolute;
+      top: 610px;
+      left: 60px;
+      right: 60px;
+    }
+    .hero-kicker {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+    .hero-main {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 106px;
+      line-height: 0.92;
+      letter-spacing: 1px;
+      color: #ffffff;
+      font-weight: 400;
+    }
+    .hero-main .accent { color: #5B67FF; }
+
+    /* Phone card */
+    .phone-card {
+      position: absolute;
+      top: 1040px;
+      left: 60px;
+      right: 60px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(91,103,255,0.18);
+      border-radius: 32px;
+      padding: 32px;
+      box-shadow: 0 0 80px rgba(91,103,255,0.10), 0 40px 80px rgba(0,0,0,0.4);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 3px;
+      color: rgba(91,103,255,0.7);
+      font-weight: 400;
+    }
+    .card-live {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: #14B8A6;
+      letter-spacing: 1px;
+    }
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #14B8A6;
+    }
+    .prompt-box {
+      background: rgba(91,103,255,0.07);
+      border: 1px solid rgba(91,103,255,0.15);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+    }
+    .prompt-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(91,103,255,0.6);
+      margin-bottom: 8px;
+    }
+    .prompt-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .itinerary-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .itin-flag {
+      font-size: 26px;
+    }
+    .itin-info {}
+    .itin-dest {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 1px;
+      color: #ffffff;
+      font-weight: 400;
+    }
+    .itin-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .day-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .day-item:last-child { border-bottom: none; }
+    .day-tag {
+      flex-shrink: 0;
+      background: rgba(91,103,255,0.12);
+      border: 1px solid rgba(91,103,255,0.2);
+      border-radius: 7px;
+      padding: 4px 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #8B95FF;
+      min-width: 50px;
+      text-align: center;
+    }
+    .day-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.5;
+    }
+    .day-desc strong {
+      color: rgba(255,255,255,0.92);
+      font-weight: 600;
+    }
+
+    /* CTA section */
+    .cta-section {
+      position: absolute;
+      bottom: 80px;
+      left: 60px;
+      right: 60px;
+    }
+    .cta-copy {
+      font-family: 'Inter', sans-serif;
+      font-size: 21px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 26px;
+      line-height: 1.6;
+    }
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .cta-btn-main {
+      flex: 1;
+      background: linear-gradient(135deg, #5B67FF 0%, #7B85FF 100%);
+      border-radius: 18px;
+      padding: 24px 32px;
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      text-align: center;
+    }
+    .cta-badge-free {
+      background: rgba(20,184,164,0.15);
+      border: 1px solid rgba(20,184,164,0.3);
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #14B8A6;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .cta-sub-row {
+      margin-top: 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: rgba(255,255,255,0.22);
+      text-align: center;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide" data-canvas-width="1080" data-canvas-height="1920">
+    <div class="bg-base"></div>
+    <div class="dot-grid"></div>
+
+    <!-- Abstract destination art (SVG) -->
+    <div class="dest-art">
+      <svg viewBox="0 0 1080 700" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a0060" stop-opacity="0.9"/>
+            <stop offset="50%" stop-color="#0d0830" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#080811" stop-opacity="1"/>
+          </linearGradient>
+          <radialGradient id="moonGlow" cx="70%" cy="25%" r="40%">
+            <stop offset="0%" stop-color="#5B67FF" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="tokyoGlow" cx="50%" cy="80%" r="60%">
+            <stop offset="0%" stop-color="#FF6B9D" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Sky background -->
+        <rect width="1080" height="700" fill="url(#skyGrad)"/>
+        <!-- Moon glow -->
+        <circle cx="756" cy="175" r="80" fill="rgba(91,103,255,0.08)"/>
+        <circle cx="756" cy="175" r="55" fill="rgba(91,103,255,0.12)"/>
+        <circle cx="756" cy="175" r="36" fill="rgba(150,160,255,0.18)"/>
+        <!-- Mount Fuji silhouette -->
+        <polygon points="540,440 200,700 880,700" fill="rgba(20,15,60,0.8)"/>
+        <polygon points="540,395 280,700 800,700" fill="rgba(25,18,70,0.9)"/>
+        <!-- City glow -->
+        <ellipse cx="540" cy="700" rx="500" ry="120" fill="rgba(255,107,157,0.12)"/>
+        <!-- Stars -->
+        <circle cx="120" cy="60" r="2" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="280" cy="120" r="1.5" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="450" cy="40" r="1" fill="rgba(255,255,255,0.7)"/>
+        <circle cx="680" cy="80" r="2" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="880" cy="50" r="1.5" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="950" cy="140" r="1" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="160" cy="200" r="1" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="320" cy="180" r="1.5" fill="rgba(255,255,255,0.5)"/>
+        <!-- Cherry blossom petals (abstract) -->
+        <ellipse cx="200" cy="380" rx="12" ry="6" fill="rgba(255,150,180,0.25)" transform="rotate(-30 200 380)"/>
+        <ellipse cx="340" cy="320" rx="10" ry="5" fill="rgba(255,150,180,0.2)" transform="rotate(15 340 320)"/>
+        <ellipse cx="820" cy="300" rx="11" ry="5" fill="rgba(255,150,180,0.2)" transform="rotate(-45 820 300)"/>
+        <ellipse cx="720" cy="400" rx="9" ry="4" fill="rgba(255,150,180,0.15)" transform="rotate(20 720 400)"/>
+        <!-- Tokyo skyline silhouette -->
+        <rect x="0" y="570" width="60" height="130" fill="rgba(10,8,30,0.9)" rx="2"/>
+        <rect x="55" y="540" width="40" height="160" fill="rgba(10,8,30,0.9)" rx="2"/>
+        <rect x="90" y="580" width="35" height="120" fill="rgba(10,8,30,0.85)" rx="1"/>
+        <rect x="160" y="560" width="50" height="140" fill="rgba(10,8,30,0.9)" rx="2"/>
+        <rect x="205" y="545" width="30" height="155" fill="rgba(10,8,30,0.88)" rx="1"/>
+        <rect x="850" y="555" width="55" height="145" fill="rgba(10,8,30,0.9)" rx="2"/>
+        <rect x="900" y="535" width="40" height="165" fill="rgba(10,8,30,0.9)" rx="2"/>
+        <rect x="935" y="565" width="50" height="135" fill="rgba(10,8,30,0.85)" rx="2"/>
+        <rect x="980" y="550" width="60" height="150" fill="rgba(10,8,30,0.88)" rx="2"/>
+        <!-- Tokyo Tower hint -->
+        <polygon points="490,430 505,700 475,700" fill="rgba(255,80,80,0.15)"/>
+        <polygon points="490,430 498,700 482,700" fill="rgba(200,50,50,0.2)"/>
+        <!-- Light bokeh circles -->
+        <circle cx="100" cy="450" r="18" fill="rgba(91,103,255,0.06)"/>
+        <circle cx="960" cy="480" r="24" fill="rgba(255,107,157,0.05)"/>
+        <circle cx="560" cy="200" r="30" fill="rgba(91,103,255,0.04)"/>
+        <!-- Bottom fade -->
+        <rect width="1080" height="200" y="500" fill="url(#skyGrad)" opacity="0.7"/>
+      </svg>
+    </div>
+
+    <!-- Brand -->
+    <div class="brand-top">
+      <div class="brand-mark">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 2L14 7H11V12H7V7H4L9 2Z" fill="white" opacity="0.9"/>
+          <path d="M5 14H13" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <path d="M7 16H11" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="brand-name">DRIFT</div>
+    </div>
+
+    <div class="eyebrow-chip">AI Trip Planner</div>
+
+    <!-- Headline -->
+    <div class="hero-headline">
+      <div class="hero-kicker">Describe your dream trip once.</div>
+      <div class="hero-main">ONE<br/><span class="accent">SENTENCE.</span><br/>FULL TRIP.</div>
+    </div>
+
+    <!-- Phone card -->
+    <div class="phone-card">
+      <div class="card-header">
+        <div class="card-title">DRIFT AI PLANNER</div>
+        <div class="card-live"><div class="live-dot"></div>GENERATING</div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-label">Your Prompt</div>
+        <div class="prompt-text">"7 days in Japan — Tokyo + Kyoto, obsessed with food and hidden temples, mid-range budget"</div>
+      </div>
+      <div class="itinerary-header">
+        <div class="itin-flag">🇯🇵</div>
+        <div class="itin-info">
+          <div class="itin-dest">Japan · 7 Days</div>
+          <div class="itin-meta">Food + Culture · Mid-range · Solo or Couple</div>
+        </div>
+      </div>
+      <div class="day-item">
+        <div class="day-tag">DAY 1</div>
+        <div class="day-desc"><strong>Shinjuku + Omoide Yokocho</strong> — arrive, Golden Gai at dusk, yakitori alley</div>
+      </div>
+      <div class="day-item">
+        <div class="day-tag">DAY 2</div>
+        <div class="day-desc"><strong>Tsukiji outer market</strong> at 5am — freshest sushi breakfast you'll ever have</div>
+      </div>
+      <div class="day-item">
+        <div class="day-tag">DAY 4</div>
+        <div class="day-desc"><strong>Fushimi Inari at dawn</strong> — beat the crowds, tea ceremony in the afternoon</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <div class="cta-copy">Plan any trip in under 30 seconds.<br/>Drift builds it. You just go.</div>
+      <div class="cta-row">
+        <div class="cta-btn-main">Plan Your Trip →</div>
+        <div class="cta-badge-free">Free<br/>to start</div>
+      </div>
+      <div class="cta-sub-row">Your Passion Passport · Drift</div>
+    </div>
+  </div>
+</body>
+</html>

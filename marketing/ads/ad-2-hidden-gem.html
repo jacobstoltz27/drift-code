@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Drift Ad 2 – Hidden Gem</title>
+  <meta name="hz:slide-selector" content=".slide" />
+  <meta name="hz:canvas-width" content="1080" />
+  <meta name="hz:canvas-height" content="1920" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #04080a;
+    }
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background: #050c0a;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Background */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 1100px 700px at 50% -50px, rgba(20,184,164,0.16) 0%, transparent 60%),
+        radial-gradient(ellipse 700px 500px at 100% 50%, rgba(20,184,164,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 600px 600px at 0% 80%, rgba(91,103,255,0.07) 0%, transparent 60%),
+        linear-gradient(180deg, #050c0a 0%, #040809 100%);
+    }
+
+    /* Hex grid overlay */
+    .hex-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.4;
+    }
+
+    /* Brand */
+    .brand-top {
+      position: absolute;
+      top: 52px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #14B8A6 0%, #0EA5A0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 400;
+    }
+
+    /* Big hero art - Bali rice terrace abstract */
+    .hero-art {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 800px;
+    }
+    .hero-art svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Hidden gem chip */
+    .gem-chip {
+      position: absolute;
+      top: 120px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(20,184,164,0.1);
+      border: 1px solid rgba(20,184,164,0.28);
+      border-radius: 100px;
+      padding: 8px 20px;
+    }
+    .gem-emoji { font-size: 16px; }
+    .gem-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #14B8A6;
+    }
+
+    /* Quote caption */
+    .quote-block {
+      position: absolute;
+      top: 700px;
+      left: 60px;
+      right: 60px;
+    }
+    .quote-line {
+      width: 48px;
+      height: 3px;
+      background: #14B8A6;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+    .quote-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+    .quote-text em {
+      color: rgba(255,255,255,0.85);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* Main headline */
+    .headline {
+      position: absolute;
+      top: 880px;
+      left: 60px;
+      right: 60px;
+    }
+    .headline-main {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 110px;
+      line-height: 0.92;
+      color: #ffffff;
+      font-weight: 400;
+    }
+    .headline-main .teal { color: #14B8A6; }
+
+    /* Destination cards */
+    .dest-grid {
+      position: absolute;
+      top: 1220px;
+      left: 60px;
+      right: 60px;
+    }
+    .grid-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 18px;
+    }
+    .grid-row {
+      display: flex;
+      gap: 14px;
+    }
+    .dest-card {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .dest-card.featured {
+      border-color: rgba(20,184,164,0.25);
+      background: rgba(20,184,164,0.04);
+    }
+    .card-art {
+      height: 130px;
+      position: relative;
+    }
+    .card-art svg { width: 100%; height: 100%; }
+    .card-body {
+      padding: 12px 14px 14px;
+    }
+    .card-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 3px;
+    }
+    .card-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 8px;
+    }
+    .gem-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(20,184,164,0.12);
+      border-radius: 5px;
+      padding: 3px 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #14B8A6;
+    }
+
+    /* CTA bar */
+    .cta-bar {
+      position: absolute;
+      bottom: 70px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .cta-text {
+      flex: 1;
+    }
+    .cta-primary {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 4px;
+    }
+    .cta-secondary {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.35);
+    }
+    .cta-action {
+      background: #14B8A6;
+      border-radius: 16px;
+      padding: 20px 30px;
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide" data-canvas-width="1080" data-canvas-height="1920">
+    <div class="bg"></div>
+
+    <!-- Abstract Bali landscape SVG art -->
+    <div class="hero-art">
+      <svg viewBox="0 0 1080 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0a2818" stop-opacity="0.95"/>
+            <stop offset="60%" stop-color="#063020" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#050c0a" stop-opacity="1"/>
+          </linearGradient>
+          <radialGradient id="sunG" cx="50%" cy="20%" r="35%">
+            <stop offset="0%" stop-color="#14B8A6" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="terraceG1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0d4a35"/>
+            <stop offset="100%" stop-color="#062918"/>
+          </linearGradient>
+          <linearGradient id="terraceG2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0a3d2b"/>
+            <stop offset="100%" stop-color="#051f12"/>
+          </linearGradient>
+          <linearGradient id="waterG" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0a3d2b" stop-opacity="0.6"/>
+            <stop offset="50%" stop-color="#14B8A6" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#0a3d2b" stop-opacity="0.6"/>
+          </linearGradient>
+        </defs>
+        <!-- Sky -->
+        <rect width="1080" height="800" fill="url(#skyG)"/>
+        <ellipse cx="540" cy="160" rx="400" ry="250" fill="url(#sunG)"/>
+        <!-- Distant jungle mountains -->
+        <path d="M0,600 Q180,400 360,480 Q500,380 600,440 Q720,360 900,430 Q980,400 1080,460 L1080,800 L0,800 Z" fill="rgba(8,30,20,0.95)"/>
+        <!-- Rice terraces — layered curves -->
+        <path d="M0,650 Q270,580 540,620 Q810,580 1080,650 L1080,800 L0,800 Z" fill="url(#terraceG1)"/>
+        <path d="M0,680 Q200,640 400,665 Q600,640 800,665 Q950,648 1080,680 L1080,800 L0,800 Z" fill="url(#terraceG2)"/>
+        <path d="M0,710 Q160,690 320,700 Q540,685 760,700 Q920,688 1080,710 L1080,800 L0,800 Z" fill="rgba(6,25,16,0.97)"/>
+        <!-- Water reflections on terraces -->
+        <path d="M80,660 Q200,648 340,658 Q420,650 500,658" stroke="url(#waterG)" stroke-width="2" fill="none" opacity="0.6"/>
+        <path d="M200,685 Q350,672 480,682 Q580,674 720,682" stroke="url(#waterG)" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M0,700 Q150,692 300,697 Q480,690 620,697 Q800,690 980,697 Q1040,693 1080,697" stroke="url(#waterG)" stroke-width="1.5" fill="none" opacity="0.4"/>
+        <!-- Teal mist overlay -->
+        <ellipse cx="540" cy="550" rx="600" ry="120" fill="rgba(20,184,164,0.04)"/>
+        <!-- Palm tree silhouettes -->
+        <line x1="180" y1="650" x2="175" y2="520" stroke="rgba(5,20,12,0.95)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M175,520 Q120,480 80,490" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M175,520 Q140,495 110,510" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M175,520 Q175,490 155,475" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M175,520 Q210,490 240,500" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M175,520 Q220,480 250,485" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- Far right palm -->
+        <line x1="900" y1="660" x2="905" y2="530" stroke="rgba(5,20,12,0.95)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M905,530 Q850,490 820,500" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M905,530 Q870,500 855,515" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M905,530 Q940,500 970,510" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M905,530 Q960,490 990,495" stroke="rgba(5,20,12,0.9)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- Stars -->
+        <circle cx="200" cy="80" r="1.5" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="400" cy="50" r="1" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="700" cy="70" r="2" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="850" cy="40" r="1" fill="rgba(255,255,255,0.4)"/>
+        <circle cx="950" cy="100" r="1.5" fill="rgba(255,255,255,0.5)"/>
+        <!-- Bottom fade to slide bg -->
+        <rect width="1080" height="250" y="550" fill="url(#skyG)" opacity="0.85"/>
+      </svg>
+    </div>
+
+    <!-- Brand -->
+    <div class="brand-top">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2L14 7H11V12H7V7H4L9 2Z" fill="white" opacity="0.9"/>
+          <path d="M5 14H13" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="brand-name">DRIFT</div>
+    </div>
+
+    <div class="gem-chip">
+      <span class="gem-emoji">💎</span>
+      <span class="gem-text">Hidden Gems</span>
+    </div>
+
+    <!-- Quote -->
+    <div class="quote-block">
+      <div class="quote-line"></div>
+      <div class="quote-text">"I found this place in Bali through Drift.<br/><em>It wasn't on anyone else's feed.</em>"</div>
+    </div>
+
+    <!-- Headline -->
+    <div class="headline">
+      <div class="headline-main">
+        PLACES<br/>
+        <span class="teal">NOBODY</span><br/>
+        KNOWS YET
+      </div>
+    </div>
+
+    <!-- Destination cards -->
+    <div class="dest-grid">
+      <div class="grid-label">Hidden Gems · Trending on Drift</div>
+      <div class="grid-row">
+        <div class="dest-card featured">
+          <div class="card-art">
+            <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg">
+              <rect width="320" height="130" fill="#0a2818"/>
+              <path d="M0,90 Q80,60 160,75 Q240,60 320,90 L320,130 L0,130 Z" fill="#0d3d22"/>
+              <path d="M0,105 Q80,88 160,95 Q240,88 320,105 L320,130 L0,130 Z" fill="#082314"/>
+              <ellipse cx="160" cy="30" rx="80" ry="50" fill="rgba(20,184,164,0.08)"/>
+              <circle cx="160" cy="20" r="15" fill="rgba(20,184,164,0.12)"/>
+              <line x1="60" y1="95" x2="58" y2="60" stroke="#062016" stroke-width="5"/>
+              <path d="M58,60 Q30,45 15,50" stroke="#062016" stroke-width="4" fill="none"/>
+              <path d="M58,60 Q60,40 48,35" stroke="#062016" stroke-width="4" fill="none"/>
+              <path d="M58,60 Q75,42 88,48" stroke="#062016" stroke-width="4" fill="none"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-name">Sidemen, Bali</div>
+            <div class="card-desc">Jungle rice terraces, no tourists</div>
+            <div class="gem-pill">💎 Hidden Gem</div>
+          </div>
+        </div>
+        <div class="dest-card">
+          <div class="card-art">
+            <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg">
+              <rect width="320" height="130" fill="#1a1228"/>
+              <path d="M160,80 L0,130 L320,130 Z" fill="#0d0820"/>
+              <circle cx="80" cy="40" r="25" fill="rgba(255,255,255,0.06)"/>
+              <rect x="100" y="70" width="15" height="60" fill="#1a1228" rx="2"/>
+              <rect x="140" y="55" width="15" height="75" fill="#1a1228" rx="2"/>
+              <rect x="165" y="65" width="12" height="65" fill="#1a1228" rx="1"/>
+              <ellipse cx="220" cy="90" rx="80" ry="20" fill="rgba(91,103,255,0.06)"/>
+              <circle cx="270" cy="40" r="8" fill="rgba(255,200,100,0.15)"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-name">Folegandros, Greece</div>
+            <div class="card-desc">The untouched Santorini</div>
+            <div class="gem-pill">💎 Hidden Gem</div>
+          </div>
+        </div>
+        <div class="dest-card">
+          <div class="card-art">
+            <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg">
+              <rect width="320" height="130" fill="#0f0f1a"/>
+              <path d="M0,100 Q160,60 320,100 L320,130 L0,130 Z" fill="#090914"/>
+              <polygon points="160,30 120,100 200,100" fill="#1a1a2e"/>
+              <polygon points="160,20 128,100 192,100" fill="#13132a"/>
+              <circle cx="160" cy="55" r="3" fill="rgba(91,103,255,0.5)"/>
+              <path d="M155,90 Q160,70 165,90" fill="rgba(255,200,100,0.12)"/>
+              <rect x="150" y="95" width="20" height="35" fill="#090914" rx="1"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-name">Kanazawa, Japan</div>
+            <div class="card-desc">Old Japan, zero tourists</div>
+            <div class="gem-pill">💎 Hidden Gem</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-bar">
+      <div class="cta-text">
+        <div class="cta-primary">Discover what everyone misses</div>
+        <div class="cta-secondary">Free · Available on iOS & Android</div>
+      </div>
+      <div class="cta-action">Explore →</div>
+    </div>
+  </div>
+</body>
+</html>
