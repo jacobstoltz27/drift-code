@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd landing && npm install --legacy-peer-deps && npm run build",
+  "outputDirectory": "landing/out",
+  "installCommand": "echo 'skip root install'"
+}
