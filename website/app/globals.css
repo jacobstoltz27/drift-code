@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --grain-opacity: 0.04;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #09090b;
+  color: #f8f5ee;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Thin, warm scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #2f5e8e;
+  border-radius: 999px;
+}
+
+::selection {
+  background: rgba(242, 184, 90, 0.3);
+  color: #f8f5ee;
+}
+
+@layer components {
+  .label-kicker {
+    @apply text-xs font-semibold uppercase tracking-label text-golden;
+  }
+
+  /* Golden Hour gradient text used for emphasis words */
+  .text-gradient-gold {
+    background: linear-gradient(120deg, #f2b85a 0%, #f8f5ee 50%, #f2b85a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .glass {
+    background: rgba(21, 21, 21, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(248, 245, 238, 0.08);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 60px -15px rgba(242, 184, 90, 0.45);
+  }
+  .glow-ocean {
+    box-shadow: 0 0 80px -20px rgba(47, 94, 142, 0.6);
+  }
+}
+
+/* Film grain overlay for cinematic texture */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Magnetic / cursor-aware buttons get a soft transition */
+.magnetic {
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
