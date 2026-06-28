@@ -56,19 +56,14 @@ export default function VibeSelector() {
               onClick={() => setActive(i)}
               className={`group relative overflow-hidden rounded-2xl border px-5 py-5 text-center transition-all duration-300 ${
                 i === active
-                  ? "border-golden/50 bg-golden text-midnight shadow-[0_10px_40px_-10px_rgba(185,145,94,0.7)]"
+                  ? "border-golden/50 bg-golden text-midnight shadow-[0_10px_40px_-10px_rgba(56,189,248,0.7)]"
                   : "border-ivory/10 bg-ivory/[0.04] text-ivory/75 backdrop-blur-md hover:-translate-y-1 hover:border-ocean/50 hover:bg-ocean/10 hover:text-ivory"
               }`}
             >
-              {/* warm glow sweep on the active tile */}
+              {/* sheen sweep on the active tile */}
               {i === active && (
                 <span className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0" />
               )}
-              <span
-                className={`mx-auto mb-2 block h-1.5 w-1.5 rounded-full transition ${
-                  i === active ? "bg-midnight/70" : "bg-ocean/70 group-hover:bg-ocean"
-                }`}
-              />
               <span className="font-display text-lg font-bold tracking-tight">
                 {v.name}
               </span>

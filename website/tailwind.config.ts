@@ -12,7 +12,7 @@ const config: Config = {
         charcoal: "#151A24",
         ivory: "#FEFAEF",
         ocean: "#AFD2FA",
-        golden: "#B9915E",
+        golden: "#38BDF8",
         forest: "#24356B",
       },
       fontFamily: {

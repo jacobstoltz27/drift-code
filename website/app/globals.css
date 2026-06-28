@@ -31,7 +31,7 @@ body {
 }
 
 ::selection {
-  background: rgba(185, 145, 94, 0.35);
+  background: rgba(56, 189, 248, 0.3);
   color: #fefaef;
 }
 
@@ -42,7 +42,7 @@ body {
 
   /* Pale Brown gradient text used for emphasis words */
   .text-gradient-gold {
-    background: linear-gradient(120deg, #b9915e 0%, #fefaef 50%, #b9915e 100%);
+    background: linear-gradient(120deg, #38bdf8 0%, #fefaef 50%, #38bdf8 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -56,7 +56,7 @@ body {
   }
 
   .glow-gold {
-    box-shadow: 0 0 60px -15px rgba(185, 145, 94, 0.45);
+    box-shadow: 0 0 60px -15px rgba(56, 189, 248, 0.45);
   }
   .glow-ocean {
     box-shadow: 0 0 80px -20px rgba(175, 210, 250, 0.45);
