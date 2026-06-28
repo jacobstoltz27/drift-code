@@ -7,7 +7,10 @@ import JourneyTimeline from "@/components/JourneyTimeline";
 import Features from "@/components/Features";
 import StolenTrips from "@/components/StolenTrips";
 import VibeSelector from "@/components/VibeSelector";
+import Stories from "@/components/Stories";
 import Pricing from "@/components/Pricing";
+import FAQ from "@/components/FAQ";
+import Roadmap from "@/components/Roadmap";
 import WaitlistCTA from "@/components/WaitlistCTA";
 import Footer from "@/components/Footer";
 import ScrollCompass from "@/components/ScrollCompass";
@@ -25,7 +28,10 @@ export default function Home() {
       <Features />
       <StolenTrips />
       <VibeSelector />
+      <Stories />
       <Pricing />
+      <FAQ />
+      <Roadmap />
       <WaitlistCTA />
       <Footer />
     </main>

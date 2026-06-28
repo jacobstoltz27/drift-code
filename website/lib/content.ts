@@ -66,6 +66,57 @@ export const journey = [
   { step: "Share", text: "Drop your itinerary for a friend. They steal it in one tap." },
 ];
 
+export const stories = [
+  {
+    quote:
+      "I almost didn't go. Drift handed me a plan good enough that I stopped overthinking and just booked the flight.",
+    name: "Maya R.",
+    place: "Lisbon → Morocco",
+  },
+  {
+    quote:
+      "Stole my friend's whole Japan itinerary in one tap. Two weeks of his research, mine in seconds.",
+    name: "Devin K.",
+    place: "Tokyo & Kyoto",
+  },
+  {
+    quote:
+      "My map lighting up after Patagonia did something to me. I want to fill the whole thing now.",
+    name: "Sofia L.",
+    place: "Patagonia",
+  },
+];
+
+export const faqs = [
+  {
+    q: "Do I need to be an experienced traveler?",
+    a: "No — Drift is built for the opposite. If planning has ever stopped you from going, that's exactly who this is for. You tell us the vibe; we handle the hard part.",
+  },
+  {
+    q: "What does \"stealing\" an itinerary actually mean?",
+    a: "You copy someone's trip — a friend's, a creator's — into your own plans in one tap. Every day, every spot, fully editable. It's the fastest way from inspiration to a real plan.",
+  },
+  {
+    q: "Is Drift free?",
+    a: "Yes. The Free plan covers the feed, discovery, and AI planning for your first trips. You unlock more by inviting friends, or go Pro for unlimited everything.",
+  },
+  {
+    q: "When does Drift launch?",
+    a: "We're rolling out access in waves to early members first. Join the waitlist and you'll be near the front of the line — with founding-member perks.",
+  },
+  {
+    q: "Will my data be private?",
+    a: "Your trips are yours. We don't sell your data, and your email only ever gets the occasional spark of travel inspiration — never spam.",
+  },
+];
+
+export const roadmap = [
+  { phase: "Now", title: "Early access", text: "Waitlist members get in first, in waves.", done: true },
+  { phase: "Next", title: "AI planner v2", text: "Smarter plans that learn your taste over time.", done: false },
+  { phase: "Soon", title: "Live group trips", text: "Plan together in real time, anywhere in the world.", done: false },
+  { phase: "Later", title: "Local Guides", text: "Verified locals who shape your trip from the inside.", done: false },
+];
+
 export const features = [
   {
     name: "The Feed",
