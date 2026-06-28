@@ -48,14 +48,14 @@ export const stats = [
 ];
 
 export const vibes = [
-  { name: "Adventure", color: "#7BA3D6", img: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Adventure", color: "#24356B", img: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=80" },
   { name: "Food", color: "#B9915E", img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Luxury", color: "#2E4585", img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Nature", color: "#7BA3D6", img: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Nightlife", color: "#2E4585", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Luxury", color: "#24356B", img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Nature", color: "#24356B", img: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Nightlife", color: "#24356B", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80" },
   { name: "Relaxing", color: "#B9915E", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80" },
   { name: "Culture", color: "#B9915E", img: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Backpacking", color: "#7BA3D6", img: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Backpacking", color: "#24356B", img: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1600&q=80" },
 ];
 
 export const journey = [

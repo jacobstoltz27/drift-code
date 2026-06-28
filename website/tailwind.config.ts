@@ -8,15 +8,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        midnight: "#101831",
-        charcoal: "#182350",
+        midnight: "#0A0D12",
+        charcoal: "#151A24",
         ivory: "#FEFAEF",
         ocean: "#AFD2FA",
         golden: "#B9915E",
-        forest: "#7BA3D6",
+        forest: "#24356B",
       },
       fontFamily: {
-        display: ["var(--font-fraunces)", "serif"],
+        display: ["Satoshi", "var(--font-inter)", "system-ui", "sans-serif"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       letterSpacing: {

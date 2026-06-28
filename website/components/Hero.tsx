@@ -32,7 +32,7 @@ export default function Hero() {
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage:
-              "url('https://d8j0ntlcm91z4.cloudfront.net/user_3EBkRDT9DW01OCu9b0Wi6DO1TJo/hf_20260628_185419_f885bf22-cd28-4e7e-8e89-1085f7101abf.png'), linear-gradient(160deg, #2E4585 0%, #182350 55%, #101831 100%)",
+              "url('https://d8j0ntlcm91z4.cloudfront.net/user_3EBkRDT9DW01OCu9b0Wi6DO1TJo/hf_20260628_185419_f885bf22-cd28-4e7e-8e89-1085f7101abf.png'), linear-gradient(160deg, #24356B 0%, #151A24 55%, #0A0D12 100%)",
           }}
         />
         {/* Golden-hour to midnight gradient wash */}

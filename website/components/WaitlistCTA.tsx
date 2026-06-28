@@ -15,7 +15,7 @@ export default function WaitlistCTA() {
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=80'), linear-gradient(160deg, #2E4585 0%, #182350 60%, #101831 100%)",
+            "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=80'), linear-gradient(160deg, #24356B 0%, #151A24 60%, #0A0D12 100%)",
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-midnight via-midnight/70 to-midnight" />

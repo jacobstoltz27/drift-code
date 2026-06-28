@@ -32,7 +32,7 @@ export default function Nav() {
           </span>
         </a>
 
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-ivory/10 bg-charcoal/40 px-2 py-1.5 text-sm text-ivory/70 backdrop-blur-md md:flex">
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-ivory/10 bg-charcoal/40 px-2 py-1.5 font-display text-sm font-medium text-ivory/70 backdrop-blur-md md:flex">
           <a href="#features" className="rounded-full px-4 py-1.5 transition hover:bg-ivory/10 hover:text-ivory">Features</a>
           <a href="#vibe" className="rounded-full px-4 py-1.5 transition hover:bg-ivory/10 hover:text-ivory">Your Vibe</a>
           <a href="#pricing" className="rounded-full px-4 py-1.5 transition hover:bg-ivory/10 hover:text-ivory">Pricing</a>

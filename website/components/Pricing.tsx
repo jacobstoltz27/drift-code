@@ -67,7 +67,7 @@ export default function Pricing() {
             <button
               onClick={() => setAnnual(true)}
               className={`flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition ${
-                annual ? "bg-ocean text-ivory" : "text-ivory/50"
+                annual ? "bg-ocean text-midnight" : "text-ivory/50"
               }`}
             >
               Annual
@@ -138,7 +138,7 @@ export default function Pricing() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="relative rounded-[24px] border border-golden/30 bg-charcoal/70 p-8 glow-gold"
           >
-            <span className="absolute right-6 top-6 rounded-full bg-ocean px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-ivory">
+            <span className="absolute right-6 top-6 rounded-full bg-ocean px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-midnight">
               Most Popular
             </span>
             <h3 className="font-display text-2xl text-ivory">Pro</h3>
@@ -166,7 +166,7 @@ export default function Pricing() {
 
             <a
               href="#waitlist"
-              className="magnetic mt-8 block rounded-full bg-gradient-to-r from-ocean to-forest py-3.5 text-center font-semibold text-ivory transition hover:scale-[1.02]"
+              className="magnetic mt-8 block rounded-full bg-golden py-3.5 text-center font-semibold text-midnight transition hover:scale-[1.02]"
             >
               {annual ? "Start Free Trial for $86.28/yr" : "Start Free Trial"}
             </a>

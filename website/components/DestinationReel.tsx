@@ -29,7 +29,7 @@ function Card({ d, index }: { d: (typeof destinations)[number]; index: number })
         <motion.div
           style={{
             y,
-            backgroundImage: `url('${d.img}'), linear-gradient(135deg, #7BA3D6 0%, #182350 70%)`,
+            backgroundImage: `url('${d.img}'), linear-gradient(135deg, #24356B 0%, #151A24 70%)`,
           }}
           className="absolute inset-[-12%] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
         />
