@@ -40,7 +40,7 @@ export default function StolenTrips() {
                 className="h-48 w-full rounded-2xl bg-cover bg-center"
                 style={{
                   backgroundImage:
-                    "url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80')",
+                    "url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80'), linear-gradient(135deg, #2F5E8E 0%, #151515 70%)",
                 }}
               />
               <div className="mt-4 flex items-center justify-between">

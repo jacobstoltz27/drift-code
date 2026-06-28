@@ -20,7 +20,9 @@ export default function VibeSelector() {
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${vibe.img}')` }}
+          style={{
+            backgroundImage: `url('${vibe.img}'), linear-gradient(160deg, ${vibe.color} 0%, #09090B 70%)`,
+          }}
         />
       </AnimatePresence>
       <div className="absolute inset-0 bg-midnight/75" />

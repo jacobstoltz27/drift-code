@@ -27,7 +27,10 @@ function Card({ d, index }: { d: (typeof destinations)[number]; index: number })
     >
       <div className="relative h-72 w-full overflow-hidden md:h-full md:min-h-[280px]">
         <motion.div
-          style={{ y, backgroundImage: `url('${d.img}')` }}
+          style={{
+            y,
+            backgroundImage: `url('${d.img}'), linear-gradient(135deg, #4C7A5B 0%, #151515 70%)`,
+          }}
           className="absolute inset-[-12%] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/20 to-transparent" />
