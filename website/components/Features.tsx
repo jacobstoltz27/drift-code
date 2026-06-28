@@ -58,7 +58,7 @@ function FeatureRow({
       {/* Copy */}
       <Reveal className="w-full md:w-1/2" delay={0.1}>
         <p className="label-kicker mb-4">{f.kicker}</p>
-        <h3 className="font-display text-3xl font-light tracking-tight text-ivory sm:text-5xl">
+        <h3 className="font-display text-3xl font-bold tracking-tight text-ivory sm:text-5xl">
           {f.name}
         </h3>
         <p className="mt-5 text-lg leading-relaxed text-ivory/65">{f.desc}</p>
@@ -73,7 +73,7 @@ export default function Features() {
       <div className="mx-auto max-w-7xl px-6">
         <Reveal className="mb-20 text-center">
           <p className="label-kicker mb-4">One complete platform</p>
-          <h2 className="mx-auto max-w-3xl font-display text-4xl font-light leading-tight tracking-tight text-ivory sm:text-6xl">
+          <h2 className="mx-auto max-w-3xl font-display text-4xl font-bold leading-tight tracking-tight text-ivory sm:text-6xl">
             Everything you need.
             <span className="italic text-gradient-gold"> Nothing you don&apos;t.</span>
           </h2>

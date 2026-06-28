@@ -36,7 +36,7 @@ export default function WaitlistCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.9, delay: 0.1 }}
-          className="font-display text-5xl font-light leading-[1.05] tracking-tight text-ivory sm:text-7xl"
+          className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-ivory sm:text-7xl"
         >
           The world is waiting.
           <br />

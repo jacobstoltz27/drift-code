@@ -41,10 +41,10 @@ export default function Pricing() {
       <div className="mx-auto max-w-5xl px-6">
         <Reveal className="text-center">
           <p className="label-kicker mb-5">Pricing</p>
-          <h2 className="font-display text-5xl font-medium tracking-tight text-ivory sm:text-6xl">
+          <h2 className="font-display text-5xl font-bold tracking-tight text-ivory sm:text-6xl">
             Start free.
           </h2>
-          <h2 className="font-display text-5xl font-medium italic tracking-tight text-gradient-gold sm:text-6xl">
+          <h2 className="font-display text-5xl font-bold italic tracking-tight text-gradient-gold sm:text-6xl">
             Earn more. Unlock everything.
           </h2>
           <p className="mx-auto mt-5 max-w-md text-ivory/60">

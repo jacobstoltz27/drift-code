@@ -51,7 +51,7 @@ export default function FAQ() {
       <div className="mx-auto max-w-3xl px-6">
         <Reveal className="mb-12 text-center">
           <p className="label-kicker mb-4">Before you ask</p>
-          <h2 className="font-display text-4xl font-light tracking-tight text-ivory sm:text-5xl">
+          <h2 className="font-display text-4xl font-bold tracking-tight text-ivory sm:text-5xl">
             Questions, answered.
           </h2>
         </Reveal>

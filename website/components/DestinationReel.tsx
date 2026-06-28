@@ -43,7 +43,7 @@ function Card({ d, index }: { d: (typeof destinations)[number]; index: number })
 
       <div className="absolute bottom-0 left-0 p-6">
         <p className="text-xs uppercase tracking-label text-golden/90">{d.tag}</p>
-        <h3 className="font-display text-3xl font-light text-ivory">{d.name}</h3>
+        <h3 className="font-display text-3xl font-bold text-ivory">{d.name}</h3>
       </div>
     </motion.div>
   );
@@ -55,7 +55,7 @@ export default function DestinationReel() {
       <div className="mx-auto max-w-7xl px-6">
         <Reveal className="mb-14 max-w-2xl">
           <p className="label-kicker mb-4">A world worth getting lost in</p>
-          <h2 className="font-display text-4xl font-light leading-tight tracking-tight text-ivory sm:text-6xl">
+          <h2 className="font-display text-4xl font-bold leading-tight tracking-tight text-ivory sm:text-6xl">
             From the well-known to the
             <span className="italic text-gradient-gold"> nowhere-on-the-map.</span>
           </h2>

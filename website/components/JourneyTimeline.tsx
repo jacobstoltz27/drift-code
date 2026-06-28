@@ -18,7 +18,7 @@ export default function JourneyTimeline() {
       <div className="mx-auto max-w-4xl px-6">
         <div className="mb-16 text-center">
           <p className="label-kicker mb-4">The Drift loop</p>
-          <h2 className="font-display text-4xl font-light tracking-tight text-ivory sm:text-5xl">
+          <h2 className="font-display text-4xl font-bold tracking-tight text-ivory sm:text-5xl">
             Dream. Plan. Experience.
             <br />
             <span className="italic text-gradient-gold">Remember. Share.</span>

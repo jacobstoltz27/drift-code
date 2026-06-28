@@ -10,7 +10,7 @@ export default function Roadmap() {
       <div className="mx-auto max-w-6xl px-6">
         <Reveal className="mb-14 max-w-2xl">
           <p className="label-kicker mb-4">The road ahead</p>
-          <h2 className="font-display text-4xl font-light tracking-tight text-ivory sm:text-5xl">
+          <h2 className="font-display text-4xl font-bold tracking-tight text-ivory sm:text-5xl">
             We&apos;re just
             <span className="italic text-gradient-gold"> getting started.</span>
           </h2>

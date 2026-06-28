@@ -21,7 +21,7 @@ export default function Stories() {
       <div className="relative mx-auto max-w-6xl px-6">
         <Reveal className="mb-16 max-w-2xl">
           <p className="label-kicker mb-4">Community first</p>
-          <h2 className="font-display text-4xl font-light leading-tight tracking-tight text-ivory sm:text-6xl">
+          <h2 className="font-display text-4xl font-bold leading-tight tracking-tight text-ivory sm:text-6xl">
             Collect stories,
             <span className="italic text-gradient-gold"> not souvenirs.</span>
           </h2>
@@ -41,7 +41,7 @@ export default function Stories() {
               transition={{ duration: 0.7, delay: i * 0.12 }}
               className="glass flex flex-col justify-between rounded-[24px] p-7"
             >
-              <blockquote className="font-display text-xl font-light italic leading-relaxed text-ivory/90">
+              <blockquote className="font-display text-xl font-bold italic leading-relaxed text-ivory/90">
                 &ldquo;{s.quote}&rdquo;
               </blockquote>
               <figcaption className="mt-7 flex items-center gap-3">

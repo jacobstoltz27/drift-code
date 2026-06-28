@@ -16,7 +16,7 @@ const config: Config = {
         forest: "#24356B",
       },
       fontFamily: {
-        display: ["Satoshi", "var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-fraunces)", "Georgia", "serif"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       letterSpacing: {

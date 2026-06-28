@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 
-// Satoshi (the brand display face) is served from Fontshare, its foundry —
-// loaded via <link> below. Inter handles all body/UI text.
+// Fraunces is the bold serif brand face (logo, headlines, section titles, nav).
+// Inter handles all body, button, and form text.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  display: "swap",
+  axes: ["opsz"],
+});
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -35,14 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <head>
-        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap"
-        />
-      </head>
+    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="font-sans antialiased grain bg-midnight text-ivory">
         {children}
       </body>

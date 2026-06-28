@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="border-t border-ivory/5 bg-midnight py-16">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-12 text-center">
-          <p className="mx-auto max-w-xl font-display text-2xl font-light italic leading-relaxed text-ivory/80 sm:text-3xl">
+          <p className="mx-auto max-w-xl font-display text-2xl font-bold italic leading-relaxed text-ivory/80 sm:text-3xl">
             &ldquo;Travel isn&apos;t always pretty. It isn&apos;t always
             comfortable. But it leaves marks on your memory, your consciousness,
             your heart. And you take it with you.&rdquo;

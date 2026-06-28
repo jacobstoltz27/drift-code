@@ -39,7 +39,7 @@ export default function Manifesto() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.9, delay: i * 0.18 }}
-              className={`font-display text-3xl font-light leading-snug tracking-tight sm:text-5xl ${
+              className={`font-display text-3xl font-bold leading-snug tracking-tight sm:text-5xl ${
                 i === lines.length - 1 ? "text-gradient-gold italic" : "text-ivory"
               }`}
             >

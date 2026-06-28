@@ -39,7 +39,7 @@ export default function VibeSelector() {
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <Reveal>
           <p className="label-kicker mb-4">What&apos;s your travel vibe?</p>
-          <h2 className="font-display text-4xl font-light tracking-tight text-ivory sm:text-6xl">
+          <h2 className="font-display text-4xl font-bold tracking-tight text-ivory sm:text-6xl">
             Drift plans around
             <span className="italic text-gradient-gold"> how you want to feel.</span>
           </h2>
@@ -49,18 +49,29 @@ export default function VibeSelector() {
           </p>
         </Reveal>
 
-        <div className="mt-12 flex flex-wrap justify-center gap-3">
+        <div className="mx-auto mt-12 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
           {vibes.map((v, i) => (
             <button
               key={v.name}
               onClick={() => setActive(i)}
-              className={`magnetic rounded-full border px-5 py-2.5 text-sm font-medium transition ${
+              className={`group relative overflow-hidden rounded-2xl border px-5 py-5 text-center transition-all duration-300 ${
                 i === active
-                  ? "border-golden bg-golden text-midnight"
-                  : "border-ivory/20 bg-midnight/30 text-ivory/80 hover:border-ivory/50"
+                  ? "border-golden/50 bg-golden text-midnight shadow-[0_10px_40px_-10px_rgba(185,145,94,0.7)]"
+                  : "border-ivory/10 bg-ivory/[0.04] text-ivory/75 backdrop-blur-md hover:-translate-y-1 hover:border-ocean/50 hover:bg-ocean/10 hover:text-ivory"
               }`}
             >
-              {v.name}
+              {/* warm glow sweep on the active tile */}
+              {i === active && (
+                <span className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0" />
+              )}
+              <span
+                className={`mx-auto mb-2 block h-1.5 w-1.5 rounded-full transition ${
+                  i === active ? "bg-midnight/70" : "bg-ocean/70 group-hover:bg-ocean"
+                }`}
+              />
+              <span className="font-display text-lg font-bold tracking-tight">
+                {v.name}
+              </span>
             </button>
           ))}
         </div>

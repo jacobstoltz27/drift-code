@@ -12,7 +12,7 @@ export default function StolenTrips() {
       <div className="relative mx-auto grid max-w-6xl items-center gap-16 px-6 md:grid-cols-2">
         <Reveal>
           <p className="label-kicker mb-5">The one that changes everything</p>
-          <h2 className="font-display text-5xl font-light leading-[1.05] tracking-tight text-ivory sm:text-7xl">
+          <h2 className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-ivory sm:text-7xl">
             Steal any
             <br />
             <span className="italic text-gradient-gold">itinerary.</span>

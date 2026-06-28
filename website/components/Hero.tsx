@@ -59,7 +59,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 1 }}
-          className="font-display text-5xl font-light leading-[1.05] tracking-tight text-ivory sm:text-7xl md:text-8xl"
+          className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-ivory sm:text-7xl md:text-8xl"
         >
           Where will you
           <br />
