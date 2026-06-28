@@ -168,7 +168,7 @@ export default function Pricing() {
               href="#waitlist"
               className="magnetic mt-8 block rounded-full bg-gradient-to-r from-ocean to-forest py-3.5 text-center font-semibold text-ivory transition hover:scale-[1.02]"
             >
-              {annual ? "Start Free Trial — $86.28/yr" : "Start Free Trial"}
+              {annual ? "Start Free Trial for $86.28/yr" : "Start Free Trial"}
             </a>
           </motion.div>
         </div>

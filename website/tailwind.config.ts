@@ -8,12 +8,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        midnight: "#09090B",
-        charcoal: "#151515",
-        ivory: "#F8F5EE",
-        ocean: "#2F5E8E",
-        golden: "#F2B85A",
-        forest: "#4C7A5B",
+        midnight: "#101831",
+        charcoal: "#182350",
+        ivory: "#FEFAEF",
+        ocean: "#AFD2FA",
+        golden: "#B9915E",
+        forest: "#7BA3D6",
       },
       fontFamily: {
         display: ["var(--font-fraunces)", "serif"],

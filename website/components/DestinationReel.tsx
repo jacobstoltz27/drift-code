@@ -29,7 +29,7 @@ function Card({ d, index }: { d: (typeof destinations)[number]; index: number })
         <motion.div
           style={{
             y,
-            backgroundImage: `url('${d.img}'), linear-gradient(135deg, #4C7A5B 0%, #151515 70%)`,
+            backgroundImage: `url('${d.img}'), linear-gradient(135deg, #7BA3D6 0%, #182350 70%)`,
           }}
           className="absolute inset-[-12%] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
         />
@@ -61,7 +61,7 @@ export default function DestinationReel() {
           </h2>
           <p className="mt-5 text-lg text-ivory/60">
             Iceland to a fishing village you can&apos;t pronounce yet. Drift
-            doesn&apos;t just show you where everyone goes — it shows you where
+            doesn&apos;t just show you where everyone goes. It shows you where
             you&apos;d go if you were braver.
           </p>
         </Reveal>

@@ -26,7 +26,7 @@ export default function Stories() {
             <span className="italic text-gradient-gold"> not souvenirs.</span>
           </h2>
           <p className="mt-5 text-lg text-ivory/60">
-            Drift isn&apos;t about the photos you take — it&apos;s about the
+            Drift isn&apos;t about the photos you take. It&apos;s about the
             moments between them, and the people you share them with.
           </p>
         </Reveal>

@@ -16,7 +16,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Drift — Where will you drift to next?",
+  title: "Drift: Where will you drift to next?",
   description:
     "Drift is permission to explore. Plan trips by your vibe, steal itineraries in seconds, and watch your world map grow with every journey. Collect stories, not souvenirs.",
   keywords: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "explore",
   ],
   openGraph: {
-    title: "Drift — Where will you drift to next?",
+    title: "Drift: Where will you drift to next?",
     description:
       "The world feels bigger with Drift. Collect stories, not souvenirs.",
     type: "website",

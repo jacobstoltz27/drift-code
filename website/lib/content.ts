@@ -24,7 +24,7 @@ export const destinations = [
     name: "Patagonia",
     tag: "The edge of the map",
     coords: "49.3300° S, 73.0000° W",
-    img: "https://images.unsplash.com/photo-1531794343860-bbe4d20e9b6e?auto=format&fit=crop&w=1600&q=80",
+    img: "https://d8j0ntlcm91z4.cloudfront.net/user_3EBkRDT9DW01OCu9b0Wi6DO1TJo/hf_20260628_193922_bf6df2e0-86df-4837-898c-c7b1c0785a2e.png",
   },
   {
     name: "Morocco",
@@ -48,19 +48,19 @@ export const stats = [
 ];
 
 export const vibes = [
-  { name: "Adventure", color: "#4C7A5B", img: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Food", color: "#F2B85A", img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Luxury", color: "#2F5E8E", img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Nature", color: "#4C7A5B", img: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Nightlife", color: "#2F5E8E", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Relaxing", color: "#F2B85A", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Culture", color: "#F2B85A", img: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=80" },
-  { name: "Backpacking", color: "#4C7A5B", img: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Adventure", color: "#7BA3D6", img: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Food", color: "#B9915E", img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Luxury", color: "#2E4585", img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Nature", color: "#7BA3D6", img: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Nightlife", color: "#2E4585", img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Relaxing", color: "#B9915E", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Culture", color: "#B9915E", img: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=80" },
+  { name: "Backpacking", color: "#7BA3D6", img: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1600&q=80" },
 ];
 
 export const journey = [
   { step: "Dream", text: "Open Drift and let the world wander past. Save what stops you." },
-  { step: "Plan", text: "Tell us your vibe. Get a real itinerary back in seconds — not a blank page." },
+  { step: "Plan", text: "Tell us your vibe. Get a real itinerary back in seconds, never a blank page." },
   { step: "Experience", text: "Day-by-day plans in your pocket. Costs, timing, the spots locals love." },
   { step: "Remember", text: "Your trips become a living map. Every place you've been, lit up." },
   { step: "Share", text: "Drop your itinerary for a friend. They steal it in one tap." },
@@ -90,11 +90,11 @@ export const stories = [
 export const faqs = [
   {
     q: "Do I need to be an experienced traveler?",
-    a: "No — Drift is built for the opposite. If planning has ever stopped you from going, that's exactly who this is for. You tell us the vibe; we handle the hard part.",
+    a: "Not at all. Drift is built for the opposite. If planning has ever stopped you from going, that's exactly who this is for. You tell us the vibe, and we handle the hard part.",
   },
   {
     q: "What does \"stealing\" an itinerary actually mean?",
-    a: "You copy someone's trip — a friend's, a creator's — into your own plans in one tap. Every day, every spot, fully editable. It's the fastest way from inspiration to a real plan.",
+    a: "You copy someone's trip, whether it's a friend's or a creator's, into your own plans in one tap. Every day and every spot comes with it, fully editable. It's the fastest way from inspiration to a real plan.",
   },
   {
     q: "Is Drift free?",
@@ -102,11 +102,11 @@ export const faqs = [
   },
   {
     q: "When does Drift launch?",
-    a: "We're rolling out access in waves to early members first. Join the waitlist and you'll be near the front of the line — with founding-member perks.",
+    a: "We're rolling out access in waves to early members first. Join the waitlist and you'll be near the front of the line, with founding-member perks.",
   },
   {
     q: "Will my data be private?",
-    a: "Your trips are yours. We don't sell your data, and your email only ever gets the occasional spark of travel inspiration — never spam.",
+    a: "Your trips are yours. We don't sell your data, and your email only ever gets the occasional spark of travel inspiration, never spam.",
   },
 ];
 
@@ -121,7 +121,7 @@ export const features = [
   {
     name: "The Feed",
     kicker: "Home",
-    desc: "A travel feed that actually moves you. Real trips from real explorers and creators — not ads. See where the world is going, and steal what speaks to you.",
+    desc: "A travel feed that actually moves you. Real trips from real explorers and creators, not ads. See where the world is going, and steal what speaks to you.",
     img: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1400&q=80",
   },
   {
@@ -133,7 +133,7 @@ export const features = [
   {
     name: "AI Itinerary Builder",
     kicker: "Planning, solved",
-    desc: "Describe the trip you want — \"ten days, food, no rush, Italy.\" Get a complete day-by-day plan with costs and timing. Edit anything. The blank page is gone.",
+    desc: "Describe the trip you want, like \"ten days, food, no rush, Italy.\" Get a complete day-by-day plan with costs and timing. Edit anything. The blank page is gone.",
     img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1400&q=80",
   },
   {
@@ -145,7 +145,7 @@ export const features = [
   {
     name: "World Travel Map",
     kicker: "Your world, growing",
-    desc: "Every trip lights up another corner of the globe. Your map is the story of your life in motion — and it grows with every place you go.",
+    desc: "Every trip lights up another corner of the globe. Your map is the story of your life in motion, and it grows with every place you go.",
     img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1400&q=80",
   },
   {

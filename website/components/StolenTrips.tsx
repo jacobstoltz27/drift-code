@@ -18,8 +18,9 @@ export default function StolenTrips() {
             <span className="italic text-gradient-gold">itinerary.</span>
           </h2>
           <p className="mt-6 max-w-md text-lg leading-relaxed text-ivory/65">
-            See a trip you love — a friend&apos;s, a creator&apos;s, a stranger
-            who clearly knows what they&apos;re doing? Take the whole thing in
+            See a trip you love, whether it&apos;s a friend&apos;s, a
+            creator&apos;s, or a stranger&apos;s who clearly knows what
+            they&apos;re doing? Take the whole thing in
             one tap. Every day, every spot, every reservation-worthy detail,
             copied into your own plans in seconds.
           </p>
@@ -40,7 +41,7 @@ export default function StolenTrips() {
                 className="h-48 w-full rounded-2xl bg-cover bg-center"
                 style={{
                   backgroundImage:
-                    "url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80'), linear-gradient(135deg, #2F5E8E 0%, #151515 70%)",
+                    "url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80'), linear-gradient(135deg, #2E4585 0%, #182350 70%)",
                 }}
               />
               <div className="mt-4 flex items-center justify-between">

@@ -49,7 +49,7 @@ function FeatureRow({
         <div
           className="h-72 w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105 sm:h-96"
           style={{
-            backgroundImage: `url('${f.img}'), linear-gradient(135deg, #2F5E8E 0%, #151515 70%)`,
+            backgroundImage: `url('${f.img}'), linear-gradient(135deg, #2E4585 0%, #182350 70%)`,
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-tr from-midnight/70 via-transparent to-transparent" />

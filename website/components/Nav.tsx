@@ -24,7 +24,7 @@ export default function Nav() {
           : "py-5"
       }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6">
+      <nav className="relative mx-auto flex max-w-7xl items-center justify-between px-6">
         <a href="#top" className="flex items-center gap-2">
           <Compass className="h-7 w-7 text-golden" />
           <span className="font-display text-2xl font-semibold tracking-tight text-ivory">
@@ -32,10 +32,10 @@ export default function Nav() {
           </span>
         </a>
 
-        <div className="hidden items-center gap-8 text-sm text-ivory/70 md:flex">
-          <a href="#features" className="transition hover:text-ivory">Features</a>
-          <a href="#vibe" className="transition hover:text-ivory">Your Vibe</a>
-          <a href="#pricing" className="transition hover:text-ivory">Pricing</a>
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-ivory/10 bg-charcoal/40 px-2 py-1.5 text-sm text-ivory/70 backdrop-blur-md md:flex">
+          <a href="#features" className="rounded-full px-4 py-1.5 transition hover:bg-ivory/10 hover:text-ivory">Features</a>
+          <a href="#vibe" className="rounded-full px-4 py-1.5 transition hover:bg-ivory/10 hover:text-ivory">Your Vibe</a>
+          <a href="#pricing" className="rounded-full px-4 py-1.5 transition hover:bg-ivory/10 hover:text-ivory">Pricing</a>
         </div>
 
         <a

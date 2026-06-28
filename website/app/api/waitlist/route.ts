@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       {
         ok: true,
         pending: true,
-        message: "You're on the list (local mode — connect Supabase to store it).",
+        message: "You're on the list (local mode, connect Supabase to store it).",
       },
       { status: 200 }
     );
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     // 23505 = unique violation → already on the list. Treat as success.
     if (error.code === "23505") {
       return NextResponse.json(
-        { ok: true, message: "You're already on the list — see you out there." },
+        { ok: true, message: "You're already on the list. See you out there." },
         { status: 200 }
       );
     }

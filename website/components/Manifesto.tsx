@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 const lines = [
   "Some people travel to check a box.",
   "Others go to feel the size of the world.",
-  "Drift is for the second kind —",
+  "Drift is for the second kind,",
   "and for anyone ready to become one.",
 ];
 
@@ -55,8 +55,9 @@ export default function Manifesto() {
           transition={{ duration: 1, delay: 0.9 }}
           className="mx-auto mt-12 max-w-lg text-lg text-ivory/55"
         >
-          Travel changes people. Not the photos — the moments between them. We
-          built Drift to make those moments easier to reach.
+          Travel changes people. It isn&apos;t the photos that change us, but the
+          moments between them. We built Drift to make those moments easier to
+          reach.
         </motion.p>
       </div>
     </section>

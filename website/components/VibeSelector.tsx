@@ -21,7 +21,7 @@ export default function VibeSelector() {
           transition={{ duration: 1 }}
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('${vibe.img}'), linear-gradient(160deg, ${vibe.color} 0%, #09090B 70%)`,
+            backgroundImage: `url('${vibe.img}'), linear-gradient(160deg, ${vibe.color} 0%, #101831 70%)`,
           }}
         />
       </AnimatePresence>
@@ -44,7 +44,7 @@ export default function VibeSelector() {
             <span className="italic text-gradient-gold"> how you want to feel.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-ivory/70">
-            Not just where you&apos;re going — the kind of trip you&apos;re after.
+            Not just where you&apos;re going, but the kind of trip you&apos;re after.
             Pick a vibe and watch the world shift.
           </p>
         </Reveal>
