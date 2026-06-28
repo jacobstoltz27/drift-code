@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Starfield from "./Starfield";
+import DriftWord from "./DriftWord";
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -15,6 +16,8 @@ export default function Hero() {
   const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
   const imgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.2]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "120%"]);
+  // The plane flies across "drift" over the first part of the scroll.
+  const planeProgress = useTransform(scrollYProgress, [0, 0.42], [0, 1]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
@@ -63,7 +66,7 @@ export default function Hero() {
         >
           Where will you
           <br />
-          <span className="italic text-gradient-gold">drift</span> to next?
+          <DriftWord progress={planeProgress} /> to next?
         </motion.h1>
 
         <motion.p
