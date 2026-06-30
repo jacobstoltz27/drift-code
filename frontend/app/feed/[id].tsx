@@ -25,7 +25,7 @@ export default function FeedDetail() {
   const router = useRouter();
   const { user } = useAuth();
   const [post, setPost] = useState<any | null>(null);
-  const [busy, setBusy] = useState<"save" | "steal" | null>(null);
+  const [busy, setBusy] = useState<"save" | "steal" | "schedule" | null>(null);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
 
@@ -60,11 +60,40 @@ export default function FeedDetail() {
       setBusy(null);
     }
   };
-  const onSteal = async () => {
+  // Performs the steal without re-checking the gate. Used directly after a
+  // successful upgrade, where the freshly-set `user` is not yet visible in this
+  // render's closure.
+  const doSteal = async () => {
+    if (busy) return;
     setBusy("steal");
     try {
       const t = await api.stealPost(post.id);
       router.replace(`/trip/${t.id}`);
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setBusy(null);
+    }
+  };
+  const onSteal = () => {
+    if (!user?.is_premium) {
+      setPaywallOpen(true);
+      return;
+    }
+    doSteal();
+  };
+  // Scheduling a feed post: save it into trips (non-premium, idempotent),
+  // then promote that trip into Upcoming with the chosen dates.
+  const onSchedule = async (start: string, end: string) => {
+    if (busy) return;
+    setBusy("schedule");
+    try {
+      const saved = await api.savePost(post.id);
+      await api.scheduleTrip(saved.id, start, end);
+      setScheduleOpen(false);
+      router.replace("/(tabs)/trips");
+    } catch (e) {
+      console.warn(e);
     } finally {
       setBusy(null);
     }
@@ -160,13 +189,13 @@ export default function FeedDetail() {
         visible={paywallOpen}
         onClose={() => setPaywallOpen(false)}
         reason="Steal Itinerary is a Drift Plus feature."
-        onSuccess={onSteal}
+        onSuccess={doSteal}
       />
       <ScheduleModal
         visible={scheduleOpen}
         onClose={() => setScheduleOpen(false)}
         onConfirm={onSchedule}
-        busy={busy === "save"}
+        busy={busy === "schedule"}
       />
     </View>
   );

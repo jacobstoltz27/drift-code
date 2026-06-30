@@ -20,6 +20,7 @@ export type DriftUser = {
   avatar_url?: string | null;
   bio?: string | null;
   onboarded: boolean;
+  is_premium: boolean;
   preferences: Record<string, any>;
   stats: Record<string, any>;
   created_at: string;
