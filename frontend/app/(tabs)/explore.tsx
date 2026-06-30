@@ -42,11 +42,16 @@ export default function ExploreScreen() {
 
   useEffect(() => { load(); }, [load]);
 
-  const onRefresh = async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await load();
     setRefreshing(false);
-  };
+  }, [load]);
+
+  const openPost = useCallback(
+    (id: string) => router.push(`/feed/${id}`),
+    [router],
+  );
 
   const forYou = useMemo(() => {
     const interests = new Set<string>(
@@ -58,16 +63,27 @@ export default function ExploreScreen() {
       .slice(0, 6);
   }, [feed, user]);
 
-  const filtered = (list: any[]) => {
-    if (!query.trim()) return list;
-    const q = query.toLowerCase();
-    return list.filter(
-      (p) =>
-        p.destination?.toLowerCase().includes(q) ||
-        p.title?.toLowerCase().includes(q) ||
-        p.creator?.name?.toLowerCase().includes(q),
-    );
-  };
+  // Derive every visible section list in a single pass that only recomputes
+  // when the data or the query changes — not on every render/keystroke remount.
+  const sections = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const applyQuery = (list: any[]) =>
+      !q
+        ? list
+        : list.filter(
+            (p) =>
+              p.destination?.toLowerCase().includes(q) ||
+              p.title?.toLowerCase().includes(q) ||
+              p.creator?.name?.toLowerCase().includes(q),
+          );
+    const base = [
+      { title: "For You", posts: forYou },
+      ...SECTIONS.map((s) => ({ title: s.title, posts: feed.filter(s.predicate) })),
+    ];
+    return base
+      .map((s) => ({ title: s.title, posts: applyQuery(s.posts) }))
+      .filter((s) => s.posts.length > 0);
+  }, [feed, forYou, query]);
 
   const creators = useMemo(() => {
     const map = new Map<string, any>();
@@ -81,28 +97,8 @@ export default function ExploreScreen() {
     return Array.from(map.values()).sort((a, b) => b.saves - a.saves).slice(0, 8);
   }, [feed]);
 
-  const SectionRow = ({ title, list }: { title: string; list: any[] }) => {
-    const f = filtered(list);
-    if (!f.length) return null;
-    return (
-      <>
-        <SectionHeader title={title} />
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
-        >
-          {f.map((p) => (
-            <HeroTile
-              key={p.id}
-              post={p}
-              onPress={() => router.push(`/feed/${p.id}`)}
-            />
-          ))}
-        </ScrollView>
-      </>
-    );
-  };
+  const forYouSection = sections.find((s) => s.title === "For You");
+  const otherSections = sections.filter((s) => s.title !== "For You");
 
   return (
     <SafeAreaView style={styles.wrap} edges={["top"]}>
@@ -120,7 +116,12 @@ export default function ExploreScreen() {
             testID="explore-search-input"
           />
           {query ? (
-            <TouchableOpacity onPress={() => setQuery("")} testID="explore-search-clear">
+            <TouchableOpacity
+              onPress={() => setQuery("")}
+              testID="explore-search-clear"
+              accessibilityRole="button"
+              accessibilityLabel="Clear search"
+            >
               <Ionicons name="close-circle" size={18} color={colors.textMuted} />
             </TouchableOpacity>
           ) : null}
@@ -133,7 +134,13 @@ export default function ExploreScreen() {
           <RefreshControl tintColor={colors.accent} refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <SectionRow title="For You" list={forYou} />
+        {forYouSection ? (
+          <SectionRow
+            title={forYouSection.title}
+            posts={forYouSection.posts}
+            onPressPost={openPost}
+          />
+        ) : null}
 
         <SectionHeader title="Popular Creators" />
         <ScrollView
@@ -153,13 +160,47 @@ export default function ExploreScreen() {
           ))}
         </ScrollView>
 
-        {SECTIONS.map((sec) => (
-          <SectionRow key={sec.title} title={sec.title} list={feed.filter(sec.predicate)} />
+        {otherSections.map((sec) => (
+          <SectionRow
+            key={sec.title}
+            title={sec.title}
+            posts={sec.posts}
+            onPressPost={openPost}
+          />
         ))}
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const SectionRow = React.memo(
+  ({
+    title,
+    posts,
+    onPressPost,
+  }: {
+    title: string;
+    posts: any[];
+    onPressPost: (id: string) => void;
+  }) => {
+    if (!posts.length) return null;
+    return (
+      <>
+        <SectionHeader title={title} />
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
+        >
+          {posts.map((p) => (
+            <HeroTile key={p.id} post={p} onPress={() => onPressPost(p.id)} />
+          ))}
+        </ScrollView>
+      </>
+    );
+  },
+);
+SectionRow.displayName = "SectionRow";
 
 const HeroTile = ({ post, onPress }: { post: any; onPress?: () => void }) => (
   <TouchableOpacity

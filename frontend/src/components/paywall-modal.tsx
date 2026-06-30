@@ -83,7 +83,13 @@ export const PaywallModal = ({
                 <Text style={styles.title}>Unlock unlimited travel</Text>
                 <Text style={styles.reason}>{reason}</Text>
               </View>
-              <TouchableOpacity onPress={onClose} style={styles.closeBtn} testID="paywall-close">
+              <TouchableOpacity
+                onPress={onClose}
+                style={styles.closeBtn}
+                testID="paywall-close"
+                accessibilityRole="button"
+                accessibilityLabel="Close"
+              >
                 <Ionicons name="close" size={20} color="#fff" />
               </TouchableOpacity>
             </View>

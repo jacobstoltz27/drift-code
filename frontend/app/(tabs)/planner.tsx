@@ -122,6 +122,9 @@ export default function PlannerScreen() {
   const [itinerary, setItinerary] = useState<any | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const elapsedTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Tracks whether the screen is still mounted so the long polling loop never
+  // calls setState / navigates after the user has left the screen.
+  const mountedRef = useRef(true);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -139,7 +142,13 @@ export default function PlannerScreen() {
   const stopElapsed = () => {
     if (elapsedTimer.current) { clearInterval(elapsedTimer.current); elapsedTimer.current = null; }
   };
-  useEffect(() => () => stopElapsed(), []);
+  useEffect(
+    () => () => {
+      mountedRef.current = false;
+      stopElapsed();
+    },
+    [],
+  );
 
   const generate = async () => {
     const dreamText = prompt.trim() || "Surprise me with somewhere magical";
@@ -163,20 +172,29 @@ export default function PlannerScreen() {
       });
       for (let i = 0; i < 90; i++) {
         await new Promise((r) => setTimeout(r, 3000));
+        if (!mountedRef.current) return;
+        let status;
         try {
-          const status = await api.plannerJobStatus(job.job_id);
-          if (status.status === "done" && status.itinerary) {
-            setItinerary(status.itinerary);
-            setStep("result");
-            return;
-          }
-          if (status.status === "error") throw new Error(status.error ?? "Generation failed");
-        } catch { /* keep polling */ }
+          status = await api.plannerJobStatus(job.job_id);
+        } catch {
+          // Transient network/poll error — keep polling.
+          continue;
+        }
+        if (!mountedRef.current) return;
+        if (status.status === "done" && status.itinerary) {
+          setItinerary(status.itinerary);
+          setStep("result");
+          return;
+        }
+        // Terminal server-side failure — stop and surface it.
+        if (status.status === "error") {
+          throw new Error(status.error ?? "Generation failed");
+        }
       }
       throw new Error("Generation timed out");
     } catch (e) {
       console.warn(e);
-      setStep("convo");
+      if (mountedRef.current) setStep("convo");
     } finally {
       stopElapsed();
     }
@@ -222,7 +240,13 @@ export default function PlannerScreen() {
       <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: colors.background }}>
         <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
           <View style={resStyles.topBar}>
-            <TouchableOpacity onPress={reset} style={resStyles.iconBtn} testID="planner-new">
+            <TouchableOpacity
+              onPress={reset}
+              style={resStyles.iconBtn}
+              testID="planner-new"
+              accessibilityRole="button"
+              accessibilityLabel="Start a new plan"
+            >
               <Ionicons name="chevron-back" size={20} color="#fff" />
             </TouchableOpacity>
             <View style={{ flex: 1 }} />

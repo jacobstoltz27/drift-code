@@ -70,6 +70,8 @@ export const ScheduleModal = ({
                 onPress={onClose}
                 style={styles.closeBtn}
                 testID="schedule-close"
+                accessibilityRole="button"
+                accessibilityLabel="Close"
               >
                 <Ionicons name="close" size={20} color="#fff" />
               </TouchableOpacity>

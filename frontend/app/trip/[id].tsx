@@ -1,5 +1,5 @@
 // Trip detail — 4 actions: Save / Add to Upcoming / Steal (premium) / Remix
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -39,6 +39,16 @@ export default function TripDetail() {
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [scheduling, setScheduling] = useState(false);
 
+  // Guards the long remix polling loop against setState / navigation after the
+  // screen has unmounted.
+  const mountedRef = useRef(true);
+  useEffect(
+    () => () => {
+      mountedRef.current = false;
+    },
+    [],
+  );
+
   const load = useCallback(async () => {
     if (!id) return;
     try {
@@ -76,24 +86,31 @@ export default function TripDetail() {
       const job = await api.remixTripJob(trip.id, remixNote);
       for (let i = 0; i < 70; i++) {
         await new Promise((r) => setTimeout(r, 3000));
+        if (!mountedRef.current) return;
+        let status;
         try {
-          const status = await api.plannerJobStatus(job.job_id);
-          if (status.status === "done" && status.trip) {
-            setRemixOpen(false);
-            setRemixNote("");
-            router.replace(`/trip/${status.trip.id}`);
-            return;
-          }
-          if (status.status === "error") throw new Error(status.error ?? "Remix failed");
+          status = await api.plannerJobStatus(job.job_id);
         } catch {
-          // keep polling
+          // Transient network/poll error — keep polling.
+          continue;
+        }
+        if (!mountedRef.current) return;
+        if (status.status === "done" && status.trip) {
+          setRemixOpen(false);
+          setRemixNote("");
+          router.replace(`/trip/${status.trip.id}`);
+          return;
+        }
+        // Terminal server-side failure — stop and surface it.
+        if (status.status === "error") {
+          throw new Error(status.error ?? "Remix failed");
         }
       }
       throw new Error("Remix timed out");
     } catch (e) {
       console.warn(e);
     } finally {
-      setRemixing(false);
+      if (mountedRef.current) setRemixing(false);
     }
   };
 
@@ -134,6 +151,8 @@ export default function TripDetail() {
             style={[styles.backBtn, { top: insets.top + 8 }]}
             onPress={() => router.back()}
             testID="trip-detail-back"
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
           >
             <Ionicons name="chevron-back" size={22} color="#fff" />
           </TouchableOpacity>

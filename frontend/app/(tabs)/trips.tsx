@@ -48,11 +48,11 @@ export default function TripsScreen() {
     })();
   }, [active, load]);
 
-  const onRefresh = async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await load(active);
     setRefreshing(false);
-  };
+  }, [load, active]);
 
   return (
     <SafeAreaView style={styles.wrap} edges={["top"]}>

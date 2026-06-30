@@ -112,6 +112,8 @@ export default function FeedDetail() {
             style={[styles.backBtn, { top: insets.top + 8 }]}
             onPress={() => router.back()}
             testID="feed-detail-back"
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
           >
             <Ionicons name="chevron-back" size={22} color="#fff" />
           </TouchableOpacity>
