@@ -10,8 +10,9 @@ import {
   Image,
   ImageStyle,
 } from "react-native";
+import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
-import { colors, radii, shadows } from "@/src/theme";
+import { colors, radii, shadows, type, fonts } from "@/src/theme";
 
 export const Card = ({
   children,
@@ -27,16 +28,21 @@ export const Card = ({
   </View>
 );
 
+// Frosted glass surface with real backdrop blur + a hair-line highlight border.
 export const GlassCard = ({
   children,
   style,
+  intensity = 24,
   testID,
 }: {
   children?: React.ReactNode;
   style?: ViewStyle | ViewStyle[];
+  intensity?: number;
   testID?: string;
 }) => (
   <View testID={testID} style={[styles.glass, style]}>
+    <BlurView intensity={intensity} tint="dark" style={StyleSheet.absoluteFill} />
+    <View style={styles.glassTint} pointerEvents="none" />
     {children}
   </View>
 );
@@ -56,6 +62,8 @@ export const Pill = ({
     activeOpacity={0.85}
     onPress={onPress}
     testID={testID}
+    accessibilityRole="button"
+    accessibilityState={{ selected: !!active }}
     style={[styles.pill, active && styles.pillActive]}
   >
     <Text style={[styles.pillText, active && styles.pillTextActive]}>{label}</Text>
@@ -80,14 +88,16 @@ export const PrimaryButton = ({
   style?: ViewStyle;
 }) => (
   <TouchableOpacity
-    activeOpacity={0.85}
+    activeOpacity={0.9}
     onPress={onPress}
     disabled={disabled || loading}
     testID={testID}
-    style={[{ borderRadius: radii.pill, overflow: "hidden" }, style]}
+    accessibilityRole="button"
+    accessibilityLabel={label}
+    style={[{ borderRadius: radii.lg, overflow: "hidden" }, shadows.glow, style]}
   >
     <LinearGradient
-      colors={[colors.accent, "#7C8AFF"]}
+      colors={[colors.accent, colors.primary]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={[styles.primaryBtn, disabled && { opacity: 0.5 }]}
@@ -113,6 +123,8 @@ export const GhostButton = ({
     activeOpacity={0.85}
     onPress={onPress}
     testID={testID}
+    accessibilityRole="button"
+    accessibilityLabel={label}
     style={[styles.ghostBtn, style]}
   >
     <Text style={styles.ghostBtnText}>{label}</Text>
@@ -132,23 +144,39 @@ export const Avatar = ({
     <Image
       source={{ uri }}
       style={[
-        { width: size, height: size, borderRadius: size / 2, borderWidth: 1, borderColor: colors.background },
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderWidth: 1,
+          borderColor: colors.glassBorder,
+        },
         style,
       ]}
     />
   ) : (
     <View
       style={[
-        { width: size, height: size, borderRadius: size / 2, backgroundColor: colors.primary, borderWidth: 1, borderColor: colors.background, alignItems: "center", justifyContent: "center" },
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: colors.primarySoft,
+          borderWidth: 1,
+          borderColor: colors.glassBorder,
+          alignItems: "center",
+          justifyContent: "center",
+        },
         style as ViewStyle,
       ]}
     >
-      <Text style={{ color: colors.text, fontSize: size * 0.4, fontWeight: "700" }}>?</Text>
+      <Text style={{ color: colors.accent, fontSize: size * 0.4, fontFamily: fonts.bodyBold }}>
+        ?
+      </Text>
     </View>
   );
 
-// Circular SVG-free Trip Score badge using overlapping arcs (use two rings of color).
-// We approximate the conic by overlaying a colored disc trimmed by a smaller dark disc.
+// Circular Trip Score badge — colored ring over a translucent disc.
 export const TripScoreBadge = ({
   score,
   size = 56,
@@ -159,7 +187,7 @@ export const TripScoreBadge = ({
   testID?: string;
 }) => {
   const ringColor =
-    score >= 90 ? colors.teal : score >= 75 ? colors.accent : "#F59E0B";
+    score >= 90 ? colors.teal : score >= 75 ? colors.accent : colors.gold;
   return (
     <View
       testID={testID}
@@ -167,7 +195,7 @@ export const TripScoreBadge = ({
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: "rgba(7,11,20,0.7)",
+        backgroundColor: "rgba(10,14,23,0.72)",
         borderWidth: 2,
         borderColor: ringColor,
         alignItems: "center",
@@ -176,10 +204,24 @@ export const TripScoreBadge = ({
         shadowColor: ringColor,
       }}
     >
-      <Text style={{ color: colors.text, fontSize: size * 0.34, fontWeight: "900" }}>
+      <Text
+        style={{
+          color: colors.text,
+          fontSize: size * 0.34,
+          fontFamily: fonts.displayBold,
+        }}
+      >
         {Math.round(score)}
       </Text>
-      <Text style={{ color: colors.textMuted, fontSize: 8, marginTop: -2, letterSpacing: 1 }}>
+      <Text
+        style={{
+          color: colors.textMuted,
+          fontSize: 8,
+          marginTop: -1,
+          letterSpacing: 1.4,
+          fontFamily: fonts.bodyBold,
+        }}
+      >
         SCORE
       </Text>
     </View>
@@ -204,7 +246,11 @@ export const SectionHeader = ({
   <View style={[styles.sectionHeader, style]}>
     <Text style={styles.sectionTitle}>{title}</Text>
     {action ? (
-      <TouchableOpacity onPress={onAction} testID={`section-${title.toLowerCase().replace(/\s+/g, "-")}-action`}>
+      <TouchableOpacity
+        onPress={onAction}
+        accessibilityRole="button"
+        testID={`section-${title.toLowerCase().replace(/\s+/g, "-")}-action`}
+      >
         <Text style={styles.sectionAction}>{action}</Text>
       </TouchableOpacity>
     ) : null}
@@ -214,59 +260,63 @@ export const SectionHeader = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
-    borderRadius: radii.lg,
+    borderRadius: radii.xl,
     borderWidth: 1,
     borderColor: colors.border,
     overflow: "hidden",
   },
   glass: {
-    backgroundColor: colors.glass,
-    borderRadius: radii.lg,
+    borderRadius: radii.xl,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.glassBorder,
+    overflow: "hidden",
+  },
+  glassTint: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: colors.glass,
   },
   pill: {
-    paddingHorizontal: 14,
-    height: 36,
+    paddingHorizontal: 16,
+    height: 38,
     minWidth: 64,
-    borderRadius: 999,
+    borderRadius: radii.pill,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.glassBorder,
     backgroundColor: colors.glass,
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
   },
   pillActive: {
-    backgroundColor: colors.accent,
-    borderColor: colors.accent,
+    backgroundColor: colors.primaryContainer,
+    borderColor: colors.primaryContainer,
   },
   pillText: {
     color: colors.textMuted,
-    fontWeight: "600",
+    fontFamily: fonts.bodySemibold,
     fontSize: 13,
   },
   pillTextActive: {
-    color: "#fff",
-    fontWeight: "700",
+    color: colors.onPrimaryContainer,
+    fontFamily: fonts.bodyBold,
   },
   primaryBtn: {
-    height: 52,
+    height: 54,
     paddingHorizontal: 28,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
   primaryBtnText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "800",
+    color: colors.onPrimaryContainer,
+    fontSize: 15,
+    fontFamily: fonts.bodyExtrabold,
     letterSpacing: 0.2,
   },
   ghostBtn: {
-    height: 52,
+    height: 54,
     paddingHorizontal: 28,
-    borderRadius: 999,
+    borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: colors.borderStrong,
     alignItems: "center",
@@ -276,25 +326,22 @@ const styles = StyleSheet.create({
   ghostBtnText: {
     color: colors.text,
     fontSize: 15,
-    fontWeight: "700",
+    fontFamily: fonts.bodyBold,
   },
   sectionHeader: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    marginTop: 24,
-    marginBottom: 12,
+    marginTop: 26,
+    marginBottom: 14,
   },
   sectionTitle: {
-    color: colors.text,
-    fontSize: 22,
-    fontWeight: "800",
-    letterSpacing: -0.3,
+    ...(type.headlineMd as TextStyle),
   },
   sectionAction: {
     color: colors.accent,
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: 13,
+    fontFamily: fonts.bodyBold,
   },
 });

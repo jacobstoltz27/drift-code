@@ -1,30 +1,52 @@
-// Drift design tokens — keep in one place, import via @/src/theme
+// Drift design tokens — single source of truth, import via @/src/theme
+// Direction: cinematic dark glassmorphism. Material-3 tonal dark palette,
+// light-indigo accent, mint secondary, Space Grotesk (display) + Manrope (body).
+
 export const colors = {
-  background: "#070B14",
-  surface: "#0E1322",
-  surfaceElevated: "#121726",
-  primary: "#1B1F3B",
-  primarySoft: "rgba(27,31,59,0.7)",
-  accent: "#5B67FF",
-  accentSoft: "rgba(91,103,255,0.16)",
-  teal: "#14B8A6",
-  tealSoft: "rgba(20,184,166,0.15)",
-  text: "#F5F7FA",
-  textMuted: "#A1A1AA",
-  textDim: "#6B7280",
-  border: "rgba(255,255,255,0.06)",
-  borderStrong: "rgba(255,255,255,0.12)",
-  glass: "rgba(255,255,255,0.04)",
-  danger: "#EF4444",
+  // Base surfaces (darkest -> elevated)
+  background: "#0F131D",
+  surfaceLowest: "#0A0E17",
+  surface: "#171C25", // cards / inputs
+  surfaceElevated: "#1B2029",
+  surfaceHigh: "#262A34",
+
+  // Brand
+  primary: "#7B85FF", // vivid indigo (solid fills)
+  primarySoft: "rgba(123,133,255,0.16)",
+  primaryContainer: "#7B85FF",
+  onPrimaryContainer: "#000694",
+  accent: "#BEC2FF", // light indigo — logo, icons, active, links
+  accentSoft: "rgba(190,194,255,0.14)",
+  accentGlow: "rgba(190,194,255,0.40)",
+
+  // Secondary (mint)
+  teal: "#4FDBC8",
+  tealSoft: "rgba(79,219,200,0.15)",
+
+  // Text
+  text: "#F5F7FA", // soft white — headings / primary
+  textMuted: "#A8ADBF", // secondary copy
+  textDim: "#7B8191", // slate — meta / captions
+
+  // Lines & glass
+  border: "rgba(255,255,255,0.08)",
+  borderStrong: "rgba(255,255,255,0.14)",
+  glass: "rgba(255,255,255,0.06)",
+  glassBorder: "rgba(255,255,255,0.10)",
+  glowIndigo: "rgba(91,103,255,0.30)",
+
+  // Status
+  danger: "#FFB4AB",
   success: "#22C55E",
   gold: "#F59E0B",
 };
 
 export const radii = {
-  sm: 10,
+  sm: 12,
   md: 16,
-  lg: 22,
-  xl: 28,
+  lg: 20,
+  xl: 24, // rounded-3xl hero cards
+  xxl: 30,
   pill: 999,
 };
 
@@ -33,25 +55,107 @@ export const space = (n: number) => n * 4;
 export const shadows = {
   card: {
     shadowColor: "#000",
-    shadowOpacity: 0.4,
-    shadowOffset: { width: 0, height: 12 },
-    shadowRadius: 24,
-    elevation: 8,
+    shadowOpacity: 0.45,
+    shadowOffset: { width: 0, height: 14 },
+    shadowRadius: 28,
+    elevation: 10,
   },
   glow: {
     shadowColor: colors.accent,
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.55,
     shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 18,
-    elevation: 10,
+    shadowRadius: 22,
+    elevation: 12,
+  },
+  dock: {
+    shadowColor: colors.glowIndigo,
+    shadowOpacity: 0.6,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 24,
+    elevation: 16,
   },
 };
 
+// Font family names — registered in use-icon-fonts.ts.
+// Space Grotesk stands in for Clash Display; Manrope for Satoshi. Swap the
+// registered files to the exact Fontshare faces without touching call sites.
 export const fonts = {
-  // System fallbacks — Clash Display / Satoshi / Inter aren't bundled, but
-  // platform sans-serif (San Francisco / Roboto) reads as premium in the dark theme.
-  display: undefined as string | undefined,
-  body: undefined as string | undefined,
+  displayMedium: "SpaceGrotesk-Medium",
+  displaySemibold: "SpaceGrotesk-SemiBold",
+  displayBold: "SpaceGrotesk-Bold",
+  bodyRegular: "Manrope-Regular",
+  bodyMedium: "Manrope-Medium",
+  bodySemibold: "Manrope-SemiBold",
+  bodyBold: "Manrope-Bold",
+  bodyExtrabold: "Manrope-ExtraBold",
+};
+
+// Typography presets — spread into a Text style: style={type.headline}.
+// Custom fonts encode weight in the family, so we set fontFamily (not
+// fontWeight) to get the right cut.
+export const type = {
+  displayLg: {
+    fontFamily: fonts.displayBold,
+    fontSize: 40,
+    lineHeight: 46,
+    letterSpacing: -0.8,
+    color: colors.text,
+  },
+  headline: {
+    fontFamily: fonts.displaySemibold,
+    fontSize: 28,
+    lineHeight: 34,
+    letterSpacing: -0.4,
+    color: colors.text,
+  },
+  headlineMd: {
+    fontFamily: fonts.displaySemibold,
+    fontSize: 22,
+    lineHeight: 28,
+    letterSpacing: -0.3,
+    color: colors.text,
+  },
+  title: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 18,
+    lineHeight: 24,
+    letterSpacing: -0.2,
+    color: colors.text,
+  },
+  body: {
+    fontFamily: fonts.bodyRegular,
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.textMuted,
+  },
+  bodyStrong: {
+    fontFamily: fonts.bodySemibold,
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.text,
+  },
+  bodySm: {
+    fontFamily: fonts.bodyRegular,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.textMuted,
+  },
+  label: {
+    fontFamily: fonts.bodyExtrabold,
+    fontSize: 11,
+    lineHeight: 14,
+    letterSpacing: 1.4,
+    textTransform: "uppercase" as const,
+    color: colors.textDim,
+  },
+} as const;
+
+// Glass surface primitive — spread onto a View style. Pair with <BlurView>
+// underneath for true frosted depth where performance allows.
+export const glass = {
+  backgroundColor: colors.glass,
+  borderWidth: 1,
+  borderColor: colors.glassBorder,
 };
 
 export const motion = {

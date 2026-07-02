@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { colors, radii, shadows } from "@/src/theme";
+import { colors, radii, shadows, fonts, type } from "@/src/theme";
 
 const FEATURES: { key: string; icon: keyof typeof Ionicons.glyphMap; label: string }[] = [
   { key: "score", icon: "speedometer", label: "Trip Score" },
@@ -27,19 +27,25 @@ export const InviteUnlockCard = ({
 }) => (
   <View style={[styles.wrap, shadows.card]} testID="invite-unlock-card">
     <LinearGradient
-      colors={["#0B1024", "#1B1F3B"]}
+      colors={["rgba(123,133,255,0.10)", "rgba(123,133,255,0.0)"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={StyleSheet.absoluteFillObject}
     />
     {/* faint accent glow */}
     <View style={styles.glow} />
 
     <View style={styles.header}>
-      <View style={styles.headerLeft}>
-        <Text style={styles.eyebrow}>UNLOCK MORE</Text>
-        <Text style={styles.title}>You have {remaining} invites left</Text>
+      <View style={styles.headerIcon}>
+        <Ionicons name="person-add" size={24} color={colors.accent} />
       </View>
-      <View style={styles.headerBadge}>
-        <Ionicons name="key-outline" size={18} color={colors.accent} />
+      <View style={styles.headerLeft}>
+        <Text style={styles.title}>
+          You have <Text style={styles.titleAccent}>{remaining} invites</Text> left
+        </Text>
+        <Text style={styles.subtitle}>
+          Unlock exclusive creator features by inviting travel partners.
+        </Text>
       </View>
     </View>
 
@@ -47,7 +53,7 @@ export const InviteUnlockCard = ({
       {FEATURES.map((f) => (
         <View key={f.key} style={styles.iconCol}>
           <View style={styles.iconCircle}>
-            <Ionicons name={f.icon} size={18} color="#fff" />
+            <Ionicons name={f.icon} size={17} color={colors.text} />
           </View>
           <Text style={styles.iconLabel} numberOfLines={2}>
             {f.label}
@@ -60,17 +66,12 @@ export const InviteUnlockCard = ({
       activeOpacity={0.9}
       onPress={onInvite}
       testID="invite-friends-button"
+      accessibilityRole="button"
+      accessibilityLabel="Invite friends"
       style={styles.cta}
     >
-      <LinearGradient
-        colors={[colors.accent, "#8088FF"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.ctaInner}
-      >
-        <Ionicons name="paper-plane-outline" size={16} color="#fff" />
-        <Text style={styles.ctaText}>Invite Friends</Text>
-      </LinearGradient>
+      <Ionicons name="share-social-outline" size={18} color={colors.onPrimaryContainer} />
+      <Text style={styles.ctaText}>Invite Friends</Text>
     </TouchableOpacity>
   </View>
 );
@@ -78,84 +79,88 @@ export const InviteUnlockCard = ({
 const styles = StyleSheet.create({
   wrap: {
     marginHorizontal: 20,
-    marginTop: 16,
-    borderRadius: radii.lg,
+    marginTop: 20,
+    borderRadius: radii.xl,
     borderWidth: 1,
-    borderColor: "rgba(91,103,255,0.18)",
+    borderColor: "rgba(123,133,255,0.16)",
+    backgroundColor: colors.surfaceElevated,
     overflow: "hidden",
-    paddingHorizontal: 18,
-    paddingTop: 18,
-    paddingBottom: 18,
+    padding: 20,
   },
   glow: {
     position: "absolute",
-    top: -50,
+    top: -60,
     right: -50,
     width: 180,
     height: 180,
     borderRadius: 90,
     backgroundColor: colors.accent,
-    opacity: 0.18,
+    opacity: 0.14,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    gap: 14,
   },
-  headerLeft: { flex: 1 },
-  eyebrow: {
-    color: colors.accent,
-    fontSize: 10,
-    fontWeight: "800",
-    letterSpacing: 2,
-    marginBottom: 4,
-  },
-  title: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "900",
-    letterSpacing: -0.4,
-  },
-  headerBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: colors.accentSoft,
+  headerIcon: {
+    width: 54,
+    height: 54,
+    borderRadius: radii.md,
+    backgroundColor: colors.primarySoft,
     alignItems: "center",
     justifyContent: "center",
+  },
+  headerLeft: { flex: 1 },
+  title: {
+    ...type.title,
+    color: colors.text,
+  },
+  titleAccent: { color: colors.accent, fontFamily: fonts.bodyBold },
+  subtitle: {
+    color: colors.textDim,
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 4,
+    fontFamily: fonts.bodyMedium,
   },
   iconRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 22,
-    marginBottom: 18,
+    marginBottom: 20,
   },
-  iconCol: { alignItems: "center", width: 56 },
+  iconCol: { alignItems: "center", width: 58 },
   iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.06)",
+    width: 46,
+    height: 46,
+    borderRadius: radii.sm,
+    backgroundColor: colors.glass,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: colors.glassBorder,
     alignItems: "center",
     justifyContent: "center",
   },
   iconLabel: {
     color: colors.textMuted,
-    fontSize: 10,
-    fontWeight: "700",
+    fontSize: 9,
+    fontFamily: fonts.bodyBold,
     marginTop: 8,
     textAlign: "center",
     letterSpacing: 0.2,
   },
-  cta: { borderRadius: 999, overflow: "hidden" },
-  ctaInner: {
+  cta: {
     height: 52,
+    borderRadius: radii.lg,
+    backgroundColor: colors.primaryContainer,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
   },
-  ctaText: { color: "#fff", fontWeight: "800", fontSize: 15, letterSpacing: 0.2 },
+  ctaText: {
+    color: colors.onPrimaryContainer,
+    fontFamily: fonts.bodyExtrabold,
+    fontSize: 15,
+    letterSpacing: 0.2,
+  },
 });

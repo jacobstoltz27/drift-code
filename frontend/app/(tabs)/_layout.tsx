@@ -1,11 +1,11 @@
 // Drift bottom tab navigation
 import React from "react";
-import { View, StyleSheet, Platform, Text } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { Tabs } from "expo-router";
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { colors } from "@/src/theme";
+import { colors, radii, shadows } from "@/src/theme";
 
 const ICONS: Record<string, { focused: keyof typeof Ionicons.glyphMap; outline: keyof typeof Ionicons.glyphMap }> = {
   home: { focused: "home", outline: "home-outline" },
@@ -13,14 +13,6 @@ const ICONS: Record<string, { focused: keyof typeof Ionicons.glyphMap; outline: 
   planner: { focused: "sparkles", outline: "sparkles-outline" },
   trips: { focused: "airplane", outline: "airplane-outline" },
   profile: { focused: "person", outline: "person-outline" },
-};
-
-const LABELS: Record<string, string> = {
-  home: "Home",
-  explore: "Explore",
-  planner: "Planner",
-  trips: "Trips",
-  profile: "Profile",
 };
 
 export default function TabsLayout() {
@@ -42,42 +34,29 @@ export default function TabsLayout() {
           ),
           tabBarStyle: {
             position: "absolute",
-            left: 16,
-            right: 16,
-            bottom: Math.max(insets.bottom, 12),
-            height: 64,
-            borderRadius: 999,
+            left: 20,
+            right: 20,
+            bottom: Math.max(insets.bottom, 14),
+            height: 66,
+            borderRadius: radii.pill,
             borderTopWidth: 0,
             borderWidth: 1,
-            borderColor: colors.border,
-            backgroundColor: "rgba(14,19,34,0.85)",
-            paddingHorizontal: 8,
-            paddingTop: 8,
-            paddingBottom: 8,
-            elevation: 14,
-            shadowColor: "#000",
-            shadowOpacity: 0.45,
-            shadowRadius: 24,
-            shadowOffset: { width: 0, height: 12 },
+            borderColor: colors.glassBorder,
+            backgroundColor: "rgba(15,19,29,0.72)",
+            paddingHorizontal: 10,
+            paddingTop: 9,
+            paddingBottom: 9,
+            ...shadows.dock,
           },
           tabBarShowLabel: false,
-          tabBarIcon: ({ focused, color }) => (
+          tabBarIconStyle: { flex: 1 },
+          tabBarIcon: ({ focused }) => (
             <View style={[styles.tabItem, focused && styles.tabItemFocused]}>
               <Ionicons
                 name={focused ? cfg.focused : cfg.outline}
-                size={focused ? 22 : 20}
-                color={color}
+                size={22}
+                color={focused ? colors.onPrimaryContainer : colors.textDim}
               />
-              <Text
-                style={[
-                  styles.tabLabel,
-                  { color },
-                  focused && { fontWeight: "800" },
-                ]}
-                numberOfLines={1}
-              >
-                {LABELS[route.name]}
-              </Text>
             </View>
           ),
         };
@@ -94,17 +73,15 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   tabItem: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 6,
-    paddingVertical: 4,
-    minWidth: 56,
   },
-  tabItemFocused: {},
-  tabLabel: {
-    fontSize: 10,
-    fontWeight: "700",
-    marginTop: 3,
-    letterSpacing: 0.2,
+  tabItemFocused: {
+    backgroundColor: colors.primaryContainer,
+    ...shadows.glow,
+    shadowColor: colors.glowIndigo,
   },
 });

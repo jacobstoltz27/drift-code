@@ -1,15 +1,39 @@
-// Following feed post — fully interactive social card
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+// Following feed post — cinematic full-bleed social card
+import React from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { colors, radii } from "@/src/theme";
+import { colors, radii, shadows, fonts, type } from "@/src/theme";
 import { Avatar } from "@/src/components/ui";
+
+const EngageButton = ({
+  icon,
+  count,
+  color,
+  onPress,
+  label,
+  testID,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  count?: number;
+  color: string;
+  onPress?: () => void;
+  label: string;
+  testID?: string;
+}) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={styles.engageBtn}
+    testID={testID}
+    accessibilityRole="button"
+    accessibilityLabel={label}
+  >
+    <Ionicons name={icon} size={26} color={color} />
+    {count !== undefined ? (
+      <Text style={styles.engageCount}>{count.toLocaleString()}</Text>
+    ) : null}
+  </TouchableOpacity>
+);
 
 export const FollowingPostCard = ({
   post,
@@ -36,145 +60,219 @@ export const FollowingPostCard = ({
   saved?: boolean;
   following?: boolean;
 }) => {
+  const isItinerary = post.kind === "itinerary" || post.kind === "trip";
+  const heading =
+    post.title ??
+    (post.days ? `${post.days} days in ${post.destination}` : post.destination);
+
   return (
-    <TouchableOpacity
-      activeOpacity={0.95}
-      onPress={onPress}
-      style={styles.wrap}
-      testID={`following-post-${post.id}`}
-    >
-      <View style={styles.headerRow}>
-        <Avatar uri={post.creator?.avatar} size={40} />
-        <View style={{ marginLeft: 10, flex: 1 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-            <Text style={styles.name}>{post.creator?.name}</Text>
-            {post.creator?.verified ? (
-              <Ionicons name="checkmark-circle" size={14} color={colors.accent} />
-            ) : null}
+    <View style={[styles.wrap, shadows.card]} testID={`following-post-${post.id}`}>
+      <Image source={{ uri: post.image_url }} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient
+        colors={["rgba(6,9,15,0.72)", "transparent", "rgba(6,9,15,0.92)"]}
+        locations={[0, 0.4, 1]}
+        style={StyleSheet.absoluteFillObject}
+      />
+
+      {/* Top: creator + follow */}
+      <View style={styles.topRow}>
+        <TouchableOpacity
+          style={styles.creator}
+          onPress={onPress}
+          activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel={`View ${post.creator?.name ?? "creator"}'s trip`}
+        >
+          <Avatar uri={post.creator?.avatar} size={40} />
+          <View style={{ marginLeft: 10, flexShrink: 1 }}>
+            <View style={styles.nameRow}>
+              <Text style={styles.name} numberOfLines={1}>
+                {post.creator?.handle ?? post.creator?.name}
+              </Text>
+              {post.creator?.verified ? (
+                <Ionicons name="checkmark-circle" size={13} color={colors.accent} />
+              ) : null}
+            </View>
+            <View style={styles.locRow}>
+              <Ionicons name="location" size={11} color="rgba(255,255,255,0.7)" />
+              <Text style={styles.loc} numberOfLines={1}>
+                {post.destination}
+              </Text>
+            </View>
           </View>
-          <Text style={styles.meta}>
-            {post.creator?.role} · {post.time_ago} · {post.destination}
-          </Text>
-        </View>
+        </TouchableOpacity>
 
         <TouchableOpacity
           onPress={onFollow}
           style={[styles.followBtn, following && styles.followBtnActive]}
           testID={`following-follow-${post.id}`}
+          accessibilityRole="button"
+          accessibilityLabel={following ? "Unfollow" : "Follow"}
         >
-          <Text style={[styles.followText, following && { color: colors.text }]}>
+          <Text style={[styles.followText, following && styles.followTextActive]}>
             {following ? "Following" : "Follow"}
           </Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.text}>{post.text}</Text>
-
-      {post.image_url ? (
-        <Image source={{ uri: post.image_url }} style={styles.img} />
-      ) : null}
-
-      {/* Steal Itinerary callout (only for itinerary/trip posts) */}
-      {post.kind === "itinerary" || post.kind === "trip" ? (
-        <TouchableOpacity
-          onPress={onSteal}
-          style={styles.stealBar}
-          testID={`following-steal-${post.id}`}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flex: 1 }}>
-            <Ionicons name="sparkles" size={14} color={colors.accent} />
-            <Text style={styles.stealText}>Steal this itinerary</Text>
-          </View>
-          <View style={styles.proBadge}>
-            <Text style={styles.proBadgeText}>PRO</Text>
-          </View>
-        </TouchableOpacity>
-      ) : null}
-
-      <View style={styles.actions}>
-        <TouchableOpacity
+      {/* Right: engagement rail */}
+      <View style={styles.rail}>
+        <EngageButton
+          icon={liked ? "heart" : "heart-outline"}
+          color={liked ? colors.danger : colors.text}
+          count={(post.likes ?? 0) + (liked ? 1 : 0)}
           onPress={onLike}
-          style={styles.actBtn}
+          label="Like"
           testID={`following-like-${post.id}`}
-        >
-          <Ionicons name={liked ? "heart" : "heart-outline"} size={20} color={liked ? "#EF4444" : colors.text} />
-          <Text style={styles.actText}>{((post.likes ?? 0) + (liked ? 1 : 0)).toLocaleString()}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
+        />
+        <EngageButton
+          icon="chatbubble-outline"
+          color={colors.text}
+          count={post.comments ?? 0}
           onPress={onComment}
-          style={styles.actBtn}
+          label="Comment"
           testID={`following-comment-${post.id}`}
-        >
-          <Ionicons name="chatbubble-outline" size={18} color={colors.text} />
-          <Text style={styles.actText}>{(post.comments ?? 0).toLocaleString()}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
+        />
+        <EngageButton
+          icon={saved ? "bookmark" : "bookmark-outline"}
+          color={saved ? colors.teal : colors.text}
+          count={(post.saves ?? 0) + (saved ? 1 : 0)}
           onPress={onSave}
-          style={styles.actBtn}
+          label="Save"
           testID={`following-save-${post.id}`}
-        >
-          <Ionicons name={saved ? "bookmark" : "bookmark-outline"} size={18} color={saved ? colors.teal : colors.text} />
-          <Text style={styles.actText}>{((post.saves ?? 0) + (saved ? 1 : 0)).toLocaleString()}</Text>
-        </TouchableOpacity>
-
-        <View style={{ flex: 1 }} />
-
-        <TouchableOpacity
+        />
+        <EngageButton
+          icon="paper-plane-outline"
+          color={colors.text}
           onPress={onShare}
-          style={styles.actBtn}
+          label="Share"
           testID={`following-share-${post.id}`}
-        >
-          <Ionicons name="share-outline" size={18} color={colors.text} />
-        </TouchableOpacity>
+        />
       </View>
-    </TouchableOpacity>
+
+      {/* Bottom: content + itinerary CTA */}
+      <View style={styles.bottom}>
+        <View style={styles.copy}>
+          <Text style={styles.heading} numberOfLines={2}>
+            {heading}
+          </Text>
+          {post.text ? (
+            <Text style={styles.caption} numberOfLines={2}>
+              {post.text}
+            </Text>
+          ) : null}
+        </View>
+        <View style={styles.ctaRow}>
+          <TouchableOpacity
+            onPress={onPress}
+            style={styles.itineraryBtn}
+            testID={`following-view-${post.id}`}
+            accessibilityRole="button"
+            accessibilityLabel="View itinerary"
+          >
+            <Ionicons name="book-outline" size={17} color={colors.text} />
+            <Text style={styles.itineraryText}>View itinerary</Text>
+          </TouchableOpacity>
+          {isItinerary ? (
+            <TouchableOpacity
+              onPress={onSteal}
+              style={styles.stealPill}
+              testID={`following-steal-${post.id}`}
+              accessibilityRole="button"
+              accessibilityLabel="Steal this itinerary"
+            >
+              <Ionicons name="sparkles" size={14} color={colors.onPrimaryContainer} />
+              <Text style={styles.stealText}>Steal</Text>
+            </TouchableOpacity>
+          ) : null}
+        </View>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   wrap: {
-    backgroundColor: colors.surface,
-    borderRadius: radii.lg,
+    aspectRatio: 0.74,
+    width: "100%",
+    borderRadius: radii.xl,
+    overflow: "hidden",
     borderWidth: 1,
-    borderColor: colors.border,
-    padding: 14,
-    marginBottom: 14,
+    borderColor: colors.glassBorder,
+    marginBottom: 18,
+    backgroundColor: colors.surface,
   },
-  headerRow: { flexDirection: "row", alignItems: "center" },
-  name: { color: "#fff", fontSize: 14, fontWeight: "800" },
-  meta: { color: colors.textMuted, fontSize: 11, marginTop: 2, fontWeight: "600" },
-  followBtn: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 999,
-    backgroundColor: colors.accent,
-  },
-  followBtnActive: { backgroundColor: colors.glass, borderWidth: 1, borderColor: colors.border },
-  followText: { color: "#fff", fontSize: 12, fontWeight: "800" },
-  text: { color: colors.text, fontSize: 14, lineHeight: 20, marginTop: 12 },
-  img: { width: "100%", height: 220, borderRadius: 16, marginTop: 12 },
-  stealBar: {
+  topRow: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 14,
-    backgroundColor: colors.accentSoft,
+    justifyContent: "space-between",
+    gap: 10,
+  },
+  creator: { flexDirection: "row", alignItems: "center", flexShrink: 1 },
+  nameRow: { flexDirection: "row", alignItems: "center", gap: 4 },
+  name: { color: colors.text, fontSize: 14, fontFamily: fonts.bodyBold },
+  locRow: { flexDirection: "row", alignItems: "center", gap: 3, marginTop: 2 },
+  loc: { color: "rgba(255,255,255,0.72)", fontSize: 11, fontFamily: fonts.bodyMedium },
+  followBtn: {
+    paddingHorizontal: 16,
+    height: 34,
+    justifyContent: "center",
+    borderRadius: radii.pill,
+    backgroundColor: colors.primaryContainer,
+  },
+  followBtnActive: {
+    backgroundColor: "rgba(255,255,255,0.12)",
     borderWidth: 1,
-    borderColor: colors.accent,
+    borderColor: colors.glassBorder,
   },
-  stealText: { color: colors.accent, fontWeight: "800", fontSize: 13 },
-  proBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 999,
-    backgroundColor: colors.teal,
+  followText: { color: colors.onPrimaryContainer, fontSize: 12, fontFamily: fonts.bodyExtrabold },
+  followTextActive: { color: colors.text },
+  rail: {
+    position: "absolute",
+    right: 14,
+    bottom: 150,
+    alignItems: "center",
+    gap: 18,
   },
-  proBadgeText: { color: "#fff", fontWeight: "900", fontSize: 9, letterSpacing: 0.5 },
-  actions: { flexDirection: "row", alignItems: "center", gap: 16, marginTop: 14 },
-  actBtn: { flexDirection: "row", alignItems: "center", gap: 6 },
-  actText: { color: colors.textMuted, fontSize: 12, fontWeight: "700" },
+  engageBtn: { alignItems: "center", gap: 3 },
+  engageCount: { color: colors.text, fontSize: 11, fontFamily: fonts.bodyBold },
+  bottom: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: 16,
+    gap: 14,
+  },
+  copy: { maxWidth: "82%", gap: 4 },
+  heading: { ...type.title, color: colors.text, fontSize: 19 },
+  caption: { color: "rgba(255,255,255,0.9)", fontSize: 13, lineHeight: 18, fontFamily: fonts.bodyRegular },
+  ctaRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  itineraryBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 16,
+    height: 44,
+    borderRadius: radii.md,
+    backgroundColor: "rgba(255,255,255,0.12)",
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
+  },
+  itineraryText: { color: colors.text, fontSize: 14, fontFamily: fonts.bodyBold },
+  stealPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingHorizontal: 14,
+    height: 44,
+    borderRadius: radii.md,
+    backgroundColor: colors.primaryContainer,
+  },
+  stealText: { color: colors.onPrimaryContainer, fontSize: 13, fontFamily: fonts.bodyExtrabold },
 });

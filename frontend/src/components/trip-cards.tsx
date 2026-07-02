@@ -11,11 +11,20 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { colors, radii, shadows } from "@/src/theme";
+import { colors, radii, shadows, fonts, type } from "@/src/theme";
 import { TripScoreBadge, Avatar } from "@/src/components/ui";
 
 const { width } = Dimensions.get("window");
-const HERO_W = Math.min(320, width - 56);
+const HERO_W = Math.min(280, width - 80);
+
+const countdownLabel = (days: number | null): string | null => {
+  if (days === null) return null;
+  if (days < 0) return "Past";
+  if (days === 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  if (days < 45) return `In ${days} days`;
+  return `In ${Math.round(days / 30)} months`;
+};
 
 const fmtDate = (s?: string) => {
   if (!s) return "";
@@ -62,15 +71,15 @@ export const UpcomingTripCard = ({
           style={heroStyles.overlay}
         />
         <View style={heroStyles.topRow}>
-          {days !== null ? (
+          {countdownLabel(days) ? (
             <View style={heroStyles.countdown}>
-              <Ionicons name="time-outline" size={12} color="#fff" />
-              <Text style={heroStyles.countdownText}>
-                {days > 0 ? `${days}d to go` : days === 0 ? "Today" : "Past"}
-              </Text>
+              <Ionicons name="time-outline" size={12} color={colors.text} />
+              <Text style={heroStyles.countdownText}>{countdownLabel(days)}</Text>
             </View>
-          ) : null}
-          <TripScoreBadge score={trip.score ?? 90} size={52} testID={`trip-score-${trip.id ?? trip.destination}`} />
+          ) : (
+            <View />
+          )}
+          <TripScoreBadge score={trip.score ?? 90} size={50} testID={`trip-score-${trip.id ?? trip.destination}`} />
         </View>
 
         <View style={heroStyles.bottom}>
@@ -106,13 +115,15 @@ export const UpcomingTripCard = ({
 const heroStyles = StyleSheet.create({
   wrap: {
     width: HERO_W,
-    height: 240,
-    borderRadius: radii.lg,
+    height: 330,
+    borderRadius: radii.xl,
     overflow: "hidden",
     marginRight: 16,
+    borderWidth: 1,
+    borderColor: colors.glassBorder,
   },
   bg: { flex: 1, justifyContent: "space-between" },
-  overlay: { ...StyleSheet.absoluteFillObject, borderRadius: radii.lg },
+  overlay: { ...StyleSheet.absoluteFillObject, borderRadius: radii.xl },
   topRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -122,25 +133,25 @@ const heroStyles = StyleSheet.create({
   countdown: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 11,
     paddingVertical: 6,
-    borderRadius: 999,
-    backgroundColor: "rgba(7,11,20,0.6)",
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(10,14,23,0.55)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.12)",
+    borderColor: colors.glassBorder,
   },
   countdownText: {
-    color: "#fff",
+    color: colors.text,
     fontSize: 11,
-    fontWeight: "700",
-    marginLeft: 4,
-    letterSpacing: 0.3,
+    fontFamily: fonts.bodyBold,
+    marginLeft: 5,
+    letterSpacing: 0.2,
   },
-  bottom: { padding: 16 },
-  dest: { color: "#fff", fontSize: 22, fontWeight: "900", letterSpacing: -0.4 },
-  dates: { color: colors.textMuted, fontSize: 12, marginTop: 2, fontWeight: "600" },
-  companionRow: { flexDirection: "row", alignItems: "center", marginTop: 10 },
-  companionText: { color: colors.textMuted, fontSize: 12, marginLeft: 8, fontWeight: "600" },
+  bottom: { padding: 18 },
+  dest: { ...type.headlineMd, color: colors.text },
+  dates: { color: colors.textDim, fontSize: 12, marginTop: 3, fontFamily: fonts.bodyMedium },
+  companionRow: { flexDirection: "row", alignItems: "center", marginTop: 12 },
+  companionText: { color: colors.textMuted, fontSize: 12, marginLeft: 8, fontFamily: fonts.bodyMedium },
 });
 
 // ---------------- Feed card ----------------

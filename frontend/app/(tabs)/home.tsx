@@ -13,12 +13,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api, useAuth } from "@/src/api/client";
-import { colors } from "@/src/theme";
+import { colors, radii, type, fonts } from "@/src/theme";
 import { Avatar, SectionHeader } from "@/src/components/ui";
 import { UpcomingTripCard } from "@/src/components/trip-cards";
 import { InviteUnlockCard } from "@/src/components/invite-card";
 import { FollowingPostCard } from "@/src/components/following-post";
 import { PaywallModal } from "@/src/components/paywall-modal";
+
+const greetingWord = (): string => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
+};
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -112,19 +119,21 @@ export default function HomeScreen() {
       >
         {/* Header */}
         <View style={styles.topRow}>
-          <View>
-            <Text style={styles.brand}>DRIFT</Text>
-            <Text style={styles.greeting}>
-              Good morning, {user?.name?.split(" ")[0] ?? "Traveler"} 👋
-            </Text>
-            <Text style={styles.greetingSub}>Where to next?</Text>
-          </View>
+          <Text style={styles.brand}>drift</Text>
           <TouchableOpacity
             onPress={() => router.push("/(tabs)/profile")}
             testID="home-avatar-button"
+            accessibilityRole="button"
+            accessibilityLabel="Open profile"
           >
-            <Avatar uri={user?.avatar_url ?? undefined} size={44} />
+            <Avatar uri={user?.avatar_url ?? undefined} size={40} />
           </TouchableOpacity>
+        </View>
+        <View style={styles.greetBlock}>
+          <Text style={styles.greeting}>
+            {greetingWord()}, {user?.name?.split(" ")[0] ?? "Traveler"}
+          </Text>
+          <Text style={styles.greetingSub}>Where will your curiosity take you today?</Text>
         </View>
 
         {loading ? (
@@ -213,21 +222,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 12,
+    paddingTop: 8,
   },
-  brand: { color: colors.accent, fontSize: 14, fontWeight: "900", letterSpacing: 3 },
+  brand: {
+    color: colors.accent,
+    fontSize: 26,
+    fontFamily: fonts.displayBold,
+    letterSpacing: -1.2,
+  },
+  greetBlock: { paddingHorizontal: 20, marginTop: 18, marginBottom: 4 },
   greeting: {
-    color: "#fff",
-    fontSize: 22,
-    fontWeight: "800",
-    marginTop: 6,
-    letterSpacing: -0.3,
+    ...type.headline,
+    textShadowColor: colors.accentGlow,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 16,
   },
-  greetingSub: { color: colors.textMuted, fontSize: 13, fontWeight: "600", marginTop: 2 },
+  greetingSub: { ...type.body, marginTop: 6 },
   emptyHero: {
-    width: 320,
+    width: 300,
     height: 200,
-    borderRadius: 22,
+    borderRadius: radii.xl,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
@@ -236,12 +250,12 @@ const styles = StyleSheet.create({
     padding: 20,
     marginRight: 16,
   },
-  emptyText: { color: "#fff", fontSize: 16, fontWeight: "800", marginTop: 10 },
-  emptySub: { color: colors.textMuted, fontSize: 12, marginTop: 4, textAlign: "center" },
+  emptyText: { ...type.title, marginTop: 10 },
+  emptySub: { ...type.bodySm, marginTop: 4, textAlign: "center" },
   emptyFollow: {
     padding: 30,
     alignItems: "center",
-    borderRadius: 22,
+    borderRadius: radii.xl,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,

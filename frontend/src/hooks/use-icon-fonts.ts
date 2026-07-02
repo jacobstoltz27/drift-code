@@ -8,8 +8,33 @@
 
 import Constants, { ExecutionEnvironment } from "expo-constants";
 import { useFonts } from "expo-font";
+import {
+  SpaceGrotesk_500Medium,
+  SpaceGrotesk_600SemiBold,
+  SpaceGrotesk_700Bold,
+} from "@expo-google-fonts/space-grotesk";
+import {
+  Manrope_400Regular,
+  Manrope_500Medium,
+  Manrope_600SemiBold,
+  Manrope_700Bold,
+  Manrope_800ExtraBold,
+} from "@expo-google-fonts/manrope";
 
 const ICON_VECTOR_VERSION = "15.0.3";
+
+// Brand faces (bundled). Family names match src/theme.ts `fonts`.
+// Space Grotesk stands in for Clash Display; Manrope for Satoshi.
+const brandFontMap: Record<string, number> = {
+  "SpaceGrotesk-Medium": SpaceGrotesk_500Medium,
+  "SpaceGrotesk-SemiBold": SpaceGrotesk_600SemiBold,
+  "SpaceGrotesk-Bold": SpaceGrotesk_700Bold,
+  "Manrope-Regular": Manrope_400Regular,
+  "Manrope-Medium": Manrope_500Medium,
+  "Manrope-SemiBold": Manrope_600SemiBold,
+  "Manrope-Bold": Manrope_700Bold,
+  "Manrope-ExtraBold": Manrope_800ExtraBold,
+};
 
 // short internal fontName (what the library queries) -> CDN .ttf file name
 const ICON_FAMILIES: Record<string, string> = {
@@ -45,8 +70,9 @@ const iconFontMap = (): Record<string, string> =>
   );
 
 export const useIconFonts = (): readonly [boolean, Error | null] =>
-  useFonts(
-    Constants.executionEnvironment === ExecutionEnvironment.StoreClient
+  useFonts({
+    ...brandFontMap,
+    ...(Constants.executionEnvironment === ExecutionEnvironment.StoreClient
       ? iconFontMap()
-      : {},
-  );
+      : {}),
+  });
