@@ -1,0 +1,603 @@
+<style>
+  :root {
+    --ground: #0B0F17;
+    --surface: #131926;
+    --surface-2: #171F2E;
+    --glass: rgba(255, 255, 255, 0.045);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+
+    --accent: #BEC2FF;      /* light indigo — Drift accent */
+    --primary: #7B85FF;     /* vivid indigo */
+    --mint: #4FDBC8;        /* secondary / done */
+    --amber: #F5B14C;       /* in progress */
+
+    --text: #EDF0F7;
+    --muted: #9AA0B2;
+    --dim: #6B7180;
+
+    --glow: rgba(123, 133, 255, 0.28);
+
+    --display: 'SF Pro Display', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Roboto Mono', Menlo, monospace;
+
+    --maxw: 860px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1100px 600px at 50% -8%, rgba(123, 133, 255, 0.16), transparent 60%),
+      radial-gradient(800px 500px at 90% 12%, rgba(79, 219, 200, 0.07), transparent 55%),
+      var(--ground);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(28px, 6vw, 72px) clamp(20px, 5vw, 40px) 120px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 8px 0 40px; border-bottom: 1px solid var(--border); }
+  .wordmark {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(40px, 9vw, 68px);
+    letter-spacing: -0.05em;
+    color: var(--accent);
+    text-shadow: 0 0 28px var(--glow);
+    margin: 0;
+    line-height: 1;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(22px, 4.4vw, 32px);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-wrap: balance;
+    margin: 20px 0 0;
+    max-width: 20ch;
+  }
+  .hero p.mission {
+    color: var(--muted);
+    font-size: clamp(15px, 2.4vw, 17px);
+    max-width: 60ch;
+    margin: 16px 0 0;
+  }
+  .hero p.mission strong { color: var(--text); font-weight: 600; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 13px;
+  }
+  .chip b { color: var(--accent); font-weight: 600; }
+
+  /* ---------- Section shells ---------- */
+  section { margin-top: 56px; }
+  h2.section-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(19px, 3.4vw, 24px);
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+  }
+  .section-sub { color: var(--muted); margin: 0 0 22px; max-width: 62ch; }
+
+  /* ---------- Overall progress ---------- */
+  .overall {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-top: 28px;
+  }
+  .overall .bar { flex: 1; }
+  .track {
+    height: 8px; border-radius: 999px;
+    background: rgba(255,255,255,0.07);
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 999px;
+    transition: width 480ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .overall .pct {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 20px;
+    color: var(--text);
+    min-width: 58px; text-align: right;
+  }
+  .overall .lbl {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--dim); margin-bottom: 8px;
+  }
+
+  /* ---------- Timeline ---------- */
+  .timeline { position: relative; margin-top: 10px; }
+  .phase {
+    position: relative;
+    padding-left: 46px;
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  .phase::before {
+    content: "";
+    position: absolute;
+    left: 15px; top: 30px; bottom: -22px;
+    width: 2px;
+    background: linear-gradient(var(--border-strong), var(--border));
+  }
+  .phase:last-child::before { display: none; }
+  .node {
+    position: absolute; left: 0; top: 2px;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    color: var(--accent);
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 0 0 4px rgba(11,15,23,0.9);
+  }
+  .phase.complete .node {
+    color: var(--ground); background: var(--mint); border-color: var(--mint);
+    box-shadow: 0 0 0 4px rgba(11,15,23,0.9), 0 0 18px rgba(79,219,200,0.5);
+  }
+
+  .phase-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .phase-when {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--dim);
+  }
+  .phase h3 {
+    font-family: var(--display); font-weight: 650; font-size: 18px;
+    letter-spacing: -0.01em; margin: 3px 0 0;
+  }
+  .phase-note { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+  .phase-progress {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 12px; color: var(--dim); white-space: nowrap;
+  }
+  .phase-progress b { color: var(--mint); }
+
+  .card {
+    margin-top: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px 4px;
+  }
+
+  /* ---------- Tasks ---------- */
+  .task {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 11px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 140ms ease;
+  }
+  .task + .task { border-top: 1px solid var(--border); }
+  .task:hover { background: var(--glass); }
+  .task input {
+    appearance: none; -webkit-appearance: none;
+    margin: 2px 0 0; flex: none;
+    width: 20px; height: 20px; border-radius: 6px;
+    border: 1.5px solid var(--border-strong);
+    background: transparent;
+    cursor: pointer; position: relative;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+  .task input:hover { border-color: var(--accent); }
+  .task input:checked { background: var(--mint); border-color: var(--mint); }
+  .task input:checked::after {
+    content: ""; position: absolute; left: 6px; top: 2px;
+    width: 5px; height: 10px;
+    border: solid var(--ground); border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .task input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .task .t-body { flex: 1; }
+  .task .t-title { font-size: 15px; color: var(--text); line-height: 1.45; }
+  .task .t-meta { font-size: 12.5px; color: var(--dim); margin-top: 2px; }
+  .task input:checked ~ .t-body .t-title { color: var(--dim); text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.25); }
+  .owner {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 5px;
+    flex: none; margin-top: 2px;
+  }
+  .owner.you { color: var(--amber); background: rgba(245,177,76,0.12); }
+  .owner.claude { color: var(--accent); background: rgba(190,194,255,0.12); }
+
+  /* ---------- Two-col blocks ---------- */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px;
+  }
+  .panel h4 {
+    font-family: var(--display); font-size: 15px; font-weight: 650;
+    margin: 0 0 4px; letter-spacing: -0.01em;
+  }
+  .panel .panel-eyebrow {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; margin: 0 0 12px;
+  }
+  .panel.you .panel-eyebrow { color: var(--amber); }
+  .panel.claude .panel-eyebrow { color: var(--accent); }
+  .panel ul { margin: 0; padding-left: 18px; }
+  .panel li { color: var(--muted); font-size: 14px; margin: 7px 0; }
+  .panel li b { color: var(--text); font-weight: 600; }
+
+  /* ---------- Architecture ---------- */
+  .arch {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px; margin-top: 8px;
+    overflow-x: auto;
+  }
+  .arch pre {
+    font-family: var(--mono); font-size: 13px; line-height: 1.7;
+    color: var(--muted); margin: 0; white-space: pre;
+  }
+  .arch .k { color: var(--accent); }
+  .arch .m { color: var(--mint); }
+
+  /* ---------- DoD ---------- */
+  .dod { margin-top: 8px; }
+
+  footer {
+    margin-top: 64px; padding-top: 22px;
+    border-top: 1px solid var(--border);
+    color: var(--dim); font-size: 13px;
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  footer .mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; }
+
+  .reveal { opacity: 0; transform: translateY(10px); }
+  .reveal.in { opacity: 1; transform: none; transition: opacity 620ms ease, transform 620ms cubic-bezier(0.16,1,0.3,1); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
+    .fill { transition: none; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="hero reveal">
+    <p class="wordmark">drift</p>
+    <p class="eyebrow" style="margin-top:22px">Build &amp; Launch Roadmap · v1</p>
+    <h1>From working prototype to a living travel community.</h1>
+    <p class="mission">
+      A place to <strong>create and share itineraries that inspire others to see the world</strong> —
+      built in the spirit of Anthony Bourdain: people and places over logistics, stories over bookings.
+      Target: a beta in real hands within <strong>6–8 weeks</strong>.
+    </p>
+    <div class="meta-row">
+      <span class="chip">Platform · <b>iOS + Android</b></span>
+      <span class="chip">Client · <b>Expo / React Native</b></span>
+      <span class="chip">Backend · <b>Supabase</b></span>
+      <span class="chip">Ship via · <b>EAS Build</b></span>
+    </div>
+  </header>
+
+  <div class="overall reveal">
+    <div class="bar">
+      <div class="lbl">Overall progress</div>
+      <div class="track"><div class="fill" id="overall-fill"></div></div>
+    </div>
+    <div class="pct" id="overall-pct">0%</div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <section class="reveal">
+    <p class="eyebrow">The stack</p>
+    <h2 class="section-title">Architecture at a glance</h2>
+    <p class="section-sub">
+      Supabase absorbs auth, data, storage, realtime and row-level security — retiring most of the
+      custom backend. The only bespoke service that survives is the AI planner, as one Edge Function
+      that calls Claude.
+    </p>
+    <div class="arch">
+<pre><span class="k">Expo app (React Native)</span>
+  ├─ supabase-js  → Auth · Postgres · Storage · Realtime
+  └─ EAS Build    → TestFlight (iOS) + Play beta (Android)
+
+<span class="k">Supabase</span>
+  ├─ <span class="m">Auth</span>       email + Apple &amp; Google  (Apple login required for iOS review)
+  ├─ <span class="m">Postgres</span>   profiles · trips · itineraries · posts · follows · saves · remixes
+  │            + Row-Level Security  → your moderation floor, for free
+  ├─ <span class="m">Storage</span>    itinerary &amp; profile photos (your community's lifeblood)
+  ├─ <span class="m">Realtime</span>   live feed &amp; notifications
+  └─ <span class="m">Edge Fn</span>    AI Planner → calls Claude</pre>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="reveal">
+    <p class="eyebrow">The plan</p>
+    <h2 class="section-title">Phased to launch</h2>
+    <p class="section-sub">
+      Check items off as they land — progress saves in your browser. Phase 0 items have real-world
+      lead times (account approvals), so start them today even though they aren't code.
+    </p>
+
+    <div class="timeline" id="timeline">
+
+      <!-- PHASE 0 -->
+      <div class="phase" data-phase>
+        <div class="node">0</div>
+        <div class="phase-head">
+          <div>
+            <div class="phase-when">Start today · lead-time items</div>
+            <h3>Accounts &amp; foundations</h3>
+            <p class="phase-note">Not code — but they gate everything. Kick these off first.</p>
+          </div>
+          <div class="phase-progress" data-progress></div>
+        </div>
+        <div class="card">
+          <label class="task"><input type="checkbox" data-id="p0-apple"><span class="owner you">You</span><span class="t-body"><span class="t-title">Enroll in the Apple Developer Program</span><span class="t-meta">$99/yr · approval can take 24–48h+ · blocks all iOS builds</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p0-google"><span class="owner you">You</span><span class="t-body"><span class="t-title">Create a Google Play Console account</span><span class="t-meta">$25 one-time</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p0-supabase"><span class="owner you">You</span><span class="t-body"><span class="t-title">Create a Supabase project &amp; connect it here</span><span class="t-meta">Free tier is plenty to start — then I build schema, RLS &amp; buckets directly</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p0-anthropic"><span class="owner you">You</span><span class="t-body"><span class="t-title">Get an Anthropic API key</span><span class="t-meta">Powers the Planner Edge Function</span></span></label>
+        </div>
+      </div>
+
+      <!-- PHASE 1 -->
+      <div class="phase" data-phase>
+        <div class="node">1</div>
+        <div class="phase-head">
+          <div>
+            <div class="phase-when">Week 1 · foundation</div>
+            <h3>Design system rollout</h3>
+            <p class="phase-note">Convert your Stitch screens into the app — zero backend dependency, so we start now.</p>
+          </div>
+          <div class="phase-progress" data-progress></div>
+        </div>
+        <div class="card">
+          <label class="task"><input type="checkbox" data-id="p1-explore"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Convert Explore to the new design system</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p1-trip"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Convert Trip detail + itinerary experience</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p1-planner"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Convert the Planner flow (Basics → Style → Advanced → Review → Result)</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p1-trips"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Convert Trips + Profile</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p1-onboard"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Build the full onboarding flow from Stitch (13 steps)</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p1-eas"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Scaffold eas.json + app.json (bundle IDs, icon, splash)</span></span></label>
+        </div>
+      </div>
+
+      <!-- PHASE 2 -->
+      <div class="phase" data-phase>
+        <div class="node">2</div>
+        <div class="phase-head">
+          <div>
+            <div class="phase-when">Weeks 2–3 · backend</div>
+            <h3>Supabase — real users &amp; data</h3>
+            <p class="phase-note">Where a prototype becomes a product.</p>
+          </div>
+          <div class="phase-progress" data-progress></div>
+        </div>
+        <div class="card">
+          <label class="task"><input type="checkbox" data-id="p2-schema"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Design Postgres schema + RLS policies</span><span class="t-meta">profiles · trips · itineraries · posts · follows · saves · remixes · invites</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p2-auth"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Wire Supabase Auth — email + Apple &amp; Google sign-in</span><span class="t-meta">Sign in with Apple is mandatory for App Store approval</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p2-storage"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Storage buckets + image upload for photos</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p2-client"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Replace the API client with supabase-js, screen by screen</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p2-planner"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Port the AI Planner to a Supabase Edge Function (Claude)</span></span></label>
+        </div>
+      </div>
+
+      <!-- PHASE 3 -->
+      <div class="phase" data-phase>
+        <div class="node">3</div>
+        <div class="phase-head">
+          <div>
+            <div class="phase-when">Week 4 · community core</div>
+            <h3>The community loop</h3>
+            <p class="phase-note">Discover → steal / remix → share. The Bourdain flywheel.</p>
+          </div>
+          <div class="phase-progress" data-progress></div>
+        </div>
+        <div class="card">
+          <label class="task"><input type="checkbox" data-id="p3-compose"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Author &amp; publish an itinerary (photos, day notes, food spots)</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p3-remix"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Steal / remix &amp; save, backed by real records</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p3-social"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Follow graph + creator profiles (portfolio + World Map)</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p3-notif"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Notifications — likes, follows, remixes</span></span></label>
+        </div>
+      </div>
+
+      <!-- PHASE 4 -->
+      <div class="phase" data-phase>
+        <div class="node">4</div>
+        <div class="phase-head">
+          <div>
+            <div class="phase-when">Week 5 · trust &amp; polish</div>
+            <h3>Ready for strangers</h3>
+            <p class="phase-note">The minimum a public community owes its members.</p>
+          </div>
+          <div class="phase-progress" data-progress></div>
+        </div>
+        <div class="card">
+          <label class="task"><input type="checkbox" data-id="p4-moderation"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Report &amp; block flows + moderation basics</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p4-states"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Every screen: empty / loading / error states</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p4-a11y"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Accessibility pass (a11y-architect agent)</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p4-onboard"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Tune onboarding so it actually converts to a first itinerary</span></span></label>
+        </div>
+      </div>
+
+      <!-- PHASE 5 -->
+      <div class="phase" data-phase>
+        <div class="node">5</div>
+        <div class="phase-head">
+          <div>
+            <div class="phase-when">Week 6 · beta</div>
+            <h3>Into real hands</h3>
+            <p class="phase-note">10–50 travelers who'll tell you the truth.</p>
+          </div>
+          <div class="phase-progress" data-progress></div>
+        </div>
+        <div class="card">
+          <label class="task"><input type="checkbox" data-id="p5-build"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Production EAS builds for iOS + Android</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p5-testflight"><span class="owner you">You</span><span class="t-body"><span class="t-title">Ship to TestFlight + Play internal testing</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p5-testers"><span class="owner you">You</span><span class="t-body"><span class="t-title">Recruit 10–50 testers &amp; gather feedback</span></span></label>
+        </div>
+      </div>
+
+      <!-- PHASE 6 -->
+      <div class="phase" data-phase>
+        <div class="node">6</div>
+        <div class="phase-head">
+          <div>
+            <div class="phase-when">Weeks 7–8 · launch</div>
+            <h3>Public launch</h3>
+            <p class="phase-note">Iterate on feedback, then submit for review.</p>
+          </div>
+          <div class="phase-progress" data-progress></div>
+        </div>
+        <div class="card">
+          <label class="task"><input type="checkbox" data-id="p6-iterate"><span class="owner claude">Claude</span><span class="t-body"><span class="t-title">Fix top beta feedback + performance pass</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p6-listing"><span class="owner you">You</span><span class="t-body"><span class="t-title">Store listings — screenshots, copy, privacy labels</span></span></label>
+          <label class="task"><input type="checkbox" data-id="p6-submit"><span class="owner you">You</span><span class="t-body"><span class="t-title">Submit for App Store &amp; Play review → launch</span></span></label>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DIVISION OF LABOR -->
+  <section class="reveal">
+    <p class="eyebrow">Who does what</p>
+    <h2 class="section-title">Division of labor</h2>
+    <div class="cols">
+      <div class="panel you">
+        <p class="panel-eyebrow">Only you can</p>
+        <h4>Founder track</h4>
+        <ul>
+          <li><b>Enroll</b> Apple + Google developer accounts</li>
+          <li><b>Create &amp; connect</b> the Supabase project</li>
+          <li><b>Provide</b> the Anthropic API key</li>
+          <li><b>Recruit &amp; listen</b> to your first testers</li>
+          <li><b>Own the taste</b> — the vision and community feel</li>
+        </ul>
+      </div>
+      <div class="panel claude">
+        <p class="panel-eyebrow">I'll handle</p>
+        <h4>Build track</h4>
+        <ul>
+          <li><b>Convert</b> Stitch screens → RN against the design system</li>
+          <li><b>Build</b> the Supabase schema, RLS &amp; storage</li>
+          <li><b>Re-wire</b> the app to supabase-js</li>
+          <li><b>Write</b> the Planner Edge Function</li>
+          <li><b>Drive</b> EAS builds + keep quality green (review agents)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEFINITION OF DONE -->
+  <section class="reveal">
+    <p class="eyebrow">Launch bar</p>
+    <h2 class="section-title">Definition of done for v1</h2>
+    <p class="section-sub">Not "every feature" — the smallest thing that is a real, trustworthy community.</p>
+    <div class="card dod">
+      <label class="task"><input type="checkbox" data-id="dod-auth"><span class="t-body"><span class="t-title">A stranger can sign up, onboard, and land on a personalized feed</span></span></label>
+      <label class="task"><input type="checkbox" data-id="dod-create"><span class="t-body"><span class="t-title">A creator can publish an itinerary with photos that persists</span></span></label>
+      <label class="task"><input type="checkbox" data-id="dod-loop"><span class="t-body"><span class="t-title">Anyone can discover, save, and remix someone else's trip</span></span></label>
+      <label class="task"><input type="checkbox" data-id="dod-social"><span class="t-body"><span class="t-title">Follow creators &amp; get notified when they post</span></span></label>
+      <label class="task"><input type="checkbox" data-id="dod-safety"><span class="t-body"><span class="t-title">Report / block works; data is row-level secured</span></span></label>
+      <label class="task"><input type="checkbox" data-id="dod-store"><span class="t-body"><span class="t-title">Installable from TestFlight + Play, passing store review</span></span></label>
+    </div>
+  </section>
+
+  <footer>
+    <span>Drift — build &amp; launch roadmap</span>
+    <span class="mono" id="stamp">tracked locally · check items to update progress</span>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var KEY = "drift-roadmap-v1";
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { saved = {}; }
+
+    var boxes = Array.prototype.slice.call(document.querySelectorAll(".task input[type=checkbox]"));
+
+    function persist() {
+      var state = {};
+      boxes.forEach(function (b) { state[b.dataset.id] = b.checked; });
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    }
+
+    function updatePhase(phase) {
+      var ins = phase.querySelectorAll(".task input");
+      if (!ins.length) return;
+      var done = 0;
+      ins.forEach ? ins.forEach(step) : Array.prototype.forEach.call(ins, step);
+      function step(i) { if (i.checked) done++; }
+      var out = phase.querySelector("[data-progress]");
+      if (out) out.innerHTML = "<b>" + done + "</b> / " + ins.length;
+      phase.classList.toggle("complete", done === ins.length);
+    }
+
+    function updateOverall() {
+      var done = boxes.filter(function (b) { return b.checked; }).length;
+      var pct = boxes.length ? Math.round((done / boxes.length) * 100) : 0;
+      document.getElementById("overall-fill").style.width = pct + "%";
+      document.getElementById("overall-pct").textContent = pct + "%";
+    }
+
+    boxes.forEach(function (b) {
+      if (saved[b.dataset.id]) b.checked = true;
+      b.addEventListener("change", function () {
+        persist();
+        var ph = b.closest("[data-phase]");
+        if (ph) updatePhase(ph);
+        updateOverall();
+      });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-phase]"), updatePhase);
+    updateOverall();
+
+    // Gentle reveal on scroll
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+    if (reduce || !("IntersectionObserver" in window)) {
+      reveals.forEach(function (r) { r.classList.add("in"); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      reveals.forEach(function (r) { io.observe(r); });
+    }
+  })();
+</script>
