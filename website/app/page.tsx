@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import Manifesto from "@/components/Manifesto";
 import Stats from "@/components/Stats";
+import GlobeSection from "@/components/GlobeSection";
 import DestinationReel from "@/components/DestinationReel";
 import JourneyTimeline from "@/components/JourneyTimeline";
 import Features from "@/components/Features";
@@ -23,6 +24,7 @@ export default function Home() {
       <Hero />
       <Manifesto />
       <Stats />
+      <GlobeSection />
       <DestinationReel />
       <JourneyTimeline />
       <Features />
