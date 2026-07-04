@@ -9,6 +9,7 @@ import Features from "@/components/Features";
 import StolenTrips from "@/components/StolenTrips";
 import VibeSelector from "@/components/VibeSelector";
 import Stories from "@/components/Stories";
+import { SmoothScrollHero } from "@/components/ui/modern-hero";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import Roadmap from "@/components/Roadmap";
@@ -31,6 +32,7 @@ export default function Home() {
       <StolenTrips />
       <VibeSelector />
       <Stories />
+      <SmoothScrollHero />
       <Pricing />
       <FAQ />
       <Roadmap />
