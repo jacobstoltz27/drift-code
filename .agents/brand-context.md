@@ -5,15 +5,19 @@
 ## 1. Brand Basics
 
 - **App / brand name:** **Drift** (this never changes).
-- **AI concierge name:** **Peregrine** — the app's AI travel concierge. Drift is the product; Peregrine is the intelligent guide *inside* it. Refer to the concierge as "Peregrine," not "the AI" or "Drift's assistant," in user-facing copy.
-- **One-line:** Drift is an AI-powered travel app where **Peregrine**, your personal travel concierge, designs taste-driven itineraries and surfaces experiences you'd never have found alone.
-- **Category:** consumer travel — inspiration + planning (NOT booking).
+- **AI companion name:** **Peregrine** — the AI travel companion that lives *inside* Drift. Two distinct brands, each with one job (like Siri inside the iPhone, Copilot inside Microsoft): **Drift = the platform/world**, **Peregrine = the AI you talk to**. Users say "I'm using Drift" and "Ask Peregrine." Never call it "Drift AI" or "the assistant" in user-facing copy — it's **Peregrine**.
+- **One-line (Drift):** Drift is a social travel platform to discover destinations, share itineraries, follow travelers, and plan trips with friends.
+- **One-line (Peregrine):** Meet Peregrine — your AI travel companion inside Drift. Ask it anything: *"Plan my Tokyo trip," "Find hidden beaches in Greece," "Make this itinerary fit $2,000," "Best coffee near me?"*
+- **Spelling note (unresolved):** **Peregrine** (full) = instant peregrine-falcon recognition; **Peregrin** (short) = more distinctive/ownable but needs explaining. Default to **Peregrine** in all copy until the founder decides; keep the choice consistent everywhere.
+- **Category:** social travel platform + AI travel companion — discovery, community, and planning (NOT booking).
 - **Stage:** early / pre-scale.
 - **Paid product:** **Drift Plus** — the only paid upgrade. Do not invent other tiers or pricing.
 
 ## 2. What Drift Is (and Isn't)
 
-- **Is:** an AI travel *concierge* experience — personalized itineraries, hidden-gem discovery, a social **trip feed**, a proprietary **Trip Score** (0–100), invite/viral loops, and premium taste.
+- **Drift (the platform):** a social travel world — discover destinations, share and follow itineraries, follow travelers, plan trips with friends, and find restaurants, events, and hidden gems. A social **trip feed**, a proprietary **Trip Score** (0–100), invite/viral loops.
+- **Peregrine (the AI inside):** the intelligent travel companion you ask — it plans trips, finds hidden places, fits budgets, and answers "what's good near me." It's *how you navigate the Drift world*, not the world itself.
+- **The two-brand pitch (landing page):** *"**Drift** — discover where people are going."* then *"**Meet Peregrine.** Your AI travel companion."*
 - **Is NOT — hard guardrails (never violate in any copy, ad, or creative):**
   - **Drift is NOT a booking platform.** Never say or imply *book, reserve, reservations, hotels/flights as inventory, checkout, payments, deals, discounts on travel*. Drift inspires and plans; it does not sell travel inventory.
   - Drift Plus is the only paid product — no invented pricing or tiers.
