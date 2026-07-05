@@ -121,6 +121,9 @@ Close every run with:
 
 ## Related Skills
 
+- **brand-strategist** — upstream: supplies the hook, pillars, audience, and objections this skill turns into ads. Run it first (or let `campaign-builder` chain it).
+- **creative-director** — upstream: supplies the visual direction + AI prompts so ads render on-brand.
+- **campaign-builder** — orchestrates strategist → creative-director → this skill → landing/email/launch into one package.
 - **brand-context** — the foundation file every ad is grounded in. Run it first for sharper output.
 - **meta-ads** — account structure, targeting, pixel, budgets, bidding, ROAS and scaling (the media-buying counterpart to this creative engine).
 - **brand-messaging / brand-voice** — source the value props, taglines, and tone this skill amplifies.
