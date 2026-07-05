@@ -16,6 +16,7 @@ const plans = [
       "Everything you need to start exploring. Unlock more by inviting friends.",
     price: 0,
     yearlyPrice: 0,
+    annualMonthly: 0,
     buttonText: "Get started free",
     buttonVariant: "outline" as const,
     includes: [
@@ -33,7 +34,8 @@ const plans = [
     description:
       "Unlimited planning and every feature, no invites required.",
     price: 8.99,
-    yearlyPrice: 71.88, // 33% off vs paying monthly ($5.99/mo)
+    yearlyPrice: 71.88, // 33% off vs paying monthly
+    annualMonthly: 5.99, // per-month price when billed annually
     buttonText: "Start free trial",
     buttonVariant: "default" as const,
     popular: true,
@@ -93,7 +95,7 @@ const PricingSwitch = ({ onSwitch }: { onSwitch: (value: string) => void }) => {
             />
           )}
           <span className="relative flex items-center gap-2">
-            Yearly
+            Annual
             <span className="relative rounded-full bg-forest px-2 py-0.5 text-[10px] font-bold text-ivory">
               -33%
             </span>
@@ -183,7 +185,7 @@ export default function PricingSection() {
           className="mx-auto max-w-md text-ivory/60"
         >
           Grow features for free by inviting friends, or go Pro for unlimited
-          everything. Yearly saves you 33%.
+          everything. Annual saves you 33%.
         </TimelineContent>
 
         <TimelineContent
@@ -238,18 +240,16 @@ export default function PricingSection() {
                   <span className="font-display text-4xl font-bold">$</span>
                   <NumberFlow
                     format={{ maximumFractionDigits: 2 }}
-                    value={isYearly ? plan.yearlyPrice : plan.price}
+                    value={isYearly ? plan.annualMonthly : plan.price}
                     className="font-display text-4xl font-bold"
                   />
-                  <span className="ml-1 text-ivory/50">
-                    /{isYearly ? "year" : "month"}
-                  </span>
+                  <span className="ml-1 text-ivory/50">/month</span>
                 </div>
                 {plan.popular && (
                   <p className="text-sm text-forest">
                     {isYearly
-                      ? "Just $5.99/mo, billed yearly"
-                      : "Or $71.88/year — save 33%"}
+                      ? "Just $71.88 a year — save $36"
+                      : "Or $5.99/mo billed annually — save 33%"}
                   </p>
                 )}
                 <p className="mb-4 mt-1 text-sm text-ivory/60">
