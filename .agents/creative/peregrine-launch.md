@@ -46,3 +46,11 @@ The **line-art peregrine falcon** (wings raised, in flight) is the hero device. 
 3. **Hero — Brand Mark (9:16):** "Refined brand hero. A minimalist black line-art peregrine falcon in flight, wings raised, centered on a near-black navy background (#070B14). A subtle indigo-to-teal glow traces its outline; faint diagonal speed streaks suggest a dive. Generous negative space. Centered wide-tracked wordmark 'PEREGRINE' beneath, with a small line 'inside Drift'."
 4. **The Line (16:9 or 1:1):** "Near-black canvas. A thin electric-indigo route line arcs like a falcon's flight path across a stylized minimalist coastline map, ending on a glowing teal map pin. A small line-art peregrine falcon rides the front of the line. Luxury negative space, cinematic, text-safe lower third."
 5. **Group trip (4:5):** "Blue-hour rooftop, four friends laughing around a low table with city lights beyond; a faint line-art falcon glides overhead tracing a route between glowing pins on the skyline. Indigo/teal accent light, editorial, warm-cool contrast, text-safe top third."
+
+## Generated assets (Bloom, 2026-07-05)
+Rendered against Bloom brand `fb390e30` (Drift). First batch:
+- **Hero A — Blue Hour Arrival (4:5):** `49adf4bb` https://www.trybloom.ai/img/49adf4bb-c852-43ac-a185-0e5132d6c620 · `5d429360` https://www.trybloom.ai/img/5d429360-f490-4a35-ba70-3988f3146dcf
+- **Hero B — In Hand app moment (4:5):** `4d47f8ed` https://www.trybloom.ai/img/4d47f8ed-ffcf-43c6-af8d-0fabdfec83f1
+- **Hero C — Peregrine falcon brand mark (9:16):** `d2a123b1` https://www.trybloom.ai/img/d2a123b1-3814-4b2f-a4ef-84a656cde16b · `f381ac78` https://www.trybloom.ai/img/f381ac78-7cc7-4aed-9592-5460cdb18159
+
+*Note: the Vercel preview URL was behind deployment protection, so Bloom extracted no real brand DNA (name came back "Vercel"/Geist) — styling here came from the prompts. For brand-aware generation, onboard a public Drift URL or the Drift Instagram.*
