@@ -3,13 +3,12 @@ import Hero from "@/components/Hero";
 import Manifesto from "@/components/Manifesto";
 import Stats from "@/components/Stats";
 import GlobeSection from "@/components/GlobeSection";
-import DestinationReel from "@/components/DestinationReel";
+import DestinationShowcase from "@/components/DestinationShowcase";
 import JourneyTimeline from "@/components/JourneyTimeline";
 import Features from "@/components/Features";
 import StolenTrips from "@/components/StolenTrips";
 import VibeSelector from "@/components/VibeSelector";
 import Stories from "@/components/Stories";
-import { SmoothScrollHero } from "@/components/ui/modern-hero";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import Roadmap from "@/components/Roadmap";
@@ -26,13 +25,12 @@ export default function Home() {
       <Manifesto />
       <Stats />
       <GlobeSection />
-      <DestinationReel />
+      <DestinationShowcase />
       <JourneyTimeline />
       <Features />
       <StolenTrips />
       <VibeSelector />
       <Stories />
-      <SmoothScrollHero />
       <Pricing />
       <FAQ />
       <Roadmap />
