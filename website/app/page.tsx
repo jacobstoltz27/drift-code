@@ -9,7 +9,7 @@ import Features from "@/components/Features";
 import StolenTrips from "@/components/StolenTrips";
 import VibeSelector from "@/components/VibeSelector";
 import Testimonials from "@/components/ui/testimonial-v2";
-import Pricing from "@/components/Pricing";
+import Pricing from "@/components/ui/pricing-section-4";
 import FAQ from "@/components/FAQ";
 import Roadmap from "@/components/Roadmap";
 import WaitlistCTA from "@/components/WaitlistCTA";
