@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Reveal from "./Reveal";
 
 export default function StolenTrips() {
+  const [stolen, setStolen] = useState(false);
   return (
     <section className="relative overflow-hidden bg-charcoal/40 py-32 sm:py-44">
       {/* gradient glow */}
@@ -58,25 +60,48 @@ export default function StolenTrips() {
                 </div>
               </div>
               <motion.button
-                initial={{ scale: 1 }}
-                whileInView={{ scale: [1, 1.05, 1] }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, delay: 0.4, repeat: Infinity, repeatDelay: 2 }}
-                className="mt-4 w-full rounded-full bg-golden py-3 text-center font-semibold text-midnight"
+                onClick={() => setStolen((v) => !v)}
+                whileTap={{ scale: 0.96 }}
+                animate={stolen ? { scale: [1, 1.06, 1] } : { scale: 1 }}
+                transition={{ duration: 0.35 }}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-golden py-3 text-center font-semibold text-midnight"
               >
-                Steal Itinerary
+                <AnimatePresence mode="wait" initial={false}>
+                  {stolen ? (
+                    <motion.span
+                      key="done"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2"
+                    >
+                      <svg viewBox="0 0 24 24" className="h-5 w-5">
+                        <motion.path
+                          d="M4 12.5l5 5 11-11"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.4, ease: "easeOut", delay: 0.05 }}
+                        />
+                      </svg>
+                      Stolen!
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="steal"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      Steal Itinerary
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </motion.button>
-            </motion.div>
-
-            {/* floating "copied" chips */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.8 }}
-              className="absolute -bottom-4 -left-4 rounded-full border border-forest/40 bg-midnight px-4 py-2 text-xs font-medium text-forest"
-            >
-              ✓ Copied to your trips
             </motion.div>
           </div>
         </Reveal>
