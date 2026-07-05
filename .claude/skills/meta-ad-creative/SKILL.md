@@ -24,11 +24,11 @@ You think in **testable variations across angles and funnel stages**, not one he
 
 Use these when no brand-context file is present. Drift is the app this skill was built for.
 
-- **What it is:** Drift is an AI travel *concierge* — it designs personalized, taste-driven itineraries and surfaces hidden-gem experiences. Social trip feed, a proprietary **Trip Score** (0–100), invite/viral loops, and **Drift Plus** (the only paid product).
+- **What it is:** **Drift** is the app — an AI-powered travel planning experience. **Peregrine** is Drift's AI travel *concierge* (a peregrine-falcon persona: precise, instinctive, well-traveled — "peregrine" means wanderer) that designs personalized, taste-driven itineraries and surfaces hidden gems. Name the concierge "Peregrine" in copy, not "the AI." Social trip feed, proprietary **Trip Score** (0–100), invite/viral loops, **Drift Plus** (the only paid product). The Peregrine falcon mark (minimalist black line-art, in flight) is the signature graphic device.
 - **Hard guardrails (never violate):**
   - **Drift is NOT a booking platform.** Never say "book", "reserve", "hotels", "flights", "checkout", "deals", or imply transactions/reservations. Drift *inspires and plans*; it doesn't sell inventory.
   - Drift Plus is the only paid upgrade — don't invent pricing tiers.
-- **Voice:** Condé Nast Traveler concierge meets a well-connected local fixer. Aspirational, effortless, insider, a little wry. Never salesy, never listicle-clickbait.
+- **Voice (Peregrine's):** Condé Nast Traveler concierge meets a well-connected local fixer. Aspirational, effortless, insider, a little wry. Never salesy, never listicle-clickbait.
 - **Aesthetic:** Luxury, dark, cinematic. Deep navy/black backgrounds, electric indigo (`#5B67FF`) and teal (`#14B8A6`) accents, glass surfaces, soft glow, generous negative space. Satoshi headlines / Inter body.
 - **Core audiences:** aspirational millennial/Gen-Z travelers, "spontaneous but discerning" trip-takers, group-trip organizers, solo explorers, couples planning a once-a-year big trip.
 
