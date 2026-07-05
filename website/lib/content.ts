@@ -85,6 +85,42 @@ export const stories = [
     name: "Sofia L.",
     place: "Patagonia",
   },
+  {
+    quote:
+      "Planned a ten-day Iceland trip in one afternoon. It used to take me weeks of open tabs and second-guessing.",
+    name: "Noah T.",
+    place: "Reykjavík, Iceland",
+  },
+  {
+    quote:
+      "The vibe quiz nailed it. Every place it suggested felt like it was picked just for me.",
+    name: "Priya M.",
+    place: "Bali, Indonesia",
+  },
+  {
+    quote:
+      "We planned the whole group trip together without a single chaotic group chat. That alone sold me.",
+    name: "Marco L.",
+    place: "Amalfi Coast",
+  },
+  {
+    quote:
+      "I found a town I'd never heard of and it became the best week of my whole year.",
+    name: "Elena K.",
+    place: "Marrakech, Morocco",
+  },
+  {
+    quote:
+      "Trip Score talked me out of one plan and into a much better one. It just gets what makes a trip good.",
+    name: "James O.",
+    place: "Queenstown, NZ",
+  },
+  {
+    quote:
+      "Stealing a creator's itinerary felt like cheating, in the best possible way.",
+    name: "Aisha R.",
+    place: "Lisbon, Portugal",
+  },
 ];
 
 export const faqs = [

@@ -8,7 +8,7 @@ import JourneyTimeline from "@/components/JourneyTimeline";
 import Features from "@/components/Features";
 import StolenTrips from "@/components/StolenTrips";
 import VibeSelector from "@/components/VibeSelector";
-import Stories from "@/components/Stories";
+import Testimonials from "@/components/ui/testimonial-v2";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import Roadmap from "@/components/Roadmap";
@@ -30,7 +30,7 @@ export default function Home() {
       <Features />
       <StolenTrips />
       <VibeSelector />
-      <Stories />
+      <Testimonials />
       <Pricing />
       <FAQ />
       <Roadmap />
