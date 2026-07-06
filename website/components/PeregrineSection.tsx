@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { peregrineAsks } from "@/lib/content";
-import Falcon from "./Falcon";
 import Reveal from "./Reveal";
 
 export default function PeregrineSection() {
@@ -16,8 +15,13 @@ export default function PeregrineSection() {
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-2">
         {/* Copy */}
         <Reveal>
-          <div className="mb-5 flex items-center gap-2">
-            <Falcon className="h-6 w-8 text-golden" />
+          <div className="mb-5 flex items-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/peregrine-mark.png"
+              alt="Peregrine"
+              className="h-7 w-auto"
+            />
             <span className="label-kicker">Ask Peregrine</span>
           </div>
           <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-ivory sm:text-6xl">
@@ -76,7 +80,12 @@ export default function PeregrineSection() {
               className="flex gap-3"
             >
               <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-ocean to-forest">
-                <Falcon className="h-4 w-5 text-ivory" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/peregrine-mark.png"
+                  alt=""
+                  className="h-5 w-auto object-contain"
+                />
               </div>
               <div className="max-w-[85%] rounded-2xl rounded-tl-sm border border-ivory/10 bg-charcoal/70 px-4 py-3 text-sm text-ivory/85">
                 <p className="mb-2 font-medium text-ivory">
