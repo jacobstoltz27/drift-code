@@ -75,9 +75,9 @@ export default function Hero() {
           transition={{ delay: 0.8, duration: 0.9 }}
           className="mx-auto mt-7 max-w-xl text-lg text-ivory/75"
         >
-          For everyone who wants to explore but tells themselves it&apos;s too
-          much effort. Drift makes the leap feel easy. Collect stories, not
-          souvenirs.
+          Drift is your social travel world. Ask <span className="text-ivory">Peregrine</span>,
+          your AI companion, and the whole trip is planned in one conversation.
+          Collect stories, not souvenirs.
         </motion.p>
 
         <motion.div

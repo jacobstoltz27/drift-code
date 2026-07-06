@@ -69,7 +69,7 @@ export const journey = [
 export const stories = [
   {
     quote:
-      "I almost didn't go. Drift handed me a plan good enough that I stopped overthinking and just booked the flight.",
+      "I almost didn't go. Peregrine handed me a plan good enough that I stopped overthinking and just went.",
     name: "Maya R.",
     place: "Lisbon → Morocco",
   },
@@ -123,10 +123,31 @@ export const stories = [
   },
 ];
 
+// Example prompts for the "Ask Peregrine" demo.
+export const peregrineAsks = [
+  "Plan my Tokyo trip",
+  "Find hidden beaches in Greece",
+  "Make this itinerary fit $2,000",
+  "Three days in Lisbon, food-focused",
+  "What's good near me right now?",
+];
+
 export const faqs = [
   {
+    q: "Who is Peregrine?",
+    a: "Peregrine is your AI travel companion inside Drift. Ask it anything — plan a whole trip, find hidden gems, fit a budget, or \"what's good near me\" — and it answers with a real, personal itinerary, not a wall of text. Think of it as a local who's already there.",
+  },
+  {
+    q: "Do I have to pay to ask Peregrine?",
+    a: "No. Asking Peregrine is core to Drift. Drift Plus adds power features like unlimited plans and the World Map, but the concierge is there from day one.",
+  },
+  {
+    q: "How is this different from ChatGPT or a travel blog?",
+    a: "Peregrine is built for travel and current on real local spots, and it hands back a structured itinerary that lives in Drift — one you can tweak, save, and share. It's a conversation, not an article, and it's shaped to your taste, not the same ten tourist stops.",
+  },
+  {
     q: "Do I need to be an experienced traveler?",
-    a: "Not at all. Drift is built for the opposite. If planning has ever stopped you from going, that's exactly who this is for. You tell us the vibe, and we handle the hard part.",
+    a: "Not at all. Drift is built for the opposite. If planning has ever stopped you from going, that's exactly who this is for. You tell Peregrine the vibe, and it handles the hard part.",
   },
   {
     q: "What does \"stealing\" an itinerary actually mean?",
@@ -167,9 +188,9 @@ export const features = [
     img: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1400&q=80",
   },
   {
-    name: "AI Itinerary Builder",
-    kicker: "Planning, solved",
-    desc: "Describe the trip you want, like \"ten days, food, no rush, Italy.\" Get a complete day-by-day plan with costs and timing. Edit anything. The blank page is gone.",
+    name: "Ask Peregrine",
+    kicker: "Your AI travel companion",
+    desc: "Peregrine is the AI inside Drift. Ask it anything — \"plan my Tokyo trip,\" \"find hidden beaches in Greece,\" \"make this fit $2,000\" — and get a real day-by-day itinerary in minutes, planned with a local's instinct.",
     img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1400&q=80",
   },
   {

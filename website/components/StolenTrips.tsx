@@ -23,7 +23,7 @@ export default function StolenTrips() {
             See a trip you love, whether it&apos;s a friend&apos;s, a
             creator&apos;s, or a stranger&apos;s who clearly knows what
             they&apos;re doing? Take the whole thing in
-            one tap. Every day, every spot, every reservation-worthy detail,
+            one tap. Every day, every spot, every detail worth keeping,
             copied into your own plans in seconds.
           </p>
           <p className="mt-4 font-display text-xl italic text-golden/90">
