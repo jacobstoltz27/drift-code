@@ -70,7 +70,7 @@ export default function WaitlistForm({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@wander.com"
+              placeholder="you@drift.com"
               className="flex-1 rounded-full border border-ivory/15 bg-charcoal/70 px-5 py-3 text-ivory placeholder:text-ivory/35 outline-none transition focus:border-golden/60 focus:ring-2 focus:ring-golden/20"
             />
             <button
