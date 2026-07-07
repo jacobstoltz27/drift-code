@@ -166,7 +166,7 @@ export default function PeregrineSection() {
             dashboard mockup, including its own light color scheme and
             Plus Jakarta Sans/Inter typography (not the site's dark theme). */}
         <Reveal delay={0.15}>
-          <div className="font-jakarta mx-auto w-full max-w-md overflow-hidden rounded-3xl bg-[#f7f9fb] shadow-2xl">
+          <div className="font-jakarta mx-auto w-full max-w-sm overflow-hidden rounded-3xl bg-[#f7f9fb] shadow-2xl">
             {/* top bar */}
             <div className="flex items-center justify-between px-4 py-3">
               <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full border border-[#c6c6cd]/30">

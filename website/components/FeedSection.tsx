@@ -138,7 +138,7 @@ export default function FeedSection() {
 
         {/* Feed wireframe: exact recreation of the reference screenshot */}
         <Reveal delay={0.15}>
-          <div className="font-dm-sans mx-auto w-full max-w-md overflow-hidden rounded-3xl bg-[#fff8f3] shadow-2xl">
+          <div className="font-dm-sans mx-auto w-full max-w-sm overflow-hidden rounded-3xl bg-[#fff8f3] shadow-2xl">
             {/* top bar */}
             <div className="flex items-center justify-between px-5 pt-5">
               <span className="font-caslon text-2xl text-[#040d1b]">
