@@ -2,11 +2,27 @@
 
 import { motion, useTransform, type MotionValue } from "framer-motion";
 
-// A small jet silhouette pointing to the right (direction of travel).
+// A clear (outline-only) top-down airliner silhouette, nose pointing right
+// (direction of travel), stroked in the current text color.
 function Plane({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-      <path d="M21.5 12c0-.5-.4-1-1-1.1L14 9.6 9.8 3.2c-.2-.3-.5-.4-.8-.3l-.7.2c-.4.1-.6.5-.5.9L9.4 9 4.7 8.1l-1.2-1.4c-.1-.2-.4-.3-.6-.2l-.6.2c-.3.1-.4.4-.3.7L3.3 11c-.1.2-.1.5 0 .7l-.7 1.9c-.1.3 0 .6.3.7l.6.2c.2.1.5 0 .6-.2l1.2-1.4 4.7-.9-2.2 4.9c-.2.4 0 .8.4.9l.7.2c.3.1.7 0 .9-.3l4-6.4 6.5-1.3c.6-.1 1-.6 1-1.1z" />
+    <svg
+      viewBox="0 0 120 48"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.4}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {/* fuselage */}
+      <path d="M4 24 L14 22.5 L34 21.5 L54 20.8 L78 21 L96 22 L108 23.5 L116 24 L108 24.5 L96 26 L78 27 L54 27.2 L34 26.5 L14 25.5 Z" />
+      {/* main wings, swept back */}
+      <path d="M50 21 L26 3 L34 2 L62 19" />
+      <path d="M50 27 L26 45 L34 46 L62 29" />
+      {/* tail stabilizers */}
+      <path d="M18 22.5 L6 12 L11 11.5 L24 21.5" />
+      <path d="M18 25.5 L6 36 L11 36.5 L24 26.5" />
     </svg>
   );
 }
@@ -47,7 +63,7 @@ export default function DriftWord({
         style={{ left: planeLeft, y: planeY, opacity: planeOpacity, top: "0.04em" }}
         className="pointer-events-none absolute -translate-y-1/2"
       >
-        <Plane className="h-[0.34em] w-[0.34em] -rotate-6 text-sky-200 drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+        <Plane className="h-[0.24em] w-[0.6em] -rotate-6 text-sky-200 drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
       </motion.span>
     </span>
   );
