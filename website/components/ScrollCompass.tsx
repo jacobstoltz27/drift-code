@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Compass from "./Compass";
 
 // Easter egg: a compass fixed in the corner whose needle rotates as you
-// travel down the page — like you're always finding your bearing.
+// travel down the page, like you're always finding your bearing.
 export default function ScrollCompass() {
   const { scrollYProgress } = useScroll();
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 540]);

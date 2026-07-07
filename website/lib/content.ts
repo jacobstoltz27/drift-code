@@ -1,5 +1,5 @@
 // Shared content for the Drift marketing site.
-// Images are commercially-free (Unsplash / Pexels) — no attribution required.
+// Images are commercially-free (Unsplash / Pexels), no attribution required.
 
 export const destinations = [
   {
@@ -135,7 +135,7 @@ export const peregrineAsks = [
 export const faqs = [
   {
     q: "Who is Peregrine?",
-    a: "Peregrine is your AI travel companion inside Drift. Ask it anything — plan a whole trip, find hidden gems, fit a budget, or \"what's good near me\" — and it answers with a real, personal itinerary, not a wall of text. Think of it as a local who's already there.",
+    a: "Peregrine is your AI travel companion inside Drift. Ask it anything: plan a whole trip, find hidden gems, fit a budget, or ask what's good near you, and it answers with a real, personal itinerary, not a wall of text. Think of it as a local who's already there.",
   },
   {
     q: "Do I have to pay to ask Peregrine?",
@@ -143,7 +143,7 @@ export const faqs = [
   },
   {
     q: "How is this different from ChatGPT or a travel blog?",
-    a: "Peregrine is built for travel and current on real local spots, and it hands back a structured itinerary that lives in Drift — one you can tweak, save, and share. It's a conversation, not an article, and it's shaped to your taste, not the same ten tourist stops.",
+    a: "Peregrine is built for travel and current on real local spots, and it hands back a structured itinerary that lives in Drift, one you can tweak, save, and share. It's a conversation, not an article, and it's shaped to your taste, not the same ten tourist stops.",
   },
   {
     q: "Do I need to be an experienced traveler?",
@@ -190,7 +190,7 @@ export const features = [
   {
     name: "Ask Peregrine",
     kicker: "Your AI travel companion",
-    desc: "Peregrine is the AI inside Drift. Ask it anything — \"plan my Tokyo trip,\" \"find hidden beaches in Greece,\" \"make this fit $2,000\" — and get a real day-by-day itinerary in minutes, planned with a local's instinct.",
+    desc: "Peregrine is the AI inside Drift. Ask it anything: \"plan my Tokyo trip,\" \"find hidden beaches in Greece,\" \"make this fit $2,000,\" and get a real day-by-day itinerary in minutes, planned with a local's instinct.",
     img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1400&q=80",
   },
   {

@@ -1,4 +1,4 @@
-// Custom compass icon — also the easter-egg glyph that rotates on scroll.
+// Custom compass icon, also the easter-egg glyph that rotates on scroll.
 export default function Compass({ className = "" }: { className?: string }) {
   return (
     <svg

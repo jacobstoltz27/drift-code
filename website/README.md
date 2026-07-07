@@ -1,11 +1,11 @@
-# Drift — Marketing Website
+# Drift: Marketing Website
 
 The cinematic, scroll-driven landing page for Drift. Built with **Next.js 14**,
 **Tailwind CSS**, and **Framer Motion**. Deploys to **Vercel** with a custom
 domain in minutes.
 
 This is the public website only. The Drift mobile app lives in `../frontend`
-and its API in `../backend` — this folder does not touch them.
+and its API in `../backend`, this folder does not touch them.
 
 ## Run locally
 
@@ -28,7 +28,7 @@ npm run dev                        # http://localhost:3000
    ```
 3. Restart `npm run dev`. The "Get Early Access" forms now write to Supabase.
 
-> Until Supabase is connected, the forms still work — they just confirm
+> Until Supabase is connected, the forms still work, they just confirm
 > success without storing the email (local mode).
 
 ## Deploy (Vercel)

@@ -68,7 +68,7 @@ export default function PeregrineSection() {
               transition={{ duration: 0.5 }}
               className="mb-4 ml-auto max-w-[80%] rounded-2xl rounded-br-sm bg-ocean/15 px-4 py-3 text-right text-sm text-ivory"
             >
-              Plan my Tokyo trip — 5 days, food-first, not too touristy.
+              Plan my Tokyo trip, 5 days, food-first, not too touristy.
             </motion.div>
 
             {/* peregrine answer */}
@@ -89,12 +89,12 @@ export default function PeregrineSection() {
               </div>
               <div className="max-w-[85%] rounded-2xl rounded-tl-sm border border-ivory/10 bg-charcoal/70 px-4 py-3 text-sm text-ivory/85">
                 <p className="mb-2 font-medium text-ivory">
-                  Here&apos;s a first draft — say the word and I&apos;ll refine it.
+                  Here&apos;s a first draft, say the word and I&apos;ll refine it.
                 </p>
                 <ul className="space-y-1.5 text-ivory/70">
                   <li>
-                    <span className="text-golden">Day 1</span> · Shimokitazawa
-                    — vintage lanes, natural wine at a tucked-away bar
+                    <span className="text-golden">Day 1</span> · Shimokitazawa,
+                    vintage lanes, natural wine at a tucked-away bar
                   </li>
                   <li>
                     <span className="text-golden">Day 2</span> · Dawn at the

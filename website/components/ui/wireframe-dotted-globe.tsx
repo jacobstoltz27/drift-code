@@ -133,7 +133,7 @@ export default function RotatingEarth({
       const currentScale = projection.scale();
       const scaleFactor = currentScale / radius;
 
-      // Draw ocean (globe background) — deep Drift navy
+      // Draw ocean (globe background), deep Drift navy
       context.beginPath();
       context.arc(
         containerWidth / 2,

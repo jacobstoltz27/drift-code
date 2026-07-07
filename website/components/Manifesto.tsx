@@ -7,7 +7,7 @@ import { journey } from "@/lib/content";
 const lines = [
   "The best places rarely make the guidebooks.",
   "The best trips are the ones you'd never plan alone.",
-  "So we built a world for both —",
+  "So we built a world for both,",
   "and a companion who already knows the way.",
 ];
 
@@ -63,7 +63,7 @@ export default function Manifesto() {
           easier to take.
         </motion.p>
 
-        {/* The Drift loop — compact strip */}
+        {/* The Drift loop, compact strip */}
         <div className="relative mx-auto mt-20 max-w-3xl">
           <p className="label-kicker mb-8">The Drift loop</p>
           <div className="relative flex items-start justify-between">

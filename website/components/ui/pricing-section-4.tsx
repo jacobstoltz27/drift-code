@@ -24,9 +24,9 @@ const plans = [
       "Social feed & discovery",
       "Browse any community trip",
       "AI planner (2 trips)",
-      "Steal itineraries — invite 1 friend",
-      "World Travel Map — invite 3 friends",
-      "Group planning — invite 5 friends",
+      "Steal itineraries, invite 1 friend",
+      "World Travel Map, invite 3 friends",
+      "Group planning, invite 5 friends",
     ],
   },
   {
@@ -53,7 +53,7 @@ const plans = [
 ];
 
 const PricingSwitch = ({ onSwitch }: { onSwitch: (value: string) => void }) => {
-  const [selected, setSelected] = useState("0");
+  const [selected, setSelected] = useState("1");
 
   const handleSwitch = (value: string) => {
     setSelected(value);
@@ -107,7 +107,7 @@ const PricingSwitch = ({ onSwitch }: { onSwitch: (value: string) => void }) => {
 };
 
 export default function PricingSection() {
-  const [isYearly, setIsYearly] = useState(false);
+  const [isYearly, setIsYearly] = useState(true);
   const pricingRef = useRef<HTMLDivElement>(null);
 
   const revealVariants = {
@@ -248,8 +248,8 @@ export default function PricingSection() {
                 {plan.popular && (
                   <p className="text-sm text-forest">
                     {isYearly
-                      ? "Just $71.88 a year — save $36"
-                      : "Or $5.99/mo billed annually — save 33%"}
+                      ? "Just $71.88 a year, save $36"
+                      : "Or $5.99/mo billed annually, save 33%"}
                   </p>
                 )}
                 <p className="mb-4 mt-1 text-sm text-ivory/60">
