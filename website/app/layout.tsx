@@ -54,6 +54,20 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${inter.variable} ${jakarta.variable}`}
     >
+      <head>
+        {/* Libre Caslon Text + DM Sans: only used inside the Feed and Trips
+            app-preview mockups, to match those Stitch designs exactly. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="font-sans antialiased grain bg-midnight text-ivory">
         {children}
       </body>

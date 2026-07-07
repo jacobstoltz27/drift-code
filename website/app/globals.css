@@ -45,6 +45,14 @@ body {
     font-family: var(--font-jakarta), sans-serif;
   }
 
+  /* Used only inside the Feed and Trips app-preview mockups. */
+  .font-dm-sans {
+    font-family: "DM Sans", sans-serif;
+  }
+  .font-caslon {
+    font-family: "Libre Caslon Text", serif;
+  }
+
   /* Pale Brown gradient text used for emphasis words */
   .text-gradient-gold {
     background: linear-gradient(120deg, #38bdf8 0%, #fefaef 50%, #38bdf8 100%);
