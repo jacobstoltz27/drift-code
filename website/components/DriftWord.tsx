@@ -2,23 +2,26 @@
 
 import { motion, useTransform, type MotionValue } from "framer-motion";
 
-// A filled, top-down airliner silhouette matching the reference photo's
-// proportions (fuselage, swept main wings with engine pods, swept tail
-// stabilizers), nose pointing right (direction of travel across "drift").
+// Filled airplane silhouette matching the reference clipart: fuselage with a
+// pointed nose and a thin tail spike, swept "V"-tail flukes, and the two main
+// wings swept diagonally in opposite directions (the crossed look), each
+// with an engine pod. Nose points right (direction of travel across "drift").
 function Plane({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 130 100" className={className} fill="currentColor">
+    <svg viewBox="0 0 120 100" className={className} fill="currentColor">
       {/* fuselage */}
-      <path d="M4 50 C4 46 14 42 34 42 C60 42 90 44 108 46 C118 47 126 49 126 50 C126 51 118 53 108 54 C90 56 60 58 34 58 C14 58 4 54 4 50 Z" />
-      {/* main wings, swept back toward the tail */}
-      <path d="M95 45 L38 4 L48 3 L68 18 L100 43 Z" />
-      <path d="M95 55 L38 96 L48 97 L68 82 L100 57 Z" />
-      {/* engine nacelles */}
-      <ellipse cx="79" cy="35" rx="6" ry="3" />
-      <ellipse cx="79" cy="65" rx="6" ry="3" />
-      {/* tail stabilizers */}
-      <path d="M28 46 L8 25 L14 24 L24 40 L34 45 Z" />
-      <path d="M28 54 L8 75 L14 76 L24 60 L34 55 Z" />
+      <path d="M116 50 C114 43 104 39 72 40 C50 40 34 42 26 45 C23 47 23 53 26 55 C34 58 50 60 72 60 C104 61 114 57 116 50 Z" />
+      {/* tail spike */}
+      <path d="M26 49 L3 50 L26 51 Z" />
+      {/* V-tail flukes */}
+      <path d="M28 44 L8 10 L15 12 L33 42 Z" />
+      <path d="M28 56 L8 90 L15 88 L33 58 Z" />
+      {/* main wings, swept in opposite diagonals */}
+      <path d="M55 46 L98 6 L106 9 L75 40 L58 48 Z" />
+      <path d="M65 54 L22 94 L14 91 L45 60 L62 52 Z" />
+      {/* engine pods */}
+      <ellipse cx="82" cy="22" rx="6" ry="3.5" transform="rotate(-40 82 22)" />
+      <ellipse cx="38" cy="78" rx="6" ry="3.5" transform="rotate(-40 38 78)" />
     </svg>
   );
 }
@@ -59,7 +62,7 @@ export default function DriftWord({
         style={{ left: planeLeft, y: planeY, opacity: planeOpacity, top: "0.04em" }}
         className="pointer-events-none absolute -translate-y-1/2"
       >
-        <Plane className="h-[0.26em] w-[0.34em] -rotate-6 text-golden drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+        <Plane className="h-[0.3em] w-[0.36em] -rotate-6 text-golden drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
       </motion.span>
     </span>
   );
