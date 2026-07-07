@@ -2,27 +2,23 @@
 
 import { motion, useTransform, type MotionValue } from "framer-motion";
 
-// A clear (outline-only) top-down airliner silhouette, nose pointing right
-// (direction of travel), stroked in the current text color.
+// A filled, top-down airliner silhouette matching the reference photo's
+// proportions (fuselage, swept main wings with engine pods, swept tail
+// stabilizers), nose pointing right (direction of travel across "drift").
 function Plane({ className = "" }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 120 48"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 130 100" className={className} fill="currentColor">
       {/* fuselage */}
-      <path d="M4 24 L14 22.5 L34 21.5 L54 20.8 L78 21 L96 22 L108 23.5 L116 24 L108 24.5 L96 26 L78 27 L54 27.2 L34 26.5 L14 25.5 Z" />
-      {/* main wings, swept back */}
-      <path d="M50 21 L26 3 L34 2 L62 19" />
-      <path d="M50 27 L26 45 L34 46 L62 29" />
+      <path d="M4 50 C4 46 14 42 34 42 C60 42 90 44 108 46 C118 47 126 49 126 50 C126 51 118 53 108 54 C90 56 60 58 34 58 C14 58 4 54 4 50 Z" />
+      {/* main wings, swept back toward the tail */}
+      <path d="M95 45 L38 4 L48 3 L68 18 L100 43 Z" />
+      <path d="M95 55 L38 96 L48 97 L68 82 L100 57 Z" />
+      {/* engine nacelles */}
+      <ellipse cx="79" cy="35" rx="6" ry="3" />
+      <ellipse cx="79" cy="65" rx="6" ry="3" />
       {/* tail stabilizers */}
-      <path d="M18 22.5 L6 12 L11 11.5 L24 21.5" />
-      <path d="M18 25.5 L6 36 L11 36.5 L24 26.5" />
+      <path d="M28 46 L8 25 L14 24 L24 40 L34 45 Z" />
+      <path d="M28 54 L8 75 L14 76 L24 60 L34 55 Z" />
     </svg>
   );
 }
@@ -63,7 +59,7 @@ export default function DriftWord({
         style={{ left: planeLeft, y: planeY, opacity: planeOpacity, top: "0.04em" }}
         className="pointer-events-none absolute -translate-y-1/2"
       >
-        <Plane className="h-[0.24em] w-[0.6em] -rotate-6 text-sky-200 drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+        <Plane className="h-[0.26em] w-[0.34em] -rotate-6 text-golden drop-shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
       </motion.span>
     </span>
   );

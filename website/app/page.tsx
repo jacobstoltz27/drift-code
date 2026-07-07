@@ -3,7 +3,6 @@ import Hero from "@/components/Hero";
 import Manifesto from "@/components/Manifesto";
 import Stats from "@/components/Stats";
 import GlobeSection from "@/components/GlobeSection";
-import WorldMapSection from "@/components/WorldMapSection";
 import DestinationShowcase from "@/components/DestinationShowcase";
 import PeregrineSection from "@/components/PeregrineSection";
 import Features from "@/components/Features";
@@ -25,7 +24,6 @@ export default function Home() {
       <Manifesto />
       <Stats />
       <GlobeSection />
-      <WorldMapSection />
       <DestinationShowcase />
       <PeregrineSection />
       <Features />
