@@ -77,8 +77,18 @@ const activeTrips = [
 ];
 
 const quickActions = [
-  { label: "Create Itinerary", icon: CompassIcon, tone: "bg-golden/15 text-golden" },
-  { label: "Find Restaurants", icon: ForkKnifeIcon, tone: "bg-forest/40 text-ivory" },
+  {
+    label: "Create Itinerary",
+    icon: CompassIcon,
+    card: "bg-golden text-midnight",
+    badge: "bg-midnight/15 text-midnight",
+  },
+  {
+    label: "Find Restaurants",
+    icon: ForkKnifeIcon,
+    card: "bg-[#f3d9d0] text-[#6b2f22]",
+    badge: "bg-[#6b2f22]/10 text-[#6b2f22]",
+  },
 ];
 
 export default function PeregrineSection() {
@@ -146,7 +156,7 @@ export default function PeregrineSection() {
                   alt=""
                   className="h-6 w-auto"
                 />
-                <span className="font-display text-base font-bold text-ivory">
+                <span className="font-sans text-base font-bold tracking-tight text-ivory">
                   Peregrine
                 </span>
               </div>
@@ -164,7 +174,7 @@ export default function PeregrineSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/40 to-transparent" />
               <div className="absolute inset-x-3 bottom-3">
-                <p className="mb-2 font-display text-lg font-bold leading-tight text-ivory">
+                <p className="mb-2 font-sans text-lg font-bold leading-tight tracking-tight text-ivory">
                   Where are we drifting next?
                 </p>
                 <div className="flex items-center gap-2 rounded-full border border-ivory/20 bg-midnight/50 px-3 py-2 backdrop-blur-sm">
@@ -211,7 +221,7 @@ export default function PeregrineSection() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-label text-ivory/40">
                 Try Asking
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-2">
                 {[
                   "Plan a 5-day itinerary for Tokyo...",
                   "Find hidden gem restaurants in Rome...",
@@ -219,9 +229,9 @@ export default function PeregrineSection() {
                 ].map((ask) => (
                   <span
                     key={ask}
-                    className="flex items-center gap-1.5 rounded-full border border-ivory/10 bg-charcoal/60 px-3 py-1.5 text-xs text-ivory/70"
+                    className="flex items-center gap-2 rounded-full border border-ivory/10 bg-charcoal/60 px-3.5 py-2 text-xs text-ivory/70"
                   >
-                    <ChatIcon className="h-3.5 w-3.5 text-golden" />
+                    <ChatIcon className="h-3.5 w-3.5 flex-shrink-0 text-golden" />
                     {ask}
                   </span>
                 ))}
@@ -233,9 +243,13 @@ export default function PeregrineSection() {
               {quickActions.map((action) => (
                 <div
                   key={action.label}
-                  className={`flex flex-col items-start gap-4 rounded-2xl p-4 ${action.tone}`}
+                  className={`flex flex-col items-start gap-4 rounded-2xl p-4 ${action.card}`}
                 >
-                  <action.icon className="h-6 w-6" />
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-full ${action.badge}`}
+                  >
+                    <action.icon className="h-5 w-5" />
+                  </div>
                   <span className="text-sm font-semibold leading-tight">
                     {action.label}
                   </span>
