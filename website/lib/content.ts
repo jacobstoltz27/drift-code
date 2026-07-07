@@ -174,23 +174,41 @@ export const roadmap = [
   { phase: "Later", title: "Local Guides", text: "Verified locals who shape your trip from the inside.", done: false },
 ];
 
-// Explore, World Travel Map, and Group Planning get this compact roadmap
-// grid. The Feed, Ask Peregrine, and My Trips each have their own dedicated
-// section elsewhere on the page, so they're intentionally left out here.
 export const features = [
+  {
+    name: "The Feed",
+    kicker: "Home",
+    desc: "A travel feed that actually moves you. Real trips from real explorers and creators, not ads. See where the world is going, and steal what speaks to you.",
+    img: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1400&q=80",
+  },
   {
     name: "Explore",
     kicker: "Discovery",
     desc: "Search the planet by feeling, not just place. Hidden gems, seasonal inspiration, and a map that rewards curiosity over checklists.",
+    img: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1400&q=80",
+  },
+  {
+    name: "Ask Peregrine",
+    kicker: "Your AI travel companion",
+    desc: "Peregrine is the AI inside Drift. Ask it anything: \"plan my Tokyo trip,\" \"find hidden beaches in Greece,\" \"make this fit $2,000,\" and get a real day-by-day itinerary in minutes, planned with a local's instinct.",
+    img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1400&q=80",
+  },
+  {
+    name: "My Trips",
+    kicker: "Upcoming · Saved · Stolen · Past",
+    desc: "Every journey in one place. Count down to what's next, hold onto what you saved, keep what you stole, and revisit where you've been.",
+    img: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1400&q=80",
   },
   {
     name: "World Travel Map",
     kicker: "Your world, growing",
     desc: "Every trip lights up another corner of the globe. Your map is the story of your life in motion, and it grows with every place you go.",
+    img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1400&q=80",
   },
   {
     name: "Group Planning",
     kicker: "Together",
     desc: "Plan with the people you'd actually fly across the world with. One shared trip, everyone's input, zero group-chat chaos.",
+    img: "https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=1400&q=80",
   },
 ];

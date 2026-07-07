@@ -4,10 +4,8 @@ import Manifesto from "@/components/Manifesto";
 import Stats from "@/components/Stats";
 import GlobeSection from "@/components/GlobeSection";
 import DestinationShowcase from "@/components/DestinationShowcase";
-import FeedSection from "@/components/FeedSection";
-import TripsSection from "@/components/TripsSection";
-import PeregrineSection from "@/components/PeregrineSection";
 import Features from "@/components/Features";
+import PeregrineSection from "@/components/PeregrineSection";
 import StolenTrips from "@/components/StolenTrips";
 import VibeSelector from "@/components/VibeSelector";
 import Testimonials from "@/components/ui/testimonial-v2";
@@ -27,10 +25,8 @@ export default function Home() {
       <Stats />
       <GlobeSection />
       <DestinationShowcase />
-      <FeedSection />
-      <TripsSection />
-      <PeregrineSection />
       <Features />
+      <PeregrineSection />
       <StolenTrips />
       <VibeSelector />
       <Testimonials />
