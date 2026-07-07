@@ -183,7 +183,7 @@ export default function FeedSection() {
                     <p className="text-[9px] text-white/70">OCT 15 - 18</p>
                   </div>
                 </div>
-                <div className="h-24 w-8 flex-shrink-0 rounded-xl bg-[#eae1d7]/60" />
+                <div className="h-24 flex-1 rounded-xl bg-[#eae1d7]/60" />
               </div>
             </div>
 

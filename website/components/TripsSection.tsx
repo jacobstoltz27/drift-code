@@ -66,22 +66,16 @@ const tabs = ["Planned", "Past", "Saved", "Stolen"];
 
 const trips = [
   {
-    place: "Tokyo, Japan",
-    dates: "May 20 — May 28",
-    length: "8 Days",
-    badge: "In 12 days",
-    friends: "+5 friends",
-    initials: ["A", "W"],
-    img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
     place: "Barcelona, Spain",
     dates: "June 4 — June 10",
     length: "6 Days",
     badge: "In 27 days",
     friends: "+2 friends",
-    initials: ["L", "M"],
-    img: "https://images.unsplash.com/photo-1583844056361-4418a8f2a985?auto=format&fit=crop&w=1200&q=80",
+    avatars: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDD_dpOKPCSMMlwhiWFMhFJwiHjxQ2fUZfeKscWooea3gM4oSwrn8H2fPw9cVaYN0woDX-2bmTB6d7OoouK6Xa5kn2mWOvp8wLI7I_ws01dUTtLJfcrLMHpJZ0W3faP8rXnEKdzQWL381iPx6QMOYwunjmXlqLw-aAT96RZhywuLZiqJ13nvTJcQMo3Zi5ZUF5VhVLoooqutEDjSUWAu8G1f5-m9Nv7GSDjAqpupi9B0bI1Mc60UTD-P-XOHcgJx5KjT1UZVRBV1u4P",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuAswyTyt0m3IzZuoEurQaa94uKf6EoZ2WN7EAOG8VZ8q5JFw3lp1NN30BxAhmhLY5WMAug_KXPMuEQJxDazsteCCyPimbGhUBXwAMPSFL2zH7bD0-5LCKHhlRBNhfMWoa9TyEcUkelGUM3GShsYDh3R5zbUvucco3gbwBY3eIzuMOghBtX2QFYMTUBG4PQhtK-yblyTHfTS2SO3LmzG2gfISKR8MC8qArQFDjokso9jLDgerJ1lyW6xtnnTb9Jsx8dpNNEsQCJziodR",
+    ],
+    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBB1wSJ3GhfMY1QCGwLxgps3Yz2XJRwx88o8ZcLBBbgJmZW5sxJB-Ji8Fwv0_ydXHqtwHhYxhU8RFL1a34VlIET6e01n9TG7FUxQnSORPcVY9pv57STpV5zhXsC6mNw7UX1wguYXxIhfIIDwtj1RcPeO7sC1r-YlzJdIdaeK2Z9sP7qCOnP8qCFo-NCt0_gkT-qe7DI8a57cFsChN8sxTIEWWLJZ_OGySIRq7sPpN8bSHwAlZ2geZkqauxSeP_TNEQ-1r6DVbqGSluo",
   },
   {
     place: "New York City, USA",
@@ -89,8 +83,11 @@ const trips = [
     length: "6 Days",
     badge: "Confirmed",
     friends: "Me & 1 friend",
-    initials: ["J"],
-    img: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=1200&q=80",
+    avatars: [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDRfYbUL2RPcc_rACfnQQwlJU3CGwz6OC6zl-CAS9v_JxGLfLXh76ObP2Ktrb43PQARWT7IegnNGGwzojgCZTyQaCcUIG1F-b8NfbSaPIypXakuR4VcYChiNopQzqkAzCJQAx8PmxWmEonvLIVXsA2fr1D6ZzKi09abRJtSWcxvIFOaxN7GoOGKgxCs-zTEK5LlsHDFSzg5-FlubWVCNCWQ5CcuwaZd6SM8-nNNA1OTVy7KpgwOmtmlMLn6xq4LFc4KjdGA1VZwjWIe",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDg09geAQsLNBSuOjTuuWpMuFCOyw60_BQkwuODjqr9QmDe7GZheE-xrRC7Jvom9kSR5w6I6uWBKmlhYdqSxEkUlXK0k4qNca9AdAKc26Oj2nwsPHu-_UMIjvHBx7nXfqVM1vFHPtPbWbdoXuy_ijUIcYXabvcw-72avxjmnb48QtQCJlpHJiPeHylS0EzDTNCoGTnfzLgue9qtMLvHF61VMgl9KP-2mduzy_I9IsNZuM2TteQrnD34LRzU1EPdzyuXV2KXN8QkK57Z",
+    ],
+    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBwrTDwkriGt0-Y4jjIBO2id9qQALJP7-5gCtXBTvtvojxaTThe4JLFzFTi0SfVZz2GABmC7hVer9gT6r2MhFZb3MrFecrboue8JTccTBd8aPaI1ADVyTjlB3AQafoYtzWFEgJD3I-ZbnBGBDLzxR3LXd3IP4Q4P7SfYxtkKMyXAbq1jARwJcjvSZlKwfXepzxNz_2q5eT-FgM8_cjM8fQvjNBs3l0GHrdte8zM6Zp-cwnNrurMOf4juk7spIRPUEm6S6n77TBnRS7V",
   },
 ];
 
@@ -190,12 +187,17 @@ export default function TripsSection() {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="flex -space-x-2">
-                        {trip.initials.map((letter) => (
+                        {trip.avatars.map((avatar) => (
                           <div
-                            key={letter}
-                            className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#040d1b] bg-[#fed65b] text-[10px] font-bold text-[#040d1b]"
+                            key={avatar}
+                            className="h-7 w-7 overflow-hidden rounded-full border-2 border-[#040d1b] bg-[#eae1d7]"
                           >
-                            {letter}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={avatar}
+                              alt=""
+                              className="h-full w-full object-cover"
+                            />
                           </div>
                         ))}
                       </div>
