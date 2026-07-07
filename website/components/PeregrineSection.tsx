@@ -189,7 +189,7 @@ export default function PeregrineSection() {
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
                   backgroundImage:
-                    "url('https://images.unsplash.com/photo-1583779457094-ab6f77f7bf9d?auto=format&fit=crop&w=1200&q=80'), linear-gradient(160deg, #24356B 0%, #151A24 100%)",
+                    "url('https://images.unsplash.com/photo-1583844056361-4418a8f2a985?auto=format&fit=crop&w=1200&q=80'), linear-gradient(160deg, #24356B 0%, #151A24 100%)",
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
