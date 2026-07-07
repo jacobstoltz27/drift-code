@@ -40,6 +40,11 @@ body {
     @apply text-xs font-semibold uppercase tracking-label text-golden;
   }
 
+  /* Used only inside the Peregrine app-dashboard preview mockup. */
+  .font-jakarta {
+    font-family: var(--font-jakarta), sans-serif;
+  }
+
   /* Pale Brown gradient text used for emphasis words */
   .text-gradient-gold {
     background: linear-gradient(120deg, #38bdf8 0%, #fefaef 50%, #38bdf8 100%);
