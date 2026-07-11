@@ -155,7 +155,7 @@ export const faqs = [
   },
   {
     q: "Is Drift free?",
-    a: "Yes. The Free plan covers the feed, discovery, and AI planning for your first trips. You unlock more by inviting friends, or go Pro for unlimited everything.",
+    a: "Yes. The Free plan covers the feed, discovery, and AI planning for your first trips. You unlock more by inviting friends, or upgrade to Drift Plus for unlimited everything.",
   },
   {
     q: "When does Drift launch?",

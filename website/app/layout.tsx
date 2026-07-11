@@ -26,7 +26,11 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Drift: Where will you drift to next?",
+  metadataBase: new URL("https://drift-code.vercel.app"),
+  title: {
+    default: "Drift: Where will you drift to next?",
+    template: "%s | Drift",
+  },
   description:
     "Drift is permission to explore. Plan trips by your vibe, steal itineraries in seconds, and watch your world map grow with every journey. Collect stories, not souvenirs.",
   keywords: [

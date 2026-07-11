@@ -1,4 +1,37 @@
+import Link from "next/link";
 import Compass from "./Compass";
+
+const columns = [
+  {
+    title: "Product",
+    links: [
+      { href: "/features", label: "Features" },
+      { href: "/explore", label: "Explore" },
+      { href: "/peregrine", label: "Peregrine" },
+      { href: "/pricing", label: "Pricing" },
+      { href: "/waitlist", label: "Early Access" },
+    ],
+  },
+  {
+    title: "Community",
+    links: [
+      { href: "/community", label: "Travelers" },
+      { href: "/creators", label: "Creators" },
+      { href: "/blog", label: "Journal" },
+      { href: "/search", label: "Search" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { href: "/about", label: "About" },
+      { href: "/faqs", label: "FAQs" },
+      { href: "/contact", label: "Contact" },
+      { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
+    ],
+  },
+];
 
 export default function Footer() {
   return (
@@ -12,7 +45,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <div className="mb-12 flex items-center justify-center gap-2.5 text-xs uppercase tracking-label text-ivory/40">
+        <div className="mb-14 flex items-center justify-center gap-2.5 text-xs uppercase tracking-label text-ivory/40">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/peregrine-mark.png"
@@ -22,26 +55,45 @@ export default function Footer() {
           Ask Peregrine, your AI travel companion
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-8 border-t border-ivory/5 pt-10 md:flex-row">
-          <div className="flex items-center gap-2">
-            <Compass className="h-6 w-6 text-golden" />
-            <span className="font-display text-xl font-semibold text-ivory">
-              Drift
-            </span>
+        <div className="grid gap-12 border-t border-ivory/5 pt-12 sm:grid-cols-2 md:grid-cols-5">
+          <div className="md:col-span-2">
+            <Link href="/" className="flex items-center gap-2">
+              <Compass className="h-6 w-6 text-golden" />
+              <span className="font-display text-xl font-semibold text-ivory">
+                Drift
+              </span>
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-ivory/40">
+              The social travel platform. Discover places through real
+              travelers, plan with Peregrine, and watch your world map grow.
+            </p>
+            <p className="mt-4 text-sm text-ivory/40">
+              Built by travelers, for travelers.
+            </p>
           </div>
 
-          <p className="text-sm text-ivory/40">
-            Built by travelers, for travelers.
-          </p>
-
-          <div className="flex gap-6 text-sm text-ivory/50">
-            <a href="#features" className="transition hover:text-ivory">Features</a>
-            <a href="#pricing" className="transition hover:text-ivory">Pricing</a>
-            <a href="#waitlist" className="transition hover:text-ivory">Early Access</a>
-          </div>
+          {columns.map((col) => (
+            <div key={col.title}>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-label text-ivory/40">
+                {col.title}
+              </p>
+              <ul className="space-y-2.5">
+                {col.links.map((l) => (
+                  <li key={l.href}>
+                    <Link
+                      href={l.href}
+                      className="text-sm text-ivory/60 transition hover:text-ivory"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <p className="mt-10 text-center text-xs text-ivory/25">
+        <p className="mt-14 border-t border-ivory/5 pt-8 text-center text-xs text-ivory/25">
           © {new Date().getFullYear()} Drift. Collect stories, not souvenirs.
         </p>
       </div>

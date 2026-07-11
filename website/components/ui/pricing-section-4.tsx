@@ -30,7 +30,7 @@ const plans = [
     ],
   },
   {
-    name: "Pro",
+    name: "Drift Plus",
     description:
       "Unlimited planning and every feature, no invites required.",
     price: 8.99,
@@ -184,8 +184,8 @@ export default function PricingSection() {
           customVariants={revealVariants}
           className="mx-auto max-w-md text-ivory/60"
         >
-          Grow features for free by inviting friends, or go Pro for unlimited
-          everything. Annual saves you 33%.
+          Grow features for free by inviting friends, or unlock Drift Plus for
+          unlimited everything. Annual saves you 33%.
         </TimelineContent>
 
         <TimelineContent
